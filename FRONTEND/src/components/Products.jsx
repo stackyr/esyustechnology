@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { PRODUCTS } from '../data/companyData';
-import { Download } from 'lucide-react';
+import { Clock } from 'lucide-react';
 
-export default function Products({ onSelectProduct, onDownloadProduct }) {
+export default function Products({ onSelectProduct, _onDownloadProduct }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'desktop' | 'mobile'
 
   // Items configuration combining software products and hardware integration
@@ -245,18 +245,11 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
 
                     <button
                       type="button"
-                      onClick={() => {
-                        if (hasProduct) {
-                          onDownloadProduct(item.product);
-                        } else {
-                          // For hardware drivers, trigger primary product
-                          onDownloadProduct(PRODUCTS[0]);
-                        }
-                      }}
-                      className="flex-1 px-3 py-2.5 rounded-full bg-[var(--c1)] hover:bg-[var(--c1)]/90 text-white text-xs font-bold shadow-sm hover:shadow-md transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer"
+                      className="flex-1 px-3 py-2.5 rounded-full bg-[var(--bg)] border border-[var(--c1)]/30 text-[var(--c1)] text-xs font-bold text-center flex items-center justify-center gap-1.5 cursor-default shadow-xs"
+                      title="Official download link will be available soon"
                     >
-                      <Download className="w-3.5 h-3.5" />
-                      <span>{item.downloadLabel.replace('Download ', '')} ({item.size})</span>
+                      <Clock className="w-3.5 h-3.5 text-[var(--c1)] shrink-0" />
+                      <span>Coming Soon</span>
                     </button>
                   </div>
                 </div>
@@ -265,10 +258,10 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           })}
         </div>
 
-        {/* Bottom CTA to Download Center */}
+        {/* Bottom CTA to Software Releases Center */}
         <div className="text-center mt-16">
           <a className="btn" href="#download">
-            <span>Explore all installers in Download Center</span>
+            <span>View All Packages in Release Center</span>
             <svg className="btn__arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
               <path d="M3 9 9 3M4 3h5v5" />
             </svg>

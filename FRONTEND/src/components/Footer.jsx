@@ -42,8 +42,8 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
               <div>
-                <small>Install Today</small>
-                <b>Download .EXE</b>
+                <small>Release Status</small>
+                <b>Coming Soon</b>
               </div>
             </a>
 
@@ -107,7 +107,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
               ))}
               <li className="pt-1">
                 <a href="#download" className="text-[var(--c3)] hover:underline font-semibold block">
-                  Download All Packages →
+                  Explore Software Packages →
                 </a>
               </li>
             </ul>

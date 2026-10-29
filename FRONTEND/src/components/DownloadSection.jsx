@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { PRODUCTS } from '../data/companyData';
+import { Clock } from 'lucide-react';
 
-export default function DownloadSection({ onDownloadApp }) {
+export default function DownloadSection({ _onDownloadApp }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'windows' | 'android'
 
   const filteredApps = PRODUCTS.filter((app) => {
@@ -17,14 +18,14 @@ export default function DownloadSection({ onDownloadApp }) {
         {/* Section Header */}
         <div className="sec-head">
           <div>
-            <span className="eyebrow">Section 10 • Application Download Center</span>
+            <span className="eyebrow">Section 10 • Application Releases</span>
             <h2 className="h2" style={{ marginTop: '16px' }}>
               Installers built for <em className="s">offline endurance.</em>
             </h2>
           </div>
           <div className="sec-head__side">
             <p className="lead">
-              Direct access to official installers and production releases. All packages are virus-checked, digitally verified, and operate 100% offline with zero external cloud dependencies.
+              Direct access to official installers and production releases. Public download links are currently in preparation — packages will be enabled for direct download as soon as release links go live.
             </p>
 
             {/* Filter Toggle */}
@@ -128,26 +129,22 @@ export default function DownloadSection({ onDownloadApp }) {
                   </li>
                 </ul>
 
-                {/* Download CTA Button */}
+                {/* Coming Soon CTA Button */}
                 <div className="w-full mt-auto pt-2">
                   <button
                     type="button"
-                    onClick={() => onDownloadApp(app)}
-                    className={`btn ${isFeatured ? '' : 'btn--line'} w-full justify-center text-center shadow-sm`}
+                    disabled
+                    className="btn btn--line w-full justify-center text-center shadow-xs cursor-default border border-[var(--c1)]/30 text-[var(--c1)] bg-white"
                     style={{ width: '100%', height: '48px', padding: '0 14px' }}
-                    title={`Download ${app.name} (${app.downloadFile})`}
+                    title="Official download link will be available soon"
                   >
-                    <svg className="w-4 h-4 mr-2 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>
-                    <span className="truncate font-semibold text-[13.5px]">
-                      Download {isAndroid ? 'Android .APK' : 'Windows .EXE'}
+                    <Clock className="w-4 h-4 mr-2 shrink-0 text-[var(--c1)]" />
+                    <span className="truncate font-bold text-[13.5px]">
+                      Coming Soon ({isAndroid ? 'Android .APK' : 'Windows .EXE'})
                     </span>
                   </button>
-                  <div className="text-[11px] text-center font-mono mt-2 truncate opacity-70">
-                    {app.downloadFile} • {app.size}
+                  <div className="text-[11px] text-center font-mono mt-2 truncate text-[var(--muted)]">
+                    Official release in preparation • {app.size}
                   </div>
                 </div>
               </div>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { X, CheckCircle2, Download, Monitor, Smartphone, Cpu } from 'lucide-react';
+import { X, CheckCircle2, Clock, Monitor, Smartphone, Cpu } from 'lucide-react';
 
-export default function ProductModal({ product, onClose, onDownload }) {
+export default function ProductModal({ product, onClose, _onDownload }) {
   if (!product) return null;
 
   const isAndroid = product.platform.toLowerCase().includes('android');
@@ -92,13 +92,13 @@ export default function ProductModal({ product, onClose, onDownload }) {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                <span className="text-[10px] text-stone-400 uppercase tracking-wider block font-mono">Package File</span>
-                <span className="font-mono text-xs font-semibold text-[var(--bg)] truncate block" title={product.downloadFile}>
-                  {product.downloadFile}
+                <span className="text-[10px] text-stone-400 uppercase tracking-wider block font-mono">Release Status</span>
+                <span className="font-mono text-xs font-semibold text-amber-300 truncate block">
+                  Coming Soon ({product.version})
                 </span>
               </div>
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
-                <span className="text-[10px] text-stone-400 uppercase tracking-wider block font-mono">File Size</span>
+                <span className="text-[10px] text-stone-400 uppercase tracking-wider block font-mono">Package Size</span>
                 <span className="font-mono text-xs font-bold text-[var(--c3)] block">{product.size}</span>
               </div>
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1 col-span-2 sm:col-span-1">
@@ -130,14 +130,13 @@ export default function ProductModal({ product, onClose, onDownload }) {
           </button>
 
           <button
-            onClick={() => {
-              onClose();
-              onDownload(product);
-            }}
-            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--c1)] hover:bg-[var(--c1)]/90 text-white text-xs font-bold rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            type="button"
+            disabled
+            className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--soft)] border border-[var(--c1)]/40 text-[var(--c1)] text-xs font-bold rounded-full shadow-xs cursor-default"
+            title="Download link will be provided soon"
           >
-            <Download className="w-3.5 h-3.5" />
-            <span>Download Software ({product.size})</span>
+            <Clock className="w-3.5 h-3.5 text-[var(--c1)]" />
+            <span>Download Coming Soon</span>
           </button>
         </div>
 
