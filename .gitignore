@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+FRONTEND/node_modules/
+
+# Production build outputs
+dist/
+FRONTEND/dist/
+dist-ssr/
+FRONTEND/dist-ssr/
+
+# Local cache & temporary files
+.vite/
+FRONTEND/.vite/
+
+# Agent & workspace metadata
+.gemini/
+.agent/
+.agents/
+.gsd/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment and local overrides
+.env
+.env.local
+.env.*.local
+*.local
+
+# System & IDE files
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
