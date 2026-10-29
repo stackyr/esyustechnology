@@ -1163,18 +1163,31 @@ em.s {
   position: relative;
   left: calc(var(--fr) + var(--tr) + var(--p, 0) * (100% - 2 * var(--fr) - 2 * var(--tr)));
   transform: translateX(calc(var(--p, 0) * -100%));
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  gap: 10px;
   width: max-content;
   height: var(--tab-h);
-  padding: 0 1.5em;
+  padding: 0 1.6em;
   border-radius: var(--tr) var(--tr) 0 0;
   background: var(--plate);
   color: var(--on);
-  font-size: clamp(15px, 1.2vw, 18px);
+  font-size: clamp(14px, 1.15vw, 16px);
   font-weight: 600;
   letter-spacing: -.01em;
   white-space: nowrap;
+}
+
+.folder__tab-num {
+  font-size: 15px;
+  font-weight: 800;
+  font-family: var(--font, sans-serif);
+  opacity: .85;
+}
+
+.folder__tab-title {
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .folder__tab::before, .folder__tab::after {
@@ -1198,53 +1211,74 @@ em.s {
 .folder__body {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
-  gap: clamp(20px, 3vw, 48px);
-  min-height: min(66svh, 540px);
-  padding: clamp(18px, 2.6vw, 36px);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+  min-height: min(60svh, 480px);
+  padding: clamp(24px, 3.2vw, 44px);
   border-radius: var(--fr);
   background: var(--plate);
   color: var(--on);
   box-shadow: 0 20px 40px -15px rgba(0,0,0,.15);
 }
 
-.folder__text {
+.folder__copy {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 28px;
-  padding: clamp(4px, 1vw, 14px);
-}
-
-.folder__lead {
-  font-size: clamp(24px, 2.5vw, 38px);
-  line-height: 1.1;
-  letter-spacing: -.03em;
-  font-weight: 600;
-  max-width: 15em;
+  gap: clamp(20px, 3vh, 32px);
+  height: 100%;
+  min-height: 280px;
 }
 
 .folder__meta {
-  display: flex;
-  align-items: flex-end;
-  gap: 14px;
-  font-size: 15px;
-  font-weight: 500;
+  display: inline-block;
+  font-size: 12.5px;
+  font-family: monospace;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  opacity: .85;
+  margin-bottom: 8px;
 }
 
-.folder__num {
-  font-size: clamp(64px, 7vw, 112px);
-  line-height: .8;
-  letter-spacing: -.06em;
-  font-weight: 400;
+.folder__h3 {
+  font-size: clamp(24px, 2.2vw, 34px);
+  line-height: 1.15;
+  letter-spacing: -.03em;
+  font-weight: 700;
+  color: var(--on);
+}
+
+.folder__lead {
+  font-size: clamp(14.5px, 1.2vw, 17px);
+  line-height: 1.55;
+  letter-spacing: -.01em;
+  font-weight: 500;
+  opacity: .92;
+  max-width: 32em;
+  margin-top: 10px;
+}
+
+.folder__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 8px;
 }
 
 .folder__photo {
   position: relative;
   overflow: hidden;
   border-radius: calc(var(--fr) * .7);
-  min-height: 260px;
+  width: 100%;
+  aspect-ratio: 4/3;
+  min-height: 280px;
+  max-height: 380px;
+  box-shadow: 0 16px 36px -12px rgba(0, 0, 0, .25);
 }
 
 .folder__photo .art > .ico {
@@ -1335,9 +1369,15 @@ em.s {
     left: 0 !important;
     transform: none !important;
     border-radius: var(--tr) var(--tr) 0 0 !important;
-    font-size: 14px !important;
-    height: 42px !important;
-    padding: 0 1.25em !important;
+    font-size: 13.5px !important;
+    height: 40px !important;
+    padding: 0 1.2em !important;
+  }
+  .folder__tab-num {
+    font-size: 13.5px !important;
+  }
+  .folder__tab-title {
+    font-size: 13.5px !important;
   }
   .folder__tab::before,
   .folder__tab::after {
@@ -1352,35 +1392,41 @@ em.s {
     min-height: 0 !important;
     padding: 20px 16px !important;
     border-radius: 20px !important;
+    gap: 20px !important;
   }
   .folder__photo {
     order: -1;
-    min-height: 0 !important;
-    aspect-ratio: 4/3.2 !important;
+    min-height: 200px !important;
+    max-height: 250px !important;
+    aspect-ratio: 16/10 !important;
     border-radius: 14px !important;
   }
-  .folder__text {
-    gap: 18px !important;
+  .folder__copy {
+    gap: 16px !important;
     padding: 0 !important;
+    min-height: 0 !important;
+  }
+  .folder__h3 {
+    font-size: 20px !important;
   }
   .folder__lead {
-    font-size: clamp(20px, 5.5vw, 26px) !important;
+    font-size: 13.5px !important;
+    line-height: 1.5 !important;
     max-width: 100% !important;
+    margin-top: 6px !important;
   }
   .folder__meta {
-    font-size: 13.5px !important;
-  }
-  .folder__num {
-    font-size: clamp(48px, 12vw, 68px) !important;
+    font-size: 11px !important;
+    margin-bottom: 4px !important;
   }
   .ui {
-    font-size: 11.5px !important;
+    font-size: 11px !important;
     padding: 10px 12px !important;
-    left: 4% !important;
-    right: 4% !important;
-    bottom: 4% !important;
+    left: 3% !important;
+    right: 3% !important;
+    bottom: 3% !important;
     width: auto !important;
-    border-radius: 14px !important;
+    border-radius: 12px !important;
   }
 }
 

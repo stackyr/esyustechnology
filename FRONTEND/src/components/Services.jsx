@@ -107,23 +107,25 @@ export default function Services({ onSelectService, onEnquireService }) {
               className={`folder ${item.tone}`}
               data-item={item.id}
             >
-              <div className="folder__tab">
-                <span className="folder__num">{item.num}</span>
-                <span className="folder__title">{item.tab}</span>
-              </div>
+              <div className="folder__in">
+                <div className="folder__tab">
+                  <span className="folder__tab-num">{item.num}</span>
+                  <span className="folder__tab-title">{item.tab}</span>
+                </div>
 
-              <div className="folder__body">
-                <div className="folder__in">
+                <div className="folder__body">
                   {/* Left Column: Details & Actions */}
                   <div className="folder__copy">
-                    <span className="folder__meta">{item.meta}</span>
-                    <h3 className="folder__h3">{serviceObj.title}</h3>
-                    <p className="folder__lead">{item.lead}</p>
+                    <div>
+                      <span className="folder__meta">{item.meta}</span>
+                      <h3 className="folder__h3">{serviceObj.title}</h3>
+                      <p className="folder__lead">{item.lead}</p>
+                    </div>
 
                     <div className="folder__actions">
                       <button
                         type="button"
-                        className="btn"
+                        className="btn btn--sm"
                         onClick={() => onSelectService(serviceObj)}
                       >
                         <span>View specifications</span>
