@@ -84,8 +84,16 @@ export default function AboutUs({ onContactClick }) {
             </h2>
             <div className="sec-head__side">
               <p className="lead">
-                {COMPANY_INFO.name} was established to solve one critical problem: businesses losing hours of productivity to cloud server outages and complex software.
+                {COMPANY_INFO.name} was established to solve one critical problem: businesses losing hours of productivity to cloud server outages and complicated tools.
               </p>
+              <div className="p-3.5 rounded-xl bg-[var(--soft)] border-l-4 border-l-[var(--c1)] border border-[var(--line)] space-y-1">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--c1)] font-semibold block">
+                  Core Engineering Motive
+                </span>
+                <p className="text-xs sm:text-sm text-[var(--ink)] font-medium italic leading-relaxed">
+                  “Transforming complex enterprise technology into simple, intuitive, and easy-to-use software that empowers everyday business.”
+                </p>
+              </div>
               <button className="link" onClick={onContactClick}>
                 Speak with our engineering desk →
               </button>
