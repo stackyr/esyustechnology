@@ -1309,6 +1309,8 @@ em.s {
 
 .folder__photo--logo {
   background: #ffffff !important;
+  max-height: 420px;
+  height: auto;
 }
 
 .ui--inline {

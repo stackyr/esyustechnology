@@ -6,18 +6,18 @@ export default function Services({ onSelectService, onEnquireService }) {
     {
       id: "desktop-dev",
       serviceIndex: 4, // Desktop Dev in SERVICES
-      tab: "Offline Billing Systems",
+      tab: "Application Development Systems",
       tone: "tone-1",
       image: "/finance-flow-logo.png",
       isLogo: true,
       num: "01",
       meta: "Windows 10 / 11 · 100% Offline Autonomy",
-      lead: "High-performance Windows billing, inventory, and management software that works 100% offline with zero cloud lag.",
+      lead: "High-performance Windows desktop applications, inventory suites, and management systems that work 100% offline with zero cloud lag.",
       uiTop: "Runtime: Bare-Metal Win32 / Electron",
-      uiTitle: "Finance Flow POS Engine",
+      uiTitle: "Finance Flow Desktop Suite",
       row1: ["Startup Latency", "<0.2 seconds instant"],
       row2: ["Local Storage", "Encrypted SQLite DB"],
-      row3: ["Hardware Interfacing", "Thermal 2\"/3\" & Laser A4"]
+      row3: ["Hardware Support", "Thermal 2\"/3\" & Laser A4"]
     },
     {
       id: "website-dev",
@@ -148,14 +148,25 @@ export default function Services({ onSelectService, onEnquireService }) {
                   {/* Right Column: High-Res Real Photography & Floating Live Diagnostics UI */}
                   <figure className={`folder__photo overflow-hidden relative group ${item.isLogo ? 'folder__photo--logo' : ''}`}>
                     {item.isLogo ? (
-                      <div className="w-full h-full flex flex-col justify-between p-4 sm:p-5 bg-white relative">
-                        {/* Top: Crisp Finance Flow Brand Logo */}
-                        <div className="flex-1 flex items-center justify-center p-2 min-h-[90px]">
-                          <img
-                            src={item.image}
-                            alt={item.tab}
-                            className="max-h-20 sm:max-h-24 w-auto object-contain transition-transform duration-500 group-hover:scale-105"
-                          />
+                      <div className="w-full h-full flex flex-col justify-between p-3.5 sm:p-5 bg-white relative">
+                        {/* Top: Crisp Finance Flow Brand Logo Card */}
+                        <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-4 bg-gradient-to-b from-stone-50/90 to-white rounded-xl border border-stone-200/70 mb-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)]">
+                          <div className="w-full flex items-center justify-between mb-1.5 px-0.5">
+                            <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--c1)] font-bold flex items-center gap-1.5">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[var(--c1)] animate-pulse" />
+                              Official Flagship Software
+                            </span>
+                            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200/60">
+                              v2.4.0
+                            </span>
+                          </div>
+                          <div className="w-full flex items-center justify-center py-2 sm:py-3">
+                            <img
+                              src={item.image}
+                              alt="Finance Flow"
+                              className="h-14 sm:h-16 md:h-18 w-auto max-w-[85%] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
+                            />
+                          </div>
                         </div>
 
                         {/* Bottom: Live Engine Diagnostics Card */}
