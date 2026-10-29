@@ -74,31 +74,49 @@ export default function DownloadSection({ _onDownloadApp }) {
               >
                 {/* Main Plan Featured Tab */}
                 {isFeatured && (
-                  <div className="plan__tab">
-                    Most Popular Offline Suite
+                  <div className="plan__tab text-amber-300 font-semibold flex items-center gap-2 shadow-md">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                    <span>Most Popular Offline Suite</span>
                   </div>
                 )}
 
                 {/* Header Meta */}
                 <div style={{ width: '100%' }}>
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-xs font-mono uppercase tracking-wider text-[var(--muted)]">
+                  <div className="flex items-center justify-between gap-2 mb-2.5">
+                    <span className={`text-xs font-mono uppercase tracking-wider ${isFeatured ? 'text-amber-200/90 font-semibold' : 'text-[var(--muted)]'}`}>
                       {app.platform} • Build {app.version}
                     </span>
-                    <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-black/5 text-[var(--c1)]">
+                    <span className={`text-xs font-mono font-bold px-2.5 py-0.5 rounded-full ${
+                      isFeatured ? 'bg-amber-400/20 text-amber-300 border border-amber-400/30' : 'bg-black/5 text-[var(--c1)]'
+                    }`}>
                       {app.size}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2.5">
-                    {app.logo && (
+                  <div className="flex items-center gap-3 mb-1">
+                    {isFeatured ? (
+                      <div className="w-11 h-11 rounded-2xl bg-white border border-white/40 p-1.5 flex items-center justify-center shadow-lg shadow-black/40 shrink-0">
+                        <img
+                          src="/finance-flow-emblem.png"
+                          alt={app.name}
+                          className="w-full h-full object-contain filter drop-shadow-xs"
+                        />
+                      </div>
+                    ) : app.logo ? (
                       <div className="w-8 h-8 rounded-xl bg-white border border-[var(--line)] p-1 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
                         <img src={app.logo} alt={app.name} className="w-full h-full object-contain" />
                       </div>
-                    )}
-                    <h3 className="plan__name">
-                      {app.name}
-                    </h3>
+                    ) : null}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className={`plan__name font-bold ${isFeatured ? 'text-white text-xl sm:text-2xl' : ''}`}>
+                        {app.name}
+                      </h3>
+                      {isFeatured && (
+                        <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[var(--c1)] text-white uppercase tracking-wider shrink-0 shadow-xs">
+                          Flagship
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -130,22 +148,42 @@ export default function DownloadSection({ _onDownloadApp }) {
                 </ul>
 
                 {/* Coming Soon CTA Button */}
-                <div className="w-full mt-auto pt-2">
-                  <button
-                    type="button"
-                    disabled
-                    className="btn btn--line w-full justify-center text-center shadow-xs cursor-default border border-[var(--c1)]/30 text-[var(--c1)] bg-white"
-                    style={{ width: '100%', height: '48px', padding: '0 14px' }}
-                    title="Official download link will be available soon"
-                  >
-                    <Clock className="w-4 h-4 mr-2 shrink-0 text-[var(--c1)]" />
-                    <span className="truncate font-bold text-[13.5px]">
-                      Coming Soon ({isAndroid ? 'Android .APK' : 'Windows .EXE'})
-                    </span>
-                  </button>
-                  <div className="text-[11px] text-center font-mono mt-2 truncate text-[var(--muted)]">
-                    Official release in preparation • {app.size}
-                  </div>
+                <div className="w-full mt-auto pt-3">
+                  {isFeatured ? (
+                    <>
+                      <button
+                        type="button"
+                        disabled
+                        className="w-full h-12 rounded-full font-bold text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] hover:from-[#e86a48] hover:to-[var(--c1)] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-default"
+                        title="Official download link will be available soon"
+                      >
+                        <Clock className="w-4 h-4 mr-1 text-white shrink-0 animate-pulse" />
+                        <span className="text-white font-bold tracking-wide">
+                          Coming Soon (Windows .EXE)
+                        </span>
+                      </button>
+                      <div className="text-[11px] text-center font-mono mt-2 truncate text-amber-200/80 font-medium">
+                        Official release in preparation • {app.size}
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        disabled
+                        className="w-full h-12 rounded-full font-bold text-[13.5px] flex items-center justify-center gap-2 bg-white text-[var(--c1)] border border-[var(--c1)]/30 shadow-xs cursor-default hover:bg-stone-50 transition-colors"
+                        title="Official download link will be available soon"
+                      >
+                        <Clock className="w-4 h-4 mr-1 shrink-0 text-[var(--c1)]" />
+                        <span className="truncate font-bold text-[13.5px] text-[var(--c1)]">
+                          Coming Soon ({isAndroid ? 'Android .APK' : 'Windows .EXE'})
+                        </span>
+                      </button>
+                      <div className="text-[11px] text-center font-mono mt-2 truncate text-[var(--muted)]">
+                        Official release in preparation • {app.size}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             );
