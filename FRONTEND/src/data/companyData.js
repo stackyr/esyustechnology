@@ -136,7 +136,10 @@ export const PRODUCTS = [
       "Instant barcode scanning & stock tracking",
       "Automated daily sales summary & tax reports"
     ],
+    chips: ["⚡ 0.2s Keystrokes", "🔒 Encrypted SQLite DB", "🖨️ Thermal 2\"/3\" & A4"],
     downloadFile: "FinanceFlow-v2.4.0-Setup.exe",
+    downloadUrl: "",
+    isComingSoon: true,
     accentColor: "from-blue-600 to-indigo-700",
     badge: "Flagship Desktop",
     logo: "/finance-flow-logo.png",
@@ -159,7 +162,10 @@ export const PRODUCTS = [
       "Daily revenue totals and cash drawer reconciliation",
       "Zero installation overhead"
     ],
+    chips: ["⚡ <100MB Memory", "📱 Android Tablet POS", "🧾 Offline Quick Touch"],
     downloadFile: "FinanceFlowLite-Setup.exe",
+    downloadUrl: "",
+    isComingSoon: true,
     accentColor: "from-teal-600 to-emerald-600",
     badge: "Low Footprint",
     logo: "/finance-flow-lite-logo-transparent.png",
@@ -183,7 +189,10 @@ export const PRODUCTS = [
       "Direct integration with thermal POS receipt printers",
       "Automated shift handovers & cashier tracking"
     ],
+    chips: ["⚡ 0.1s Barcode Scan", "🛒 Supermarket Lanes", "💳 Multi-Split Payment"],
     downloadFile: "FinanceFlowFlash-v1.0.4.exe",
+    downloadUrl: "",
+    isComingSoon: true,
     accentColor: "from-amber-600 to-orange-600",
     badge: "Rapid POS",
     logo: "/finance-flow-flash-logo.png",
@@ -206,7 +215,10 @@ export const PRODUCTS = [
       "Custom day-by-day travel planner & expense logger",
       "Low battery consumption mode with offline maps integration"
     ],
+    chips: ["🧭 100% Offline Maps", "🚗 Driver & Route Assist", "🛕 Temple Timings"],
     downloadFile: "BharatYatraSathi-v1.1.apk",
+    downloadUrl: "",
+    isComingSoon: true,
     accentColor: "from-blue-600 to-indigo-600",
     badge: "Android App",
     logo: "/bharat-yatra-sathi-logo.png",
@@ -229,7 +241,10 @@ export const PRODUCTS = [
       "Real-time customer itinerary management & notifications",
       "Low battery and offline SQLite database synchronization"
     ],
+    chips: ["🤝 Vendor Bookings", "🎫 Offline QR Passes", "💰 Direct Payout Ledger"],
     downloadFile: "BharatYatraSathiPartner-v1.0.2.apk",
+    downloadUrl: "",
+    isComingSoon: true,
     accentColor: "from-indigo-600 to-amber-600",
     badge: "Partner Suite",
     logo: "/bharat-yatra-sathi-partner-logo.png",
@@ -389,7 +404,9 @@ export const LANDING_PAGE_SECTIONS = {
     collageB: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=800",
     collageD: "https://images.unsplash.com/photo-1556742208-999815fca738?auto=format&fit=crop&q=80&w=800",
     collageE1: "https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?auto=format&fit=crop&q=80&w=800",
-    collageE2: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800"
+    collageE2: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800",
+    founderPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
+    coFounderPhoto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
   },
   about: {
     headline: "Building dependable software for real-world businesses",
@@ -399,10 +416,22 @@ export const LANDING_PAGE_SECTIONS = {
     founderPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
     officePhoto: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900"
   },
+  servicesSection: {
+    eyebrow: "Engineering Capabilities",
+    headline: "Five ways we engineer business reliability",
+    lead: "From offline Windows billing software and thermal printer POS to cloud enterprise applications, we build robust systems with zero downtime."
+  },
+  productsSection: {
+    eyebrow: "Production Software Blueprint",
+    headline: "Inside our software ecosystem",
+    lead: "Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience."
+  },
   featuredProduct: {
     headline: "Finance Flow: From barcode scan to printed GST invoice in 0.2 seconds",
     lead: "The premier offline-first billing solution designed by Esyus Technologies. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.",
-    stationImage: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"
+    stationImage: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900",
+    isComingSoon: true,
+    downloadUrl: ""
   },
   whyChooseUs: {
     headline: "Five core pillars. Engineered for uninterrupted operations.",
@@ -415,10 +444,23 @@ export const LANDING_PAGE_SECTIONS = {
       "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=700"
     ]
   },
+  downloadSection: {
+    eyebrow: "Section 10 • Application Releases",
+    headline: "Installers built for offline endurance.",
+    lead: "Direct access to official installers and production releases. Public download links are currently in preparation — packages will be enabled for direct download as soon as release links go live.",
+    notice: "Every installer is scanned and clean of malware. Windows packages include all runtime SQLite drivers for isolated offline operation. No internet connection or cloud account setup is ever required."
+  },
+  reviewsSection: {
+    headlineQuote: "Finance Flow eliminated 100% of our checkout delays. Even when broadband cuts out during peak evening rush hours, our billing counters process GST invoices without a hitch.",
+    quoteAuthor: "Sunil Agarwal",
+    authorMeta: "Agarwal Mega Store, Kolkata · Verified User"
+  },
   contact: {
     headline: "Start a conversation.",
     lead: "Have questions regarding Finance Flow, customized desktop billing counters, or custom Android app development? Reach out to our technical leadership directly.",
-    counterImage: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900"
+    counterImage: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900",
+    footerCtaEyebrow: "Enterprise Precision • Zero Cloud Latency",
+    footerCtaTitle: "Bring calm, offline precision to your billing counter."
   }
 };
 
@@ -430,8 +472,12 @@ export function applyDynamicData({ brand, services, products, faqs, landingPage 
   if (landingPage && typeof landingPage === 'object') {
     if (landingPage.hero) Object.assign(LANDING_PAGE_SECTIONS.hero, landingPage.hero);
     if (landingPage.about) Object.assign(LANDING_PAGE_SECTIONS.about, landingPage.about);
+    if (landingPage.servicesSection) Object.assign(LANDING_PAGE_SECTIONS.servicesSection, landingPage.servicesSection);
+    if (landingPage.productsSection) Object.assign(LANDING_PAGE_SECTIONS.productsSection, landingPage.productsSection);
     if (landingPage.featuredProduct) Object.assign(LANDING_PAGE_SECTIONS.featuredProduct, landingPage.featuredProduct);
     if (landingPage.whyChooseUs) Object.assign(LANDING_PAGE_SECTIONS.whyChooseUs, landingPage.whyChooseUs);
+    if (landingPage.downloadSection) Object.assign(LANDING_PAGE_SECTIONS.downloadSection, landingPage.downloadSection);
+    if (landingPage.reviewsSection) Object.assign(LANDING_PAGE_SECTIONS.reviewsSection, landingPage.reviewsSection);
     if (landingPage.contact) Object.assign(LANDING_PAGE_SECTIONS.contact, landingPage.contact);
   }
   if (Array.isArray(services) && services.length > 0) {

@@ -7,7 +7,7 @@ const __dirname = path.dirname(__filename);
 const DATA_DIR = path.join(__dirname, 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
 
-// Initial seed data from frontend companyData.js
+// Initial seed data aligned with frontend companyData.js
 const DEFAULT_DATA = {
   brand: {
     name: "Esyus Technologies",
@@ -24,7 +24,7 @@ const DEFAULT_DATA = {
     address: "Esyus Technologies Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
     stats: [
       { label: "Offline Uptime", value: "100%", desc: "Works uninterrupted with local databases" },
-      { label: "Software Products", value: "4+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
+      { label: "Software Products", value: "5+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
       { label: "Invoices Generated", value: "50,000+", desc: "Rapid GST billings processed offline" },
       { label: "Client Satisfaction", value: "99.4%", desc: "Rated by retail & enterprise clients" },
     ]
@@ -41,7 +41,9 @@ const DEFAULT_DATA = {
       collageB: "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=800",
       collageD: "https://images.unsplash.com/photo-1556742208-999815fca738?auto=format&fit=crop&q=80&w=800",
       collageE1: "https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?auto=format&fit=crop&q=80&w=800",
-      collageE2: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800"
+      collageE2: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800",
+      founderPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
+      coFounderPhoto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
     },
     about: {
       headline: "Building dependable software for real-world businesses",
@@ -51,10 +53,22 @@ const DEFAULT_DATA = {
       founderPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
       officePhoto: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900"
     },
+    servicesSection: {
+      eyebrow: "Engineering Capabilities",
+      headline: "Five ways we engineer business reliability",
+      lead: "From offline Windows billing software and thermal printer POS to cloud enterprise applications, we build robust systems with zero downtime."
+    },
+    productsSection: {
+      eyebrow: "Production Software Blueprint",
+      headline: "Inside our software ecosystem",
+      lead: "Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience."
+    },
     featuredProduct: {
       headline: "Finance Flow: From barcode scan to printed GST invoice in 0.2 seconds",
       lead: "The premier offline-first billing solution designed by Esyus Technologies. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.",
-      stationImage: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"
+      stationImage: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900",
+      isComingSoon: true,
+      downloadUrl: ""
     },
     whyChooseUs: {
       headline: "Five core pillars. Engineered for uninterrupted operations.",
@@ -67,10 +81,23 @@ const DEFAULT_DATA = {
         "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=700"
       ]
     },
+    downloadSection: {
+      eyebrow: "Section 10 • Application Releases",
+      headline: "Installers built for offline endurance.",
+      lead: "Direct access to official installers and production releases. Public download links are currently in preparation — packages will be enabled for direct download as soon as release links go live.",
+      notice: "Every installer is scanned and clean of malware. Windows packages include all runtime SQLite drivers for isolated offline operation. No internet connection or cloud account setup is ever required."
+    },
+    reviewsSection: {
+      headlineQuote: "Finance Flow eliminated 100% of our checkout delays. Even when broadband cuts out during peak evening rush hours, our billing counters process GST invoices without a hitch.",
+      quoteAuthor: "Sunil Agarwal",
+      authorMeta: "Agarwal Mega Store, Kolkata · Verified User"
+    },
     contact: {
       headline: "Start a conversation.",
       lead: "Have questions regarding Finance Flow, customized desktop billing counters, or custom Android app development? Reach out to our technical leadership directly.",
-      counterImage: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900"
+      counterImage: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900",
+      footerCtaEyebrow: "Enterprise Precision • Zero Cloud Latency",
+      footerCtaTitle: "Bring calm, offline precision to your billing counter."
     }
   },
   services: [
@@ -81,6 +108,8 @@ const DEFAULT_DATA = {
       fullDesc: "We build modern, pixel-perfect, and ultra-responsive corporate websites. Utilizing contemporary web technologies, our websites ensure fast loading speeds, complete mobile responsiveness, accessible navigation, and search engine optimization from day one.",
       badge: "Core Service",
       iconName: "Globe",
+      isComingSoon: false,
+      actionUrl: "",
       features: [
         "Mobile-First Responsive Layouts",
         "SEO & Core Web Vitals Optimization",
@@ -97,6 +126,8 @@ const DEFAULT_DATA = {
       fullDesc: "From custom customer management portals to sophisticated SaaS platforms, we architect scalable web applications with rich frontends and robust API integrations. Designed for data integrity, security, and exceptional user experience.",
       badge: "Enterprise",
       iconName: "Layout",
+      isComingSoon: false,
+      actionUrl: "",
       features: [
         "Role-Based Access Control (RBAC)",
         "Real-time Dashboards & Data Analytics",
@@ -113,6 +144,8 @@ const DEFAULT_DATA = {
       fullDesc: "We design and develop modern mobile applications that deliver native-grade fluidity across iOS and Android ecosystems. Our solutions prioritize fast load times, intuitive touch gestures, and seamless offline data caching.",
       badge: "Cross-Platform",
       iconName: "Smartphone",
+      isComingSoon: false,
+      actionUrl: "",
       features: [
         "Smooth 60 FPS Native-Feel UI",
         "Push Notifications & Cloud Sync",
@@ -129,6 +162,8 @@ const DEFAULT_DATA = {
       fullDesc: "With deep expertise in the Android ecosystem, we build high-performance applications designed specifically for Android smartphones, POS tablets, and handheld devices. Engineered with Room SQLite databases for robust offline data preservation.",
       badge: "Specialized",
       iconName: "Cpu",
+      isComingSoon: false,
+      actionUrl: "",
       features: [
         "Native Android Architecture (Kotlin/Java)",
         "Offline SQLite / Room Database Storage",
@@ -145,6 +180,8 @@ const DEFAULT_DATA = {
       fullDesc: "Our flagship expertise lies in building rock-solid desktop software. Designed for businesses that cannot afford to halt operations due to poor internet connectivity, our desktop solutions feature instant startup, lightning-fast keystroke navigation, and zero cloud dependency.",
       badge: "Flagship",
       iconName: "Monitor",
+      isComingSoon: false,
+      actionUrl: "",
       features: [
         "100% Offline Functionality (No Internet Needed)",
         "Zero Lag Keyboard-First Operations",
@@ -161,6 +198,8 @@ const DEFAULT_DATA = {
       fullDesc: "Every business has unique requirements. We craft tailor-made software solutions from the ground up—automating tedious operational tasks, unifying scattered spreadsheets, and connecting disparate hardware devices into a cohesive system.",
       badge: "Tailor-Made",
       iconName: "Code2",
+      isComingSoon: false,
+      actionUrl: "",
       features: [
         "Business Workflow Automation",
         "Legacy Data Migration & Synchronization",
@@ -189,9 +228,14 @@ const DEFAULT_DATA = {
         "Instant barcode scanning & stock tracking",
         "Automated daily sales summary & tax reports"
       ],
+      chips: ["⚡ 0.2s Keystrokes", "🔒 Encrypted SQLite DB", "🖨️ Thermal 2\"/3\" & A4"],
       downloadFile: "FinanceFlow-v2.4.0-Setup.exe",
+      downloadUrl: "",
+      isComingSoon: true,
       accentColor: "from-blue-600 to-indigo-700",
-      badge: "Flagship Desktop"
+      badge: "Flagship Desktop",
+      logo: "/finance-flow-logo.png",
+      image: "/card-finance-flow.png"
     },
     {
       id: "finance-flow-lite",
@@ -210,9 +254,14 @@ const DEFAULT_DATA = {
         "Daily revenue totals and cash drawer reconciliation",
         "Zero installation overhead"
       ],
+      chips: ["⚡ <100MB Memory", "📱 Android Tablet POS", "🧾 Offline Quick Touch"],
       downloadFile: "FinanceFlowLite-Setup.exe",
+      downloadUrl: "",
+      isComingSoon: true,
       accentColor: "from-teal-600 to-emerald-600",
-      badge: "Low Footprint"
+      badge: "Low Footprint",
+      logo: "/finance-flow-lite-logo-transparent.png",
+      image: "/card-finance-flow-lite.png"
     },
     {
       id: "finance-flow-flash",
@@ -231,30 +280,66 @@ const DEFAULT_DATA = {
         "Direct integration with thermal POS receipt printers",
         "Automated shift handovers & cashier tracking"
       ],
+      chips: ["⚡ 0.1s Barcode Scan", "🛒 Supermarket Lanes", "💳 Multi-Split Payment"],
       downloadFile: "FinanceFlowFlash-v1.0.4.exe",
+      downloadUrl: "",
+      isComingSoon: true,
       accentColor: "from-amber-600 to-orange-600",
-      badge: "Rapid POS"
+      badge: "Rapid POS",
+      logo: "/finance-flow-flash-logo.png",
+      image: "/card-finance-flow-flash.png"
     },
     {
       id: "bharat-yatra-sathi",
       name: "Bharat Yatra Sathi",
-      category: "Travel & Companion App",
+      category: "Android Application",
       platform: "Android 8.0+",
       version: "v1.1.0",
       size: "24.8 MB",
       isFeatured: false,
-      tagline: "Smart travel and pilgrimage companion app designed for explorers in India.",
-      description: "Bharat Yatra Sathi is a mobile companion app for domestic travelers and pilgrims navigating tourist destinations and sacred sites across India. Features offline route summaries, local emergency assistance, and personalized itineraries.",
+      tagline: "Smart travel, highway mobility, and pilgrimage companion app designed for explorers in India.",
+      description: "Bharat Yatra Sathi is a production-grade Android mobile application for domestic travelers, drivers, and pilgrims navigating tourist destinations and sacred sites across India. Features 100% offline highway routes, temple timings, local emergency assistance, and driver navigation.",
       highlights: [
-        "Curated travel guides and temple/heritage site timings",
+        "100% offline highway routes & temple/heritage site timings",
+        "Driver mobility assist & turn-by-turn waypoint tracking",
         "Offline emergency contacts & tourist police hotlines",
         "Custom day-by-day travel planner & expense logger",
-        "Multi-language support (English, Hindi, Bengali)",
         "Low battery consumption mode with offline maps integration"
       ],
+      chips: ["🧭 100% Offline Maps", "🚗 Driver & Route Assist", "🛕 Temple Timings"],
       downloadFile: "BharatYatraSathi-v1.1.apk",
-      accentColor: "from-purple-600 to-indigo-600",
-      badge: "Android App"
+      downloadUrl: "",
+      isComingSoon: true,
+      accentColor: "from-blue-600 to-indigo-600",
+      badge: "Android App",
+      logo: "/bharat-yatra-sathi-logo.png",
+      image: "/card-bharat-yatra-sathi.png"
+    },
+    {
+      id: "bharat-yatra-sathi-partner",
+      name: "Bharat Yatra Sathi Partner",
+      category: "Partner & Vendor Suite",
+      platform: "Android 8.0+ & Web",
+      version: "v1.0.2",
+      size: "21.4 MB",
+      isFeatured: false,
+      tagline: "Dedicated business portal & mobile POS for tour guides, hotel vendors, and operators.",
+      description: "Built for verified travel agencies, certified pilgrimage guides, transport fleets, and homestay hosts. Manage traveler bookings, verify digital pilgrimage QR passes offline, print customer receipt slips, and track direct daily payouts with zero cloud downtime.",
+      highlights: [
+        "Offline QR code verification for pilgrim & visitor entry passes",
+        "Instant Bluetooth receipt printing for excursions & bookings",
+        "Commission calculation and automated daily vendor ledger",
+        "Real-time customer itinerary management & notifications",
+        "Low battery and offline SQLite database synchronization"
+      ],
+      chips: ["🤝 Vendor Bookings", "🎫 Offline QR Passes", "💰 Direct Payout Ledger"],
+      downloadFile: "BharatYatraSathiPartner-v1.0.2.apk",
+      downloadUrl: "",
+      isComingSoon: true,
+      accentColor: "from-indigo-600 to-amber-600",
+      badge: "Partner Suite",
+      logo: "/bharat-yatra-sathi-partner-logo.png",
+      image: "/card-bharat-yatra-sathi-partner.png"
     }
   ],
   faqs: [
@@ -287,42 +372,39 @@ const DEFAULT_DATA = {
   inquiries: []
 };
 
-// Ensure data folder and file exist
-export function initDB() {
+// Ensure data folder and db.json exist
+function ensureDataFile() {
   if (!fs.existsSync(DATA_DIR)) {
     fs.mkdirSync(DATA_DIR, { recursive: true });
   }
-
   if (!fs.existsSync(DB_FILE)) {
-    saveDB(DEFAULT_DATA);
-    console.log('[DB] Initialized database with default seed data.');
+    fs.writeFileSync(DB_FILE, JSON.stringify(DEFAULT_DATA, null, 2), 'utf-8');
   }
 }
 
 export function getDB() {
-  initDB();
+  ensureDataFile();
   try {
     const raw = fs.readFileSync(DB_FILE, 'utf-8');
     return JSON.parse(raw);
   } catch (err) {
-    console.error('[DB] Read error, resetting to defaults:', err);
-    saveDB(DEFAULT_DATA);
-    return JSON.parse(JSON.stringify(DEFAULT_DATA));
+    console.error('Error reading db.json:', err.message);
+    return DEFAULT_DATA;
   }
 }
 
 export function saveDB(data) {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  ensureDataFile();
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    return true;
+  } catch (err) {
+    console.error('Error saving db.json:', err.message);
+    return false;
   }
-  // Atomic write using temp file
-  const tempFile = `${DB_FILE}.tmp`;
-  fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
-  fs.renameSync(tempFile, DB_FILE);
 }
 
 export function resetDB() {
   saveDB(DEFAULT_DATA);
   return DEFAULT_DATA;
 }
-

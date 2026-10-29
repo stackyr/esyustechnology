@@ -1,5 +1,5 @@
 import React from 'react';
-import { CUSTOMER_REVIEWS } from '../data/companyData';
+import { CUSTOMER_REVIEWS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
 export default function Reviews({ onAddFeedbackClick }) {
   // Double reviews for infinite seamless marquee loop
@@ -12,15 +12,22 @@ export default function Reviews({ onAddFeedbackClick }) {
         <svg className="voice__mark" viewBox="0 0 28 22" aria-hidden="true">
           <path fill="currentColor" d="M0 22V12.6C0 5.5 3.4 1.3 10.2 0l1.1 2.6C7.6 3.9 5.9 6.4 5.8 10H11v12H0Zm16.6 0V12.6c0-7.1 3.4-11.3 10.2-12.6L28 2.6c-3.7 1.3-5.4 3.8-5.5 7.4h5.2v12H16.6Z" />
         </svg>
-        <blockquote>
-          <p className="voices__quote">
-            "Finance Flow eliminated 100% of our checkout delays. Even when broadband cuts out during peak evening rush hours, our billing counters process GST invoices without a hitch."
-          </p>
-        </blockquote>
-        <figcaption className="voices__who">
-          <span className="sign">Sunil Agarwal</span>
-          <span>Agarwal Mega Store, Kolkata · Verified User</span>
-        </figcaption>
+        {(() => {
+          const revSec = LANDING_PAGE_SECTIONS?.reviewsSection || {};
+          return (
+            <>
+              <blockquote>
+                <p className="voices__quote">
+                  "{revSec.headlineQuote || 'Finance Flow eliminated 100% of our checkout delays. Even when broadband cuts out during peak evening rush hours, our billing counters process GST invoices without a hitch.'}"
+                </p>
+              </blockquote>
+              <figcaption className="voices__who">
+                <span className="sign">{revSec.quoteAuthor || 'Sunil Agarwal'}</span>
+                <span>{revSec.authorMeta || 'Agarwal Mega Store, Kolkata · Verified User'}</span>
+              </figcaption>
+            </>
+          );
+        })()}
       </figure>
 
       {/* Marquee Row */}

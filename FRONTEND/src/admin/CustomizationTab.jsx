@@ -12,7 +12,11 @@ import {
   FileText,
   MessageSquare,
   Check,
-  Undo2
+  Undo2,
+  ExternalLink,
+  ShieldCheck,
+  Download,
+  Clock
 } from 'lucide-react';
 import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
@@ -48,6 +52,8 @@ export default function CustomizationTab({
   const [pageData, setPageData] = useState(() => ({
     hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage?.hero || {}) },
     about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage?.about || {}) },
+    servicesSection: { ...(LANDING_PAGE_SECTIONS?.servicesSection || {}), ...(landingPage?.servicesSection || {}) },
+    productsSection: { ...(LANDING_PAGE_SECTIONS?.productsSection || {}), ...(landingPage?.productsSection || {}) },
     featuredProduct: { ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}), ...(landingPage?.featuredProduct || {}) },
     whyChooseUs: {
       headline: landingPage?.whyChooseUs?.headline || LANDING_PAGE_SECTIONS?.whyChooseUs?.headline || '',
@@ -56,6 +62,8 @@ export default function CustomizationTab({
         ? landingPage.whyChooseUs.pillarImages
         : [...(LANDING_PAGE_SECTIONS?.whyChooseUs?.pillarImages || [])]
     },
+    reviewsSection: { ...(LANDING_PAGE_SECTIONS?.reviewsSection || {}), ...(landingPage?.reviewsSection || {}) },
+    downloadSection: { ...(LANDING_PAGE_SECTIONS?.downloadSection || {}), ...(landingPage?.downloadSection || {}) },
     contact: { ...(LANDING_PAGE_SECTIONS?.contact || {}), ...(landingPage?.contact || {}) }
   }));
 
@@ -85,6 +93,8 @@ export default function CustomizationTab({
       setPageData({
         hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage?.hero || {}) },
         about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage?.about || {}) },
+        servicesSection: { ...(LANDING_PAGE_SECTIONS?.servicesSection || {}), ...(landingPage?.servicesSection || {}) },
+        productsSection: { ...(LANDING_PAGE_SECTIONS?.productsSection || {}), ...(landingPage?.productsSection || {}) },
         featuredProduct: { ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}), ...(landingPage?.featuredProduct || {}) },
         whyChooseUs: {
           headline: landingPage?.whyChooseUs?.headline || LANDING_PAGE_SECTIONS?.whyChooseUs?.headline || '',
@@ -93,6 +103,8 @@ export default function CustomizationTab({
             ? landingPage.whyChooseUs.pillarImages
             : [...(LANDING_PAGE_SECTIONS?.whyChooseUs?.pillarImages || [])]
         },
+        reviewsSection: { ...(LANDING_PAGE_SECTIONS?.reviewsSection || {}), ...(landingPage?.reviewsSection || {}) },
+        downloadSection: { ...(LANDING_PAGE_SECTIONS?.downloadSection || {}), ...(landingPage?.downloadSection || {}) },
         contact: { ...(LANDING_PAGE_SECTIONS?.contact || {}), ...(landingPage?.contact || {}) }
       });
     }
@@ -153,100 +165,53 @@ export default function CustomizationTab({
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3500);
     } catch (err) {
-      console.error('Failed to save customization:', err);
+      console.error('Failed to save master customization:', err);
     }
   };
 
-  // Reusable Image URL Input Row with Responsive Preview
-  const ImageInputRow = ({ label, hint, value, onChange, placeholder }) => (
-    <div className="p-3 sm:p-4 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-2.5 min-w-0">
-      <div className="flex items-center justify-between gap-2">
-        <label className="text-xs font-bold text-stone-900 flex items-center gap-1.5 truncate">
-          <ImageIcon className="w-3.5 h-3.5 text-[var(--c1)] shrink-0" />
-          <span className="truncate">{label}</span>
-        </label>
-        {hint && <span className="text-[10px] text-stone-500 font-mono shrink-0">{hint}</span>}
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
-        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-stone-100 border border-stone-200 overflow-hidden shrink-0 relative flex items-center justify-center">
-          {value ? (
-            <img
-              src={value}
-              alt="Preview"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-          ) : null}
-          <div className={`w-full h-full flex flex-col items-center justify-center text-[9px] text-stone-400 p-1 text-center ${value ? 'hidden' : 'flex'}`}>
-            <ImageIcon className="w-4 h-4 opacity-40 mb-0.5" />
-            <span>No Image</span>
-          </div>
-        </div>
-
-        <div className="flex-1 w-full min-w-0">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-stone-50 border border-stone-200 focus-within:border-[var(--c1)] focus-within:bg-white focus-within:ring-2 focus-within:ring-[var(--c1)]/15 transition-all">
-            <LinkIcon className="w-3.5 h-3.5 text-stone-400 shrink-0" />
-            <input
-              type="text"
-              value={value || ''}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder={placeholder || 'https://images.unsplash.com/...'}
-              className="w-full min-w-0 bg-transparent text-xs text-stone-900 focus:outline-none font-mono"
-            />
-          </div>
-          <span className="text-[10px] text-stone-500 mt-1 block truncate">
-            Paste direct HTTPS image link or local path.
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-
   const subTabs = [
-    { id: 'brand', label: 'Brand & Identity', icon: Building },
-    { id: 'hero', label: 'Hero & Collage', icon: Layers },
-    { id: 'about', label: 'About Section', icon: FileText },
-    { id: 'featuredProduct', label: 'Featured Product', icon: Sliders },
-    { id: 'whyChooseUs', label: 'Why Choose Us', icon: Sparkles },
-    { id: 'contactFooter', label: 'Contact & Footer', icon: MessageSquare }
+    { id: 'brand', label: '1. Brand & Identity', icon: Building, desc: 'Name, contacts & stats' },
+    { id: 'hero', label: '2. Hero & Visuals', icon: Sparkles, desc: 'Headline, ring & collage images' },
+    { id: 'about', label: '3. About Section', icon: FileText, desc: 'Story, quote & founder images' },
+    { id: 'services', label: '4. App Services', icon: Layers, desc: 'Capabilities copy & lead' },
+    { id: 'products', label: '5. Applications Ecosystem', icon: Layers, desc: 'Software ecosystem blueprint' },
+    { id: 'featuredProduct', label: '6. Featured Product', icon: Sliders, desc: 'Finance Flow station mockup' },
+    { id: 'whyChooseUs', label: '7. Why Choose Us', icon: Sparkles, desc: '5 pillar cards & photo links' },
+    { id: 'reviews', label: '8. Reviews & Proof', icon: MessageSquare, desc: 'Testimonial quote & verified author' },
+    { id: 'download', label: '9. Download Releases', icon: FileText, desc: 'Installers lead & security notice' },
+    { id: 'contactFooter', label: '10. Contact & Footer', icon: MessageSquare, desc: 'Hardware mockup & footer CTA' },
   ];
 
   return (
-    <div className="space-y-5 w-full min-w-0 overflow-x-hidden">
+    <div className="space-y-6 pb-20">
       
-      {/* Top Header Card - Clean, Well-Proportioned, 100% Responsive */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 min-w-0">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10.5px] font-mono font-bold uppercase tracking-wider text-[var(--c1)] bg-[var(--c1)]/10 px-2.5 py-0.5 rounded-full">
+      {/* Top Hero Banner */}
+      <div className="p-6 sm:p-7 rounded-3xl bg-[var(--dark)] text-[var(--bg)] shadow-md flex flex-col md:flex-row md:items-center justify-between gap-6 border border-stone-800">
+        <div className="space-y-1.5 max-w-xl">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--c1)] font-bold px-2 py-0.5 rounded-full bg-white/10">
               Master Website Customizer
             </span>
-            <span className="text-[11px] text-stone-500 font-mono hidden sm:inline">
-              • Live MERN Sync
+            <span className="text-[10px] font-mono text-stone-300">
+              Live MERN Sync
             </span>
           </div>
-          <h2 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight text-stone-900 truncate">
-            Website & Brand Customization
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
+            Website &amp; Brand Customization
           </h2>
-          <p className="text-xs text-stone-500 mt-0.5 max-w-2xl leading-relaxed">
-            Customize all brand details, landing page copy, headlines, contact numbers, and image links from one place.
+          <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
+            Customize all brand details, landing page copy, headlines, contact numbers, and image links section-by-section. Updates reflect live across the entire website.
           </p>
         </div>
 
-        {/* Action Buttons: Responsive & Never Overflowing */}
-        <div className="flex items-center gap-2 shrink-0 self-start md:self-auto w-full md:w-auto">
+        <div className="flex items-center gap-3 shrink-0 flex-wrap">
           {onResetDefaults && (
             <button
               type="button"
               onClick={onResetDefaults}
-              className="flex-1 md:flex-none px-3 py-2 rounded-xl border border-stone-200 bg-stone-50 hover:bg-stone-100 text-xs font-semibold text-stone-700 transition-colors cursor-pointer flex items-center justify-center gap-1.5"
-              title="Reset all fields to template defaults"
+              className="px-4 py-2.5 rounded-xl border border-white/20 text-stone-200 hover:text-white hover:bg-white/10 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
             >
-              <Undo2 className="w-3.5 h-3.5 text-stone-500" />
+              <Undo2 className="w-4 h-4" />
               <span>Reset</span>
             </button>
           )}
@@ -255,21 +220,25 @@ export default function CustomizationTab({
             type="button"
             onClick={handleSaveAll}
             disabled={isSaving}
-            className="flex-1 md:flex-none px-4 py-2 rounded-xl bg-[var(--c1)] hover:bg-[#d65a2f] text-white text-xs font-bold shadow-sm hover:shadow transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95 shrink-0"
+            className={`px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer ${
+              saveSuccess
+                ? 'bg-emerald-600 text-white'
+                : 'bg-[var(--c1)] hover:bg-[#d64b22] text-white'
+            }`}
           >
             {isSaving ? (
               <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                <span>Saving...</span>
+                <RefreshCw className="w-4 h-4 animate-spin" />
+                <span>Saving to MongoDB...</span>
               </>
             ) : saveSuccess ? (
               <>
-                <Check className="w-3.5 h-3.5 text-emerald-200" />
-                <span>Saved Live!</span>
+                <Check className="w-4 h-4" />
+                <span>All Sections Saved!</span>
               </>
             ) : (
               <>
-                <Save className="w-3.5 h-3.5" />
+                <Save className="w-4 h-4" />
                 <span>Save All Changes</span>
               </>
             )}
@@ -277,703 +246,825 @@ export default function CustomizationTab({
         </div>
       </div>
 
-      {saveSuccess && (
-        <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-900 text-xs flex items-center gap-2 animate-fadeIn font-semibold">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-          <span>All brand details and landing page sections updated successfully in database!</span>
+      {/* Subtabs Navigation Bar */}
+      <div className="p-2 rounded-2xl bg-white border border-[var(--line)] shadow-xs overflow-x-auto">
+        <div className="flex items-center gap-1.5 min-w-max">
+          {subTabs.map((tab) => {
+            const isActive = activeSubTab === tab.id;
+            const Icon = tab.icon;
+
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveSubTab(tab.id)}
+                className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer ${
+                  isActive
+                    ? 'bg-[var(--dark)] text-white shadow-xs'
+                    : 'text-[var(--ink)]/80 hover:bg-[var(--soft)] hover:text-[var(--ink)]'
+                }`}
+              >
+                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[var(--c1)]' : 'text-stone-400'}`} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ------------------------------------------------------------- */}
+      {/* 1. BRAND & IDENTITY TAB                                      */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'brand' && (
+        <div className="space-y-6">
+          {/* Core Brand Identity */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Core Brand Identity</h3>
+                <p className="text-xs text-[var(--muted)]">Updates header, footer, modals and metadata site-wide</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Brand Settings</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Company Full Name *</label>
+                <input
+                  type="text"
+                  value={brandData.name}
+                  onChange={(e) => handleBrandChange('name', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Short Name (Navbar/Chips) *</label>
+                <input
+                  type="text"
+                  value={brandData.shortName}
+                  onChange={(e) => handleBrandChange('shortName', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Registered Domain *</label>
+                <input
+                  type="text"
+                  value={brandData.domain}
+                  onChange={(e) => handleBrandChange('domain', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] font-mono focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Official Tagline</label>
+                <input
+                  type="text"
+                  value={brandData.tagline}
+                  onChange={(e) => handleBrandChange('tagline', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Establishment Date</label>
+                <input
+                  type="text"
+                  value={brandData.establishmentDate}
+                  onChange={(e) => handleBrandChange('establishmentDate', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] font-mono focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Executive Leadership & Contact Desk */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Executive Leadership &amp; Contact Desk</h3>
+                <p className="text-xs text-[var(--muted)]">Founder details, direct phone line and corporate addresses</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Desk Contacts</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Founder &amp; CEO</label>
+                <input
+                  type="text"
+                  value={brandData.founder}
+                  onChange={(e) => handleBrandChange('founder', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Co-Founder &amp; CTO</label>
+                <input
+                  type="text"
+                  value={brandData.coFounder}
+                  onChange={(e) => handleBrandChange('coFounder', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Direct Phone Line</label>
+                <input
+                  type="text"
+                  value={brandData.phone}
+                  onChange={(e) => handleBrandChange('phone', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] font-mono focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Corporate Email</label>
+                <input
+                  type="email"
+                  value={brandData.email}
+                  onChange={(e) => handleBrandChange('email', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] font-mono focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Technical Helpdesk Email</label>
+                <input
+                  type="email"
+                  value={brandData.supportEmail}
+                  onChange={(e) => handleBrandChange('supportEmail', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] font-mono focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Headquarters Physical Address</label>
+              <input
+                type="text"
+                value={brandData.address}
+                onChange={(e) => handleBrandChange('address', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+          </div>
+
+          {/* 4 Proof Metric Stats */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Track Record &amp; Metric Proofs</h3>
+                <p className="text-xs text-[var(--muted)]">4 key metrics displayed across website stats ribbon</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Proof Stats</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {(brandData.stats || []).map((stat, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+                  <span className="text-[10px] font-mono font-bold text-[var(--c1)]">METRIC 0{idx + 1}</span>
+                  <input
+                    type="text"
+                    value={stat.value}
+                    onChange={(e) => handleStatChange(idx, 'value', e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs font-bold text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    placeholder="e.g. 5+"
+                  />
+                  <input
+                    type="text"
+                    value={stat.label}
+                    onChange={(e) => handleStatChange(idx, 'label', e.target.value)}
+                    className="w-full px-3 py-1 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    placeholder="e.g. Software Products"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Clean Horizontal Sub-Tab Navigation Pills (Scrollable on Mobile) */}
-      <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 scrollbar-none border-b border-stone-200 -mx-1 px-1">
-        {subTabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeSubTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setActiveSubTab(tab.id)}
-              className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap shrink-0 ${
-                isActive
-                  ? 'bg-stone-900 text-white shadow-sm'
-                  : 'bg-white hover:bg-stone-50 text-stone-700 border border-stone-200'
-              }`}
-            >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[var(--c3)]' : 'text-[var(--c1)]'}`} />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
+      {/* ------------------------------------------------------------- */}
+      {/* 2. HERO & VISUALS TAB                                         */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'hero' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Hero Stage Headlines &amp; Motion</h3>
+                <p className="text-xs text-[var(--muted)]">Main opening banner headline, rotating ring, and background demo video</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 01</span>
+            </div>
 
-      {/* Main Tab Content Panels */}
-      <div className="space-y-5 w-full min-w-0">
-
-        {/* ==================================================== */}
-        {/* 1. BRAND & IDENTITY */}
-        {/* ==================================================== */}
-        {activeSubTab === 'brand' && (
-          <div className="space-y-5 animate-fadeIn min-w-0">
-            
-            {/* Identity Card */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">Core Brand Identity</h3>
-                  <p className="text-xs text-stone-500">Updates header, footer, modals and metadata site-wide</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">Brand Settings</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Hero Main Title</label>
+                <input
+                  type="text"
+                  value={pageData.hero.title || ''}
+                  onChange={(e) => handlePageChange('hero', 'title', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 min-w-0">
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Company Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={brandData.name}
-                    onChange={(e) => handleBrandChange('name', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-semibold focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Short Name (Navbar/Chips) *
-                  </label>
-                  <input
-                    type="text"
-                    value={brandData.shortName}
-                    onChange={(e) => handleBrandChange('shortName', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-semibold focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Registered Domain *
-                  </label>
-                  <input
-                    type="text"
-                    value={brandData.domain}
-                    onChange={(e) => handleBrandChange('domain', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-mono focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0 sm:col-span-2">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Official Tagline
-                  </label>
-                  <input
-                    type="text"
-                    value={brandData.tagline}
-                    onChange={(e) => handleBrandChange('tagline', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Establishment Date
-                  </label>
-                  <input
-                    type="text"
-                    value={brandData.establishmentDate}
-                    onChange={(e) => handleBrandChange('establishmentDate', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-mono focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Rotating Ring Text</label>
+                <input
+                  type="text"
+                  value={pageData.hero.ringText || ''}
+                  onChange={(e) => handlePageChange('hero', 'ringText', e.target.value)}
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] font-mono focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
               </div>
             </div>
 
-            {/* Leadership & Contacts Card */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">Executive Leadership & Contact Desk</h3>
-                  <p className="text-xs text-stone-500">Founder details, direct phone line and corporate addresses</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">Desk Contacts</span>
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Demo Video Link / Path</label>
+              <input
+                type="text"
+                value={pageData.hero.videoUrl || ''}
+                onChange={(e) => handlePageChange('hero', 'videoUrl', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] font-mono focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+          </div>
+
+          {/* 6 Collage Photo Links */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Hero 6-Card Collage Visual Images</h3>
+                <p className="text-xs text-[var(--muted)]">Real photography links for POS counters, thermal printers and screens</p>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 min-w-0">
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Founder & CEO
-                  </label>
-                  <input
-                    type="text"
-                    value={brandData.founder}
-                    onChange={(e) => handleBrandChange('founder', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-semibold focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Co-Founder & CTO
-                  </label>
-                  <input
-                    type="text"
-                    value={brandData.coFounder}
-                    onChange={(e) => handleBrandChange('coFounder', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-semibold focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Direct Phone Line
-                  </label>
-                  <input
-                    type="text"
-                    value={brandData.phone}
-                    onChange={(e) => handleBrandChange('phone', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-mono focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Corporate Email
-                  </label>
-                  <input
-                    type="email"
-                    value={brandData.email}
-                    onChange={(e) => handleBrandChange('email', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-mono focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Technical Helpdesk Email
-                  </label>
-                  <input
-                    type="email"
-                    value={brandData.supportEmail}
-                    onChange={(e) => handleBrandChange('supportEmail', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-mono focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0 sm:col-span-2 lg:col-span-3">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Headquarters Physical Address
-                  </label>
-                  <input
-                    type="text"
-                    value={brandData.address}
-                    onChange={(e) => handleBrandChange('address', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Collage Visuals</span>
             </div>
 
-            {/* Live Stats */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">Track Record & Metric Proofs</h3>
-                  <p className="text-xs text-stone-500">4 key metrics displayed across website cards</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                { key: 'collageA1', label: 'Collage A1 (POS Billing Counter)' },
+                { key: 'collageA2', label: 'Collage A2 (Thermal Receipt Print)' },
+                { key: 'collageB', label: 'Collage B (Barcode Scanner)' },
+                { key: 'collageD', label: 'Collage D (Store Checkout Lane)' },
+                { key: 'collageE1', label: 'Collage E1 (GST Invoice Ledger)' },
+                { key: 'collageE2', label: 'Collage E2 (Enterprise Terminal)' }
+              ].map(({ key, label }) => (
+                <div key={key} className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+                  <span className="text-[11px] font-bold text-[var(--ink)] block truncate">{label}</span>
+                  <input
+                    type="text"
+                    value={pageData.hero[key] || ''}
+                    onChange={(e) => handlePageChange('hero', key, e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+                  />
+                  {pageData.hero[key] && (
+                    <div className="w-full h-24 rounded-lg bg-stone-100 overflow-hidden border border-[var(--line)]">
+                      <img
+                        src={pageData.hero[key]}
+                        alt={label}
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
+                  )}
                 </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">Proof Stats</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 3. ABOUT SECTION TAB                                          */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'about' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">About Us Story &amp; Motive</h3>
+                <p className="text-xs text-[var(--muted)]">Section 03 company introduction, mission statement, and quote</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 03</span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Headline</label>
+              <input
+                type="text"
+                value={pageData.about.headline || ''}
+                onChange={(e) => handlePageChange('about', 'headline', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Lead Paragraph</label>
+              <textarea
+                rows={2}
+                value={pageData.about.lead || ''}
+                onChange={(e) => handlePageChange('about', 'lead', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Founder's Quote</label>
+              <textarea
+                rows={3}
+                value={pageData.about.founderQuote || ''}
+                onChange={(e) => handlePageChange('about', 'founderQuote', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+                <span className="text-xs font-bold text-[var(--ink)]">Founder Photo Link</span>
+                <input
+                  type="text"
+                  value={pageData.about.founderPhoto || ''}
+                  onChange={(e) => handlePageChange('about', 'founderPhoto', e.target.value)}
+                  className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+                />
+                {pageData.about.founderPhoto && (
+                  <div className="w-16 h-16 rounded-full overflow-hidden border border-[var(--line)]">
+                    <img src={pageData.about.founderPhoto} alt="Founder" className="w-full h-full object-cover" />
+                  </div>
+                )}
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 min-w-0">
-                {(brandData.stats || []).map((st, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-stone-50 border border-stone-200 space-y-2 min-w-0">
-                    <span className="text-[10px] font-mono text-[var(--c1)] font-bold block uppercase">
-                      Metric 0{idx + 1}
-                    </span>
+              <div className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+                <span className="text-xs font-bold text-[var(--ink)]">Office / Workspace Photo Link</span>
+                <input
+                  type="text"
+                  value={pageData.about.officePhoto || ''}
+                  onChange={(e) => handlePageChange('about', 'officePhoto', e.target.value)}
+                  className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+                />
+                {pageData.about.officePhoto && (
+                  <div className="w-full h-16 rounded-lg overflow-hidden border border-[var(--line)]">
+                    <img src={pageData.about.officePhoto} alt="Office" className="w-full h-full object-cover" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 4. APP SERVICES SECTION TAB                                   */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'services' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Section 04 • App Services Copy</h3>
+                <p className="text-xs text-[var(--muted)]">Headline and lead paragraph introducing engineering capabilities</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 04</span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Section Headline</label>
+              <input
+                type="text"
+                value={pageData.servicesSection?.headline || ''}
+                onChange={(e) => handlePageChange('servicesSection', 'headline', e.target.value)}
+                placeholder="Five ways we engineer business reliability"
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Section Lead Paragraph</label>
+              <textarea
+                rows={3}
+                value={pageData.servicesSection?.lead || ''}
+                onChange={(e) => handlePageChange('servicesSection', 'lead', e.target.value)}
+                placeholder="From offline Windows billing software and thermal printer POS to cloud enterprise applications, we build robust systems with zero downtime."
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-900 flex items-center justify-between">
+              <span>To add, edit or delete individual services, use the dedicated <strong>App Services</strong> tab in the sidebar.</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 5. APPLICATIONS ECOSYSTEM TAB                                 */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'products' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Section 05 • Software Ecosystem Blueprint</h3>
+                <p className="text-xs text-[var(--muted)]">Section eyebrow, title and introduction copy for 5 proprietary systems</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 05</span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Eyebrow Tag</label>
+              <input
+                type="text"
+                value={pageData.productsSection?.eyebrow || ''}
+                onChange={(e) => handlePageChange('productsSection', 'eyebrow', e.target.value)}
+                placeholder="Production Software Blueprint"
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Section Headline</label>
+              <input
+                type="text"
+                value={pageData.productsSection?.headline || ''}
+                onChange={(e) => handlePageChange('productsSection', 'headline', e.target.value)}
+                placeholder="Inside our software ecosystem"
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Section Lead Paragraph</label>
+              <textarea
+                rows={3}
+                value={pageData.productsSection?.lead || ''}
+                onChange={(e) => handlePageChange('productsSection', 'lead', e.target.value)}
+                placeholder="Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience."
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-950 flex items-center justify-between">
+              <span>To toggle Coming Soon vs Live Download URLs, edit logos, or configure chips for each product, open the <strong>Applications &amp; Specs</strong> tab.</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 6. FEATURED PRODUCT TAB                                       */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'featuredProduct' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Section 06 • Featured Product (Finance Flow)</h3>
+                <p className="text-xs text-[var(--muted)]">Interactive terminal calculator headline, lead, and station background image</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 06</span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Headline</label>
+              <input
+                type="text"
+                value={pageData.featuredProduct.headline || ''}
+                onChange={(e) => handlePageChange('featuredProduct', 'headline', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Lead Paragraph</label>
+              <textarea
+                rows={3}
+                value={pageData.featuredProduct.lead || ''}
+                onChange={(e) => handlePageChange('featuredProduct', 'lead', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+              <span className="text-xs font-bold text-[var(--ink)]">Finance Flow Station Mockup Image Link</span>
+              <input
+                type="text"
+                value={pageData.featuredProduct.stationImage || ''}
+                onChange={(e) => handlePageChange('featuredProduct', 'stationImage', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-white text-xs text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+              />
+              {pageData.featuredProduct.stationImage && (
+                <div className="w-full h-32 rounded-xl overflow-hidden border border-[var(--line)]">
+                  <img src={pageData.featuredProduct.stationImage} alt="Station" className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 7. WHY CHOOSE US TAB                                          */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'whyChooseUs' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Section 07 • Why Choose Us (5 Pillars)</h3>
+                <p className="text-xs text-[var(--muted)]">Five core engineering pillars and high-resolution card photo links</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 07</span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Headline</label>
+              <input
+                type="text"
+                value={pageData.whyChooseUs.headline || ''}
+                onChange={(e) => handlePageChange('whyChooseUs', 'headline', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Lead Paragraph</label>
+              <textarea
+                rows={2}
+                value={pageData.whyChooseUs.lead || ''}
+                onChange={(e) => handlePageChange('whyChooseUs', 'lead', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            {/* 5 Pillar Images */}
+            <div className="space-y-3 pt-2">
+              <span className="text-xs font-bold text-[var(--c1)] uppercase tracking-wider font-mono">
+                5 Feature Pillar Card Images
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  'Pillar 01: Experienced Team & Local DB',
+                  'Pillar 02: AES-256 Encryption & Security',
+                  'Pillar 03: 100% Tailored Custom Architecture',
+                  'Pillar 04: Plug-and-Play Thermal Hardware',
+                  'Pillar 05: 99% Milestone Compliance'
+                ].map((label, idx) => (
+                  <div key={idx} className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+                    <span className="text-[11px] font-bold text-[var(--ink)] block truncate">{label}</span>
                     <input
                       type="text"
-                      value={st.value}
-                      onChange={(e) => handleStatChange(idx, 'value', e.target.value)}
-                      placeholder="e.g. 100%"
-                      className="w-full min-w-0 px-2.5 py-1.5 rounded-lg border border-stone-200 bg-white text-xs font-bold text-stone-900 focus:outline-none focus:border-[var(--c1)]"
+                      value={pageData.whyChooseUs?.pillarImages?.[idx] || ''}
+                      onChange={(e) => handlePillarImageChange(idx, e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
                     />
-                    <input
-                      type="text"
-                      value={st.label}
-                      onChange={(e) => handleStatChange(idx, 'label', e.target.value)}
-                      placeholder="Metric label"
-                      className="w-full min-w-0 px-2.5 py-1.5 rounded-lg border border-stone-200 bg-white text-xs text-stone-700 focus:outline-none focus:border-[var(--c1)]"
-                    />
+                    {pageData.whyChooseUs?.pillarImages?.[idx] && (
+                      <div className="w-full h-20 rounded-lg bg-stone-100 overflow-hidden border border-[var(--line)]">
+                        <img
+                          src={pageData.whyChooseUs.pillarImages[idx]}
+                          alt={label}
+                          className="w-full h-full object-cover"
+                          onError={(e) => { e.target.style.display = 'none'; }}
+                        />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
-
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ==================================================== */}
-        {/* 2. HERO & COLLAGE */}
-        {/* ==================================================== */}
-        {activeSubTab === 'hero' && (
-          <div className="space-y-5 animate-fadeIn min-w-0">
-            
-            {/* Hero Copy */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">Hero Banner Headlines</h3>
-                  <p className="text-xs text-stone-500">Main opening headline and rotating play ring message</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">Section 01</span>
+      {/* ------------------------------------------------------------- */}
+      {/* 8. REVIEWS & SOCIAL PROOF TAB                                 */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'reviews' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Section 09 • Customer Reviews &amp; Testimonial Quote</h3>
+                <p className="text-xs text-[var(--muted)]">Featured pull-quote and verified merchant endorsement</p>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 min-w-0">
-                <div className="space-y-1 min-w-0 sm:col-span-2">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Hero Main Headline (H1)
-                  </label>
-                  <input
-                    type="text"
-                    value={pageData.hero.title || ''}
-                    onChange={(e) => handlePageChange('hero', 'title', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-medium focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Rotating Circular Ring Text
-                  </label>
-                  <input
-                    type="text"
-                    value={pageData.hero.ringText || ''}
-                    onChange={(e) => handlePageChange('hero', 'ringText', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-medium focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Demo Video URL
-                  </label>
-                  <input
-                    type="text"
-                    value={pageData.hero.videoUrl || ''}
-                    onChange={(e) => handlePageChange('hero', 'videoUrl', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-mono focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0 sm:col-span-2">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Pin Flood Scene Title
-                  </label>
-                  <input
-                    type="text"
-                    value={pageData.hero.floodTitle || ''}
-                    onChange={(e) => handlePageChange('hero', 'floodTitle', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-medium focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0 sm:col-span-2">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Pin Flood Scene Lead Paragraph
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={pageData.hero.floodLead || ''}
-                    onChange={(e) => handlePageChange('hero', 'floodLead', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 09</span>
             </div>
 
-            {/* Collage 6 Image Links */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">Hero 5-Column Collage (6 Image Links)</h3>
-                  <p className="text-xs text-stone-500">Floating mosaic image URLs with live previews</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">6 Visuals</span>
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Featured Voice Headline Quote</label>
+              <textarea
+                rows={3}
+                value={pageData.reviewsSection?.headlineQuote || ''}
+                onChange={(e) => handlePageChange('reviewsSection', 'headlineQuote', e.target.value)}
+                placeholder="Finance Flow eliminated 100% of our checkout delays..."
+                className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Quote Author Name</label>
+                <input
+                  type="text"
+                  value={pageData.reviewsSection?.quoteAuthor || ''}
+                  onChange={(e) => handlePageChange('reviewsSection', 'quoteAuthor', e.target.value)}
+                  placeholder="Sunil Agarwal"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 min-w-0">
-                <ImageInputRow
-                  label="Col A Top: Retail POS Counter (collageA1)"
-                  value={pageData.hero.collageA1}
-                  onChange={(v) => handlePageChange('hero', 'collageA1', v)}
-                  hint="Left Top Large Plate"
-                />
-
-                <ImageInputRow
-                  label="Col A Bottom: Thermal Print Receipt (collageA2)"
-                  value={pageData.hero.collageA2}
-                  onChange={(v) => handlePageChange('hero', 'collageA2', v)}
-                  hint="Left Bottom Small Plate"
-                />
-
-                <ImageInputRow
-                  label="Col B: Supermarket Checkout (collageB)"
-                  value={pageData.hero.collageB}
-                  onChange={(v) => handlePageChange('hero', 'collageB', v)}
-                  hint="Left Middle Tall Plate"
-                />
-
-                <ImageInputRow
-                  label="Col D: Desktop Billing System (collageD)"
-                  value={pageData.hero.collageD}
-                  onChange={(v) => handlePageChange('hero', 'collageD', v)}
-                  hint="Right Middle Tall Plate"
-                />
-
-                <ImageInputRow
-                  label="Col E Top: Mobile Android POS (collageE1)"
-                  value={pageData.hero.collageE1}
-                  onChange={(v) => handlePageChange('hero', 'collageE1', v)}
-                  hint="Right Top Large Plate"
-                />
-
-                <ImageInputRow
-                  label="Col E Bottom: Barcode Scanner Terminal (collageE2)"
-                  value={pageData.hero.collageE2}
-                  onChange={(v) => handlePageChange('hero', 'collageE2', v)}
-                  hint="Right Bottom Small Plate"
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Author Company &amp; Meta</label>
+                <input
+                  type="text"
+                  value={pageData.reviewsSection?.authorMeta || ''}
+                  onChange={(e) => handlePageChange('reviewsSection', 'authorMeta', e.target.value)}
+                  placeholder="Agarwal Mega Store, Kolkata · Verified User"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
                 />
               </div>
             </div>
-
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ==================================================== */}
-        {/* 3. ABOUT SECTION */}
-        {/* ==================================================== */}
-        {activeSubTab === 'about' && (
-          <div className="space-y-5 animate-fadeIn min-w-0">
-            
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">About Us Section Copy & Motives</h3>
-                  <p className="text-xs text-stone-500">Company story, core mission, and executive quote</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">Section 02</span>
+      {/* ------------------------------------------------------------- */}
+      {/* 9. DOWNLOAD RELEASES TAB                                      */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'download' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Section 10 • Application Releases Center</h3>
+                <p className="text-xs text-[var(--muted)]">Section title, lead, and digital safety guarantee notice</p>
               </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 10</span>
+            </div>
 
-              <div className="space-y-3.5 min-w-0">
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Headline
-                  </label>
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Section Eyebrow</label>
+              <input
+                type="text"
+                value={pageData.downloadSection?.eyebrow || ''}
+                onChange={(e) => handlePageChange('downloadSection', 'eyebrow', e.target.value)}
+                placeholder="Section 10 • Application Releases"
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Section Headline</label>
+              <input
+                type="text"
+                value={pageData.downloadSection?.headline || ''}
+                onChange={(e) => handlePageChange('downloadSection', 'headline', e.target.value)}
+                placeholder="Installers built for offline endurance."
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Section Lead Paragraph</label>
+              <textarea
+                rows={3}
+                value={pageData.downloadSection?.lead || ''}
+                onChange={(e) => handlePageChange('downloadSection', 'lead', e.target.value)}
+                placeholder="Direct access to official installers and production releases..."
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Digital Safety &amp; Compatibility Guarantee Notice</label>
+              <textarea
+                rows={2}
+                value={pageData.downloadSection?.notice || ''}
+                onChange={(e) => handlePageChange('downloadSection', 'notice', e.target.value)}
+                placeholder="Every installer is scanned and clean of malware. Windows packages include all runtime SQLite drivers..."
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 10. CONTACT & FOOTER TAB                                      */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'contactFooter' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Section 11 • Contact Desk &amp; Hardware Mockup</h3>
+                <p className="text-xs text-[var(--muted)]">Lead text, hardware counter photo, and footer floating orb call-to-action</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 11</span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Contact Desk Headline</label>
+              <input
+                type="text"
+                value={pageData.contact.headline || ''}
+                onChange={(e) => handlePageChange('contact', 'headline', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Contact Desk Lead Paragraph</label>
+              <textarea
+                rows={2}
+                value={pageData.contact.lead || ''}
+                onChange={(e) => handlePageChange('contact', 'lead', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+              <span className="text-xs font-bold text-[var(--ink)]">Hardware Counter Mockup Image Link</span>
+              <input
+                type="text"
+                value={pageData.contact.counterImage || ''}
+                onChange={(e) => handlePageChange('contact', 'counterImage', e.target.value)}
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-white text-xs text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+              />
+              {pageData.contact.counterImage && (
+                <div className="w-full h-32 rounded-xl overflow-hidden border border-[var(--line)]">
+                  <img src={pageData.contact.counterImage} alt="Hardware Mockup" className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+
+            <div className="pt-2 border-t border-[var(--line)] space-y-3">
+              <span className="text-xs font-bold text-[var(--c1)] uppercase font-mono tracking-wider">
+                Footer Floating Banner (FCTA) Copy
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Banner Eyebrow</label>
                   <input
                     type="text"
-                    value={pageData.about.headline || ''}
-                    onChange={(e) => handlePageChange('about', 'headline', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-medium focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
+                    value={pageData.contact.footerCtaEyebrow || 'Enterprise Precision • Zero Cloud Latency'}
+                    onChange={(e) => handlePageChange('contact', 'footerCtaEyebrow', e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
                   />
                 </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Lead Paragraph
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={pageData.about.lead || ''}
-                    onChange={(e) => handlePageChange('about', 'lead', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Core Engineering Motive
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={pageData.about.motive || ''}
-                    onChange={(e) => handlePageChange('about', 'motive', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Featured Founder Quote
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={pageData.about.founderQuote || ''}
-                    onChange={(e) => handlePageChange('about', 'founderQuote', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
                 <div>
-                  <h3 className="text-sm font-bold text-stone-900">About Us Visual Assets</h3>
-                  <p className="text-xs text-stone-500">Founder avatar & corporate office backdrop link</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">2 Visuals</span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 min-w-0">
-                <ImageInputRow
-                  label="Founder Portrait Photo Link"
-                  value={pageData.about.founderPhoto}
-                  onChange={(v) => handlePageChange('about', 'founderPhoto', v)}
-                  hint="Used in Quote & Top Badge"
-                />
-
-                <ImageInputRow
-                  label="Office & Team Background Photo Link"
-                  value={pageData.about.officePhoto}
-                  onChange={(v) => handlePageChange('about', 'officePhoto', v)}
-                  hint="Card Background Backdrop"
-                />
-              </div>
-            </div>
-
-          </div>
-        )}
-
-        {/* ==================================================== */}
-        {/* 4. FEATURED PRODUCT */}
-        {/* ==================================================== */}
-        {activeSubTab === 'featuredProduct' && (
-          <div className="space-y-5 animate-fadeIn min-w-0">
-            
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">Featured Product (Finance Flow) Details</h3>
-                  <p className="text-xs text-stone-500">Section copy and live bill simulator station backdrop</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">Section 06</span>
-              </div>
-
-              <div className="space-y-3.5 min-w-0">
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Headline
-                  </label>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Banner Title</label>
                   <input
                     type="text"
-                    value={pageData.featuredProduct.headline || ''}
-                    onChange={(e) => handlePageChange('featuredProduct', 'headline', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-medium focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
+                    value={pageData.contact.footerCtaTitle || 'Bring calm, offline precision to your billing counter.'}
+                    onChange={(e) => handlePageChange('contact', 'footerCtaTitle', e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
                   />
                 </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Lead Description
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={pageData.featuredProduct.lead || ''}
-                    onChange={(e) => handlePageChange('featuredProduct', 'lead', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <ImageInputRow
-                  label="POS Invoicing Station Background Image Link"
-                  value={pageData.featuredProduct.stationImage}
-                  onChange={(v) => handlePageChange('featuredProduct', 'stationImage', v)}
-                  hint="Right Live Simulator Backdrop"
-                />
               </div>
             </div>
-
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ==================================================== */}
-        {/* 5. WHY CHOOSE US */}
-        {/* ==================================================== */}
-        {activeSubTab === 'whyChooseUs' && (
-          <div className="space-y-5 animate-fadeIn min-w-0">
-            
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">Why Choose Us Headings</h3>
-                  <p className="text-xs text-stone-500">Section headline and lead paragraph</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">Section 07</span>
-              </div>
-
-              <div className="space-y-3.5 min-w-0">
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Headline
-                  </label>
-                  <input
-                    type="text"
-                    value={pageData.whyChooseUs.headline || ''}
-                    onChange={(e) => setPageData(prev => ({
-                      ...prev,
-                      whyChooseUs: { ...prev.whyChooseUs, headline: e.target.value }
-                    }))}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-medium focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Lead Description
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={pageData.whyChooseUs.lead || ''}
-                    onChange={(e) => setPageData(prev => ({
-                      ...prev,
-                      whyChooseUs: { ...prev.whyChooseUs, lead: e.target.value }
-                    }))}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* 5 Pillar Image Links */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">5 Core Pillar Images</h3>
-                  <p className="text-xs text-stone-500">Background visual links for all 5 arched plates</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">5 Pillar Visuals</span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 min-w-0">
-                <ImageInputRow
-                  label="Pillar 1: Offline Autonomy (100% Uptime)"
-                  value={pageData.whyChooseUs?.pillarImages?.[0]}
-                  onChange={(v) => handlePillarImageChange(0, v)}
-                  hint="Plate 01"
-                />
-
-                <ImageInputRow
-                  label="Pillar 2: Zero Lag (<0.2s Keystroke)"
-                  value={pageData.whyChooseUs?.pillarImages?.[1]}
-                  onChange={(v) => handlePillarImageChange(1, v)}
-                  hint="Plate 02"
-                />
-
-                <ImageInputRow
-                  label="Pillar 3: GST Invoicing (Tax Compliant)"
-                  value={pageData.whyChooseUs?.pillarImages?.[2]}
-                  onChange={(v) => handlePillarImageChange(2, v)}
-                  hint="Plate 03"
-                />
-
-                <ImageInputRow
-                  label="Pillar 4: Hardware Ready (Thermal & Laser)"
-                  value={pageData.whyChooseUs?.pillarImages?.[3]}
-                  onChange={(v) => handlePillarImageChange(3, v)}
-                  hint="Plate 04"
-                />
-
-                <ImageInputRow
-                  label="Pillar 5: Dedicated Support (Founder Line)"
-                  value={pageData.whyChooseUs?.pillarImages?.[4]}
-                  onChange={(v) => handlePillarImageChange(4, v)}
-                  hint="Plate 05"
-                />
-              </div>
-            </div>
-
-          </div>
-        )}
-
-        {/* ==================================================== */}
-        {/* 6. CONTACT & FOOTER */}
-        {/* ==================================================== */}
-        {activeSubTab === 'contactFooter' && (
-          <div className="space-y-5 animate-fadeIn min-w-0">
-            
-            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-stone-200 shadow-xs space-y-4 min-w-0">
-              <div className="flex items-center justify-between pb-2.5 border-b border-stone-100">
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">Contact Us Section Copy & Phone Mockup</h3>
-                  <p className="text-xs text-stone-500">Section title, lead, and phone terminal mockup image link</p>
-                </div>
-                <span className="text-[11px] font-mono text-[var(--c1)] font-bold">Section 11</span>
-              </div>
-
-              <div className="space-y-3.5 min-w-0">
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Headline
-                  </label>
-                  <input
-                    type="text"
-                    value={pageData.contact.headline || ''}
-                    onChange={(e) => handlePageChange('contact', 'headline', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 font-medium focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <div className="space-y-1 min-w-0">
-                  <label className="text-xs font-bold text-stone-900 block truncate">
-                    Lead Description
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={pageData.contact.lead || ''}
-                    onChange={(e) => handlePageChange('contact', 'lead', e.target.value)}
-                    className="w-full min-w-0 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs text-stone-900 focus:outline-none focus:border-[var(--c1)] focus:ring-2 focus:ring-[var(--c1)]/15 shadow-xs"
-                  />
-                </div>
-
-                <ImageInputRow
-                  label="POS Counter Mockup Image Link"
-                  value={pageData.contact.counterImage}
-                  onChange={(v) => handlePageChange('contact', 'counterImage', v)}
-                  hint="Phone Screen Backdrop"
-                />
-              </div>
-            </div>
-
-          </div>
-        )}
-
-      </div>
-
-      {/* Bottom Sticky Save Bar - 100% Responsive, Clean & Never Overflows */}
-      <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-stone-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 min-w-0">
-        <span className="text-xs text-stone-500 truncate">
-          All modifications save directly to MongoDB and reflect live across the site.
-        </span>
+      {/* Sticky Bottom Save Bar */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[var(--line)] shadow-xl flex items-center justify-between z-30 max-w-7xl mx-auto rounded-t-2xl">
+        <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span>All modifications save directly to the MongoDB backend and reflect live across the site.</span>
+        </div>
 
         <button
           type="button"
           onClick={handleSaveAll}
           disabled={isSaving}
-          className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[var(--c1)] hover:bg-[#d65a2f] text-white font-bold text-xs shadow-sm hover:shadow transition-all cursor-pointer flex items-center justify-center gap-2 active:scale-95 shrink-0"
+          className={`px-6 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer ${
+            saveSuccess
+              ? 'bg-emerald-600 text-white'
+              : 'bg-[var(--c1)] hover:bg-[#d64b22] text-white'
+          }`}
         >
           {isSaving ? (
             <>
-              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-              <span>Saving Changes...</span>
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span>Saving...</span>
             </>
           ) : saveSuccess ? (
             <>
-              <Check className="w-3.5 h-3.5 text-emerald-200" />
-              <span>Saved Live!</span>
+              <Check className="w-4 h-4" />
+              <span>All Changes Saved!</span>
             </>
           ) : (
             <>
-              <Save className="w-3.5 h-3.5" />
+              <Save className="w-4 h-4" />
               <span>Save All Customizations</span>
             </>
           )}
