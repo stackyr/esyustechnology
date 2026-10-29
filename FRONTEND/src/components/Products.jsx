@@ -29,10 +29,21 @@ function ProductCard({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
 
+        {/* Floating Brand Logo Badge in corner if available */}
+        {product?.logo && (
+          <div className="absolute top-3.5 right-3.5 z-20 w-11 h-11 rounded-2xl bg-white/95 backdrop-blur-md p-1.5 shadow-lg border border-white/80 transition-all duration-300 group-hover:scale-110 flex items-center justify-center pointer-events-none">
+            <img src={product.logo} alt={product.name} className="w-full h-full object-contain" />
+          </div>
+        )}
+
         {/* Floating Badge (smoothly slides up on hover so it never overlaps the action buttons) */}
         <div className="chip transition-all duration-300 group-hover:-translate-y-12">
-          <span className="chip__ic">
-            <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
+          <span className="chip__ic overflow-hidden bg-white text-[var(--ink)]">
+            {product?.logo ? (
+              <img src={product.logo} alt={product.name} className="w-full h-full object-contain p-0.5" />
+            ) : (
+              <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
+            )}
           </span>
           <span>
             <b>{badgeText}</b>

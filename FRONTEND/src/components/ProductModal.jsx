@@ -13,8 +13,14 @@ export default function ProductModal({ product, onClose, onDownload }) {
         {/* Header */}
         <div className="bg-[var(--bg)]/95 backdrop-blur-md px-6 py-4.5 border-b border-[var(--line)] flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-[var(--ink)] text-[var(--bg)] flex items-center justify-center font-bold shadow-md shrink-0">
-              {isAndroid ? <Smartphone className="w-5 h-5 text-[var(--c3)]" /> : <Monitor className="w-5 h-5 text-[var(--c3)]" />}
+            <div className="w-11 h-11 rounded-2xl bg-white border border-[var(--line)] flex items-center justify-center p-1.5 shadow-sm shrink-0 overflow-hidden">
+              {product.logo ? (
+                <img src={product.logo} alt={product.name} className="w-full h-full object-contain" />
+              ) : isAndroid ? (
+                <Smartphone className="w-5 h-5 text-[var(--c3)]" />
+              ) : (
+                <Monitor className="w-5 h-5 text-[var(--c3)]" />
+              )}
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">

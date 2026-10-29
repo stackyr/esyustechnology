@@ -96,7 +96,11 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
                     onClick={() => onSelectProduct(prod)}
                     className="text-[var(--fm)] hover:text-white transition-colors text-left flex items-center gap-2 cursor-pointer"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--c1)]" />
+                    {prod.logo ? (
+                      <img src={prod.logo} alt={prod.name} className="w-3.5 h-3.5 object-contain shrink-0" />
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--c1)]" />
+                    )}
                     <span>{prod.name}</span>
                   </button>
                 </li>

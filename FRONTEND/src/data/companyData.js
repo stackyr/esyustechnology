@@ -138,7 +138,8 @@ export const PRODUCTS = [
     ],
     downloadFile: "FinanceFlow-v2.4.0-Setup.exe",
     accentColor: "from-blue-600 to-indigo-700",
-    badge: "Flagship Desktop"
+    badge: "Flagship Desktop",
+    logo: "/finance-flow-logo.png"
   },
   {
     id: "finance-flow-lite",
@@ -159,7 +160,9 @@ export const PRODUCTS = [
     ],
     downloadFile: "FinanceFlowLite-Setup.exe",
     accentColor: "from-teal-600 to-emerald-600",
-    badge: "Low Footprint"
+    badge: "Low Footprint",
+    logo: "/finance-flow-lite-logo-transparent.png",
+    logoSquare: "/finance-flow-lite-logo.png"
   },
   {
     id: "finance-flow-flash",

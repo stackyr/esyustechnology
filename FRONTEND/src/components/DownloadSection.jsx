@@ -89,9 +89,16 @@ export default function DownloadSection({ onDownloadApp }) {
                     </span>
                   </div>
 
-                  <h3 className="plan__name">
-                    {app.name}
-                  </h3>
+                  <div className="flex items-center gap-2.5">
+                    {app.logo && (
+                      <div className="w-8 h-8 rounded-xl bg-white border border-[var(--line)] p-1 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
+                        <img src={app.logo} alt={app.name} className="w-full h-full object-contain" />
+                      </div>
+                    )}
+                    <h3 className="plan__name">
+                      {app.name}
+                    </h3>
+                  </div>
                 </div>
 
                 {/* Price / Licensing Badge */}

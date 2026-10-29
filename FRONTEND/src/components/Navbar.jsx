@@ -250,6 +250,9 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
                     }}
                     className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[var(--soft)] hover:bg-[var(--line)] text-[var(--ink)] transition-colors flex items-center gap-1.5"
                   >
+                    {prod.logo && (
+                      <img src={prod.logo} alt={prod.name} className="w-3.5 h-3.5 object-contain" />
+                    )}
                     <span>{prod.name}</span>
                     <span className="text-[10px] text-[var(--muted)]">({prod.downloadFile})</span>
                   </button>

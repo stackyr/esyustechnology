@@ -76,8 +76,12 @@ Founder: Milan Mandal | Co-founder: Suman Raptan
         {/* Header */}
         <div className="p-5 bg-[var(--dark)] text-[var(--bg)] flex items-center justify-between border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[var(--c1)] flex items-center justify-center text-white shadow-md">
-              <Download className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-md shrink-0 overflow-hidden">
+              {product.logo ? (
+                <img src={product.logo} alt={product.name} className="w-full h-full object-contain" />
+              ) : (
+                <Download className="w-4 h-4 text-[var(--c1)]" />
+              )}
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">{product.name}</h3>
