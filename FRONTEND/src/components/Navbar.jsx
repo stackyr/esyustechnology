@@ -88,11 +88,11 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
               e.preventDefault();
               scrollTo('home');
             }}
-            aria-label="Esyus Technologies Home"
+            aria-label={`${COMPANY_INFO.name} Home`}
           >
             <img
               src="/logo-horizontal.png"
-              alt="Esyus Technologies"
+              alt={COMPANY_INFO.name}
               className="h-9 sm:h-10 w-auto object-contain shrink-0 transition-transform duration-300 group-hover:scale-[1.02]"
             />
             <span className="hidden xl:inline-flex items-center text-[9.5px] tracking-widest uppercase text-[var(--muted)] font-mono border-l border-[var(--line)] pl-2.5 ml-0.5 whitespace-nowrap">
@@ -209,7 +209,7 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
           <div className="space-y-6">
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
               <span className="text-xs uppercase tracking-widest text-[var(--muted)] font-mono">
-                Esyus Technologies Navigation
+                {COMPANY_INFO.name} Navigation
               </span>
               <span className="text-xs font-mono text-[var(--c1)] font-semibold">
                 10 Core Sections

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { COMPANY_INFO, SERVICES, PRODUCTS } from '../data/companyData';
+import api from '../utils/api';
 
-export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct }) {
+export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin }) {
   const [subscribed, setSubscribed] = useState(false);
   const [emailInput, setEmailInput] = useState('');
 
@@ -12,8 +13,16 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
   const handleSubscribe = (e) => {
     e.preventDefault();
     if (emailInput.trim()) {
+      const email = emailInput.trim();
       setSubscribed(true);
       setEmailInput('');
+      api.submitInquiry({
+        name: 'Release Subscriber',
+        email: email,
+        subject: 'Product Release Subscription',
+        message: 'Visitor subscribed to offline billing updates, GST tariffs, and release notifications.',
+        type: 'subscription'
+      }).catch(err => console.warn('Newsletter sync error:', err));
     }
   };
 
@@ -67,13 +76,13 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
             <div className="flex items-center gap-3">
               <img
                 src="/logo-horizontal-white.png"
-                alt="Esyus Technologies"
+                alt={COMPANY_INFO.name}
                 className="h-10 sm:h-11 w-auto object-contain"
               />
             </div>
 
             <p className="text-xs text-[var(--fm)] leading-relaxed max-w-sm">
-              Esyus Technologies builds robust, offline-capable desktop billing suites and tailored Android applications designed to operate without internet dependency or recurring lock-ins.
+              {COMPANY_INFO.name} builds robust, offline-capable desktop billing suites and tailored Android applications designed to operate without internet dependency or recurring lock-ins.
             </p>
 
             <div className="text-[11px] text-[var(--fm)] space-y-1 font-mono">
@@ -170,7 +179,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
 
             {subscribed ? (
               <div className="p-3 rounded-xl bg-white/10 text-[var(--c3)] text-xs font-semibold">
-                ✓ Thank you for subscribing to Esyus releases!
+                ✓ Thank you for subscribing to {COMPANY_INFO.shortName || 'Esyus'} releases!
               </div>
             ) : (
               <form onSubmit={handleSubscribe} className="space-y-2">
@@ -198,7 +207,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
         {/* Bottom Base Bar */}
         <div className="foot__base pt-8 border-t border-[var(--fl)] flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[var(--fm)]">
           <div className="text-center md:text-left">
-            © 2026–2027 <strong className="text-white">Esyus Technologies</strong>. All rights reserved. Registered under domain <span className="text-[var(--c3)] font-mono">{COMPANY_INFO.domain}</span>.
+            © 2026–2027 <strong className="text-white">{COMPANY_INFO.name}</strong>. All rights reserved. Registered under domain <span className="text-[var(--c3)] font-mono">{COMPANY_INFO.domain}</span>.
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6">
@@ -215,6 +224,14 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
               className="hover:text-white transition-colors cursor-pointer"
             >
               Terms of Use
+            </button>
+            <button
+              type="button"
+              onClick={onOpenAdmin || (() => { window.location.hash = '#admin'; })}
+              className="opacity-40 hover:opacity-100 hover:text-white transition-all cursor-pointer flex items-center gap-1.5 text-[11px]"
+              title="Internal Portal"
+            >
+              <span>Admin Access</span>
             </button>
             <button
               type="button"

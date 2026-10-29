@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { PRODUCTS } from '../data/companyData';
+import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import { Clock } from 'lucide-react';
 
 export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
   const financeFlow = PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0];
+  const fp = LANDING_PAGE_SECTIONS?.featuredProduct || {};
 
   // Interactive Live Invoice Simulator State
   const [customerName, setCustomerName] = useState('Sharma General Store');
@@ -31,10 +32,14 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
         <div className="process__copy">
           <span className="eyebrow">Flagship Desktop Software</span>
           <h2 className="h2">
-            Finance Flow: From barcode scan to printed GST invoice in <em className="s">0.2 seconds</em>
+            {fp.headline ? (
+              fp.headline
+            ) : (
+              <>Finance Flow: From barcode scan to printed GST invoice in <em className="s">0.2 seconds</em></>
+            )}
           </h2>
           <p className="lead">
-            The premier offline-first billing solution designed by Esyus Technologies. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.
+            {fp.lead || `The premier offline-first billing solution designed by ${COMPANY_INFO.name}. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.`}
           </p>
 
           {/* Interactive Calculator Input Controls */}
@@ -115,7 +120,7 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
         <figure className="process__photo tab-r overflow-hidden relative">
           <div className="art g-night relative">
             <img
-              src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"
+              src={fp.stationImage || "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"}
               alt="Finance Flow POS Invoicing Station"
               className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
             />

@@ -12,11 +12,21 @@
  * - Lenis smooth momentum scrolling
  */
 
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+
+// Register ScrollTrigger plugin
+gsap.registerPlugin(ScrollTrigger);
+
 export function initHearthlyAnimations() {
   const root = document.documentElement;
   if (!root.classList.contains('motion')) {
     root.classList.add('motion');
   }
+
+  // Clean up any stale ScrollTriggers before re-initializing
+  ScrollTrigger.getAll().forEach((st) => st.kill());
 
   const init = (sel, fn) => {
     document.querySelectorAll(sel).forEach((el) => {
@@ -71,26 +81,15 @@ export function initHearthlyAnimations() {
     });
   });
 
-  // Check GSAP & ScrollTrigger
-  const gsap = window.gsap;
-  const ScrollTrigger = window.ScrollTrigger;
-  if (!root.classList.contains('motion') || !gsap || !ScrollTrigger) {
-    return () => { };
-  }
-
-  gsap.registerPlugin(ScrollTrigger);
-
   // Initialize Lenis smooth scroll
   let lenis = null;
-  if (window.Lenis) {
-    try {
-      lenis = new window.Lenis({ lerp: 0.1 });
-      lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.add((time) => lenis.raf(time * 1000));
-      gsap.ticker.lagSmoothing(0);
-    } catch (e) {
-      console.error('Lenis initialization error:', e);
-    }
+  try {
+    lenis = new Lenis({ lerp: 0.1 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+  } catch (e) {
+    console.warn('Lenis initialization warning:', e);
   }
 
   const handleAnchorClick = (e) => {
@@ -124,7 +123,15 @@ export function initHearthlyAnimations() {
         }
       });
     }, { rootMargin: margin });
-    els.forEach((el) => io.observe(el));
+    els.forEach((el) => {
+      // If already in viewport, trigger immediately
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        fn(el);
+      } else {
+        io.observe(el);
+      }
+    });
   };
 
   const queue = [];
@@ -452,7 +459,7 @@ export function initHearthlyAnimations() {
   // Execute flush queue
   flush();
 
-  // ScrollTrigger refresh
+  // ScrollTrigger refresh to sync all positions
   setTimeout(() => {
     ScrollTrigger.refresh();
   }, 250);
@@ -461,5 +468,8 @@ export function initHearthlyAnimations() {
   return () => {
     document.removeEventListener('click', handleAnchorClick);
     ScrollTrigger.getAll().forEach((st) => st.kill());
+    if (lenis && typeof lenis.destroy === 'function') {
+      lenis.destroy();
+    }
   };
 }
