@@ -239,7 +239,7 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
             {/* Quick App Downloads in Mobile Drawer */}
             <div className="p-4 rounded-2xl bg-white border border-[var(--line)] space-y-3">
               <span className="text-xs uppercase tracking-wider text-[var(--muted)] font-mono block">
-                Quick Download Installers
+                Software Ecosystem (Coming Soon)
               </span>
               <div className="flex flex-wrap gap-2">
                 {PRODUCTS.map((prod) => (
@@ -250,8 +250,11 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
                     }}
                     className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[var(--soft)] hover:bg-[var(--line)] text-[var(--ink)] transition-colors flex items-center gap-1.5"
                   >
+                    {prod.logo && (
+                      <img src={prod.logo} alt={prod.name} className="w-3.5 h-3.5 object-contain" />
+                    )}
                     <span>{prod.name}</span>
-                    <span className="text-[10px] text-[var(--muted)]">({prod.downloadFile})</span>
+                    <span className="text-[10px] font-mono text-[var(--c1)] font-semibold">Coming Soon</span>
                   </button>
                 ))}
               </div>
@@ -272,7 +275,7 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
                   else scrollTo('download');
                 }}
               >
-                <span>Download Packages</span>
+                <span>Explore Packages</span>
               </button>
               <button
                 className="btn btn--line btn--sm flex-1 sm:flex-none justify-center"

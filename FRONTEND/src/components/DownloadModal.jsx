@@ -1,72 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { X, Download, CheckCircle2, ShieldCheck } from 'lucide-react';
+import React from 'react';
+import { X, Clock, ShieldCheck, Mail } from 'lucide-react';
 
 export default function DownloadModal({ product, onClose }) {
-  const [progress, setProgress] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
-
-  const triggerActualFileDownload = useCallback(() => {
-    if (!product) return;
-    const content = `=====================================================
-ESYUS TECHNOLOGIES - SOFTWARE RELEASE
-Domain: esyustechnologies.com
-=====================================================
-
-Application: ${product.name}
-Version: ${product.version}
-Platform: ${product.platform}
-Package File: ${product.downloadFile}
-Package Size: ${product.size}
-Release Date: 2026-10-28
-Category: ${product.category}
-
------------------------------------------------------
-OFFLINE INSTALLATION INSTRUCTIONS:
------------------------------------------------------
-1. Move ${product.downloadFile} to your target Windows or Android device.
-2. Run installer as Administrator (Windows) or enable Unknown Sources (Android).
-3. The software will install the embedded offline SQLite database automatically.
-4. No internet connection is required during or after installation.
-
-For technical support or license queries:
-Email: support@esyustechnologies.com
-Domain: esyustechnologies.com
-Founder: Milan Mandal | Co-founder: Suman Raptan
-
-(c) 2026-2027 Esyus Technologies. All rights reserved.
-=====================================================`;
-
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = product.downloadFile || 'setup.txt';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }, [product]);
-
-  useEffect(() => {
-    if (!product) return;
-
-    const t0 = setTimeout(() => setProgress(15), 50);
-    const t1 = setTimeout(() => setProgress(45), 300);
-    const t2 = setTimeout(() => setProgress(82), 650);
-    const t3 = setTimeout(() => {
-      setProgress(100);
-      setIsCompleted(true);
-      triggerActualFileDownload();
-    }, 1000);
-
-    return () => {
-      clearTimeout(t0);
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-    };
-  }, [product, triggerActualFileDownload]);
-
   if (!product) return null;
 
   return (
@@ -76,12 +11,16 @@ Founder: Milan Mandal | Co-founder: Suman Raptan
         {/* Header */}
         <div className="p-5 bg-[var(--dark)] text-[var(--bg)] flex items-center justify-between border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[var(--c1)] flex items-center justify-center text-white shadow-md">
-              <Download className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-md shrink-0 overflow-hidden">
+              {product.logo ? (
+                <img src={product.logo} alt={product.name} className="w-full h-full object-contain" />
+              ) : (
+                <Clock className="w-4 h-4 text-[var(--c1)]" />
+              )}
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">{product.name}</h3>
-              <p className="text-[11px] text-stone-400 font-mono">{product.downloadFile}</p>
+              <p className="text-[11px] text-amber-300 font-mono">Release Coming Soon • {product.version}</p>
             </div>
           </div>
 
@@ -96,25 +35,20 @@ Founder: Milan Mandal | Co-founder: Suman Raptan
 
         {/* Content */}
         <div className="p-6 space-y-5">
-          {/* Progress bar */}
-          <div>
-            <div className="flex justify-between text-xs mb-1.5 font-medium">
-              <span className="text-[var(--ink)]/80">
-                {isCompleted ? 'Download Prepared & Started' : 'Transferring release package...'}
-              </span>
-              <span className="font-mono text-[var(--c1)] font-bold">{progress}%</span>
-            </div>
-            <div className="w-full h-2.5 bg-[var(--soft)] border border-[var(--line)] rounded-full overflow-hidden">
-              <div
-                className={`h-full transition-all duration-300 ${
-                  isCompleted ? 'bg-emerald-500' : 'bg-[var(--c1)]'
-                }`}
-                style={{ width: `${progress}%` }}
-              />
+          {/* Coming Soon Notice Card */}
+          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 flex items-start gap-3">
+            <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="text-xs space-y-1">
+              <strong className="block font-semibold text-amber-950">
+                Official Download Link Coming Soon
+              </strong>
+              <p className="text-[var(--ink)]/80 leading-relaxed">
+                The production release installer for <strong>{product.name}</strong> is currently undergoing final verification. Direct download will be enabled as soon as the verified distribution link is published.
+              </p>
             </div>
           </div>
 
-          {/* Verification Badge */}
+          {/* Package Details */}
           <div className="p-4 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-2 text-xs">
             <div className="flex items-center justify-between text-[var(--muted)]">
               <span>Platform Target:</span>
@@ -125,26 +59,14 @@ Founder: Milan Mandal | Co-founder: Suman Raptan
               <span className="font-semibold text-[var(--ink)]">{product.size}</span>
             </div>
             <div className="flex items-center justify-between text-[var(--muted)]">
-              <span>SHA-256 Checksum:</span>
-              <span className="font-mono text-[10px] text-[var(--ink)]/70">e3b0c44298fc1c149afbf4c8...</span>
+              <span>Status:</span>
+              <span className="font-mono text-xs font-bold text-[var(--c1)]">In Final Testing</span>
             </div>
             <div className="flex items-center gap-1.5 text-emerald-700 font-medium pt-1.5 border-t border-[var(--line)]">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>Digitally Signed • Zero Telemetry Required</span>
+              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>100% Offline Architecture • Zero Cloud Latency</span>
             </div>
           </div>
-
-          {/* Offline reminder */}
-          <div className="text-[11px] text-[var(--muted)] bg-[var(--soft)] p-3 rounded-xl border border-[var(--line)]">
-            <strong className="text-[var(--ink)]">Offline Operation Guarantee:</strong> Once downloaded, this application operates completely offline without requiring any active internet connection for generating invoices or managing inventory.
-          </div>
-
-          {isCompleted && (
-            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-900 text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Package setup descriptor successfully downloaded to your browser.</span>
-            </div>
-          )}
 
           {/* Actions */}
           <div className="pt-2 flex items-center justify-end gap-2.5">
@@ -152,14 +74,16 @@ Founder: Milan Mandal | Co-founder: Suman Raptan
               onClick={onClose}
               className="px-4 py-2 text-xs font-semibold text-[var(--ink)] hover:text-[var(--ink)] bg-[var(--soft)] hover:bg-[var(--line)]/50 border border-[var(--line)] rounded-full transition-colors cursor-pointer"
             >
-              Close Window
+              Close
             </button>
-            <button
-              onClick={triggerActualFileDownload}
-              className="px-4 py-2 text-xs font-bold text-white bg-[var(--c1)] hover:bg-[var(--c1)]/90 rounded-full shadow-sm hover:shadow-md transition-all cursor-pointer"
+            <a
+              href="#contact"
+              onClick={onClose}
+              className="px-4 py-2 text-xs font-bold text-white bg-[var(--c1)] hover:bg-[var(--c1)]/90 rounded-full shadow-sm hover:shadow-md transition-all inline-flex items-center gap-1.5 cursor-pointer"
             >
-              Download Again
-            </button>
+              <Mail className="w-3.5 h-3.5" />
+              <span>Enquire for Early Access</span>
+            </a>
           </div>
         </div>
 
