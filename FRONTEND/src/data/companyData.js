@@ -192,22 +192,22 @@ export const PRODUCTS = [
   {
     id: "bharat-yatra-sathi",
     name: "Bharat Yatra Sathi",
-    category: "Travel & Companion App",
+    category: "Android Application",
     platform: "Android 8.0+",
     version: "v1.1.0",
     size: "24.8 MB",
     isFeatured: false,
-    tagline: "Smart travel and pilgrimage companion app designed for explorers in India.",
-    description: "Bharat Yatra Sathi is a mobile companion app for domestic travelers and pilgrims navigating tourist destinations and sacred sites across India. Features offline route summaries, local emergency assistance, and personalized itineraries.",
+    tagline: "Smart travel, highway mobility, and pilgrimage companion app designed for explorers in India.",
+    description: "Bharat Yatra Sathi is a production-grade Android mobile application for domestic travelers, drivers, and pilgrims navigating tourist destinations and sacred sites across India. Features 100% offline highway routes, temple timings, local emergency assistance, and driver navigation.",
     highlights: [
-      "Curated travel guides and temple/heritage site timings",
+      "100% offline highway routes & temple/heritage site timings",
+      "Driver mobility assist & turn-by-turn waypoint tracking",
       "Offline emergency contacts & tourist police hotlines",
       "Custom day-by-day travel planner & expense logger",
-      "Multi-language support (English, Hindi, Bengali)",
       "Low battery consumption mode with offline maps integration"
     ],
     downloadFile: "BharatYatraSathi-v1.1.apk",
-    accentColor: "from-purple-600 to-indigo-600",
+    accentColor: "from-blue-600 to-indigo-600",
     badge: "Android App",
     logo: "/bharat-yatra-sathi-logo.png",
     image: "/card-bharat-yatra-sathi.png"

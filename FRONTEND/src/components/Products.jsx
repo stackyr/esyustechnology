@@ -60,7 +60,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
       product: PRODUCTS.find((p) => p.id === 'bharat-yatra-sathi') || PRODUCTS[3],
       num: "04",
       name: "Bharat Yatra Sathi",
-      category: "Travel & Heritage App",
+      category: "Android Application",
       platformTag: "Android 8.0+",
       isWindows: false,
       isAndroid: true,
@@ -68,8 +68,8 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
       size: "24.8 MB",
       downloadLabel: "Download APK",
       logo: "/bharat-yatra-sathi-logo.png",
-      tagline: "Smart travel and pilgrimage companion app designed for explorers in India with 100% offline maps and temple guides.",
-      chips: ["🧭 100% Offline Maps", "🛕 Temple Timings", "🚨 Emergency Hotlines"]
+      tagline: "Smart travel, highway mobility, and pilgrimage companion app designed for explorers and drivers in India with 100% offline maps.",
+      chips: ["🧭 100% Offline Maps", "🚗 Driver & Route Assist", "🛕 Temple Timings"]
     },
     {
       id: "bharat-yatra-sathi-partner",
