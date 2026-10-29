@@ -1,14 +1,14 @@
 export const COMPANY_INFO = {
   name: "Esyus Technology Pvt. Ltd.",
   shortName: "Esyus",
-  domain: "esyustechnologies.com",
+  domain: "esyustechnology.com",
   tagline: "Smart Software Solutions for Tomorrow's Businesses",
   slogan: "High-Performance Desktop, Web & Android Systems Built for Absolute Reliability",
   founder: "Milan Mandal",
   coFounder: "Suman Raptan",
   establishmentDate: "01/01/2027",
-  email: "contact@esyustechnologies.com",
-  supportEmail: "support@esyustechnologies.com",
+  email: "contact@esyustechnology.com",
+  supportEmail: "support@esyustechnology.com",
   phone: "+91 98765 43210",
   address: "Esyus Technology Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
   stats: [

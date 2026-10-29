@@ -9,7 +9,7 @@ export default function DownloadModal({ product, onClose }) {
     if (!product) return;
     const content = `=====================================================
 ESYUS TECHNOLOGY PVT. LTD. - SOFTWARE RELEASE
-Domain: esyustechnologies.com
+Domain: esyustechnology.com
 =====================================================
 
 Application: ${product.name}
@@ -29,8 +29,8 @@ OFFLINE INSTALLATION INSTRUCTIONS:
 4. No internet connection is required during or after installation.
 
 For technical support or license queries:
-Email: support@esyustechnologies.com
-Domain: esyustechnologies.com
+Email: support@esyustechnology.com
+Domain: esyustechnology.com
 Founder: Milan Mandal | Co-founder: Suman Raptan
 
 (c) 2026-2027 Esyus Technology Pvt. Ltd. All rights reserved.
