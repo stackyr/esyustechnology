@@ -8,7 +8,8 @@ export default function Services({ onSelectService, onEnquireService }) {
       serviceIndex: 4, // Desktop Dev in SERVICES
       tab: "Offline Billing Systems",
       tone: "tone-1",
-      image: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900",
+      image: "/finance-flow-logo.png",
+      isLogo: true,
       num: "01",
       meta: "Windows 10 / 11 · 100% Offline Autonomy",
       lead: "High-performance Windows billing, inventory, and management software that works 100% offline with zero cloud lag.",
@@ -145,33 +146,69 @@ export default function Services({ onSelectService, onEnquireService }) {
                   </div>
 
                   {/* Right Column: High-Res Real Photography & Floating Live Diagnostics UI */}
-                  <figure className="folder__photo overflow-hidden relative group">
-                    <img
-                      src={item.image}
-                      alt={item.tab}
-                      className="w-full h-full object-cover brightness-75 group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
-                    
-                    <div className="ui">
-                      <div className="ui__top">
-                        <span>{item.uiTop}</span>
-                        <span className="ui__live">Ready</span>
+                  <figure className={`folder__photo overflow-hidden relative group ${item.isLogo ? 'folder__photo--logo' : ''}`}>
+                    {item.isLogo ? (
+                      <div className="w-full h-full flex flex-col justify-between p-4 sm:p-5 bg-white relative">
+                        {/* Top: Crisp Finance Flow Brand Logo */}
+                        <div className="flex-1 flex items-center justify-center p-2 min-h-[90px]">
+                          <img
+                            src={item.image}
+                            alt={item.tab}
+                            className="max-h-20 sm:max-h-24 w-auto object-contain transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+
+                        {/* Bottom: Live Engine Diagnostics Card */}
+                        <div className="ui ui--inline">
+                          <div className="ui__top">
+                            <span>{item.uiTop}</span>
+                            <span className="ui__live">Ready</span>
+                          </div>
+                          <p className="ui__title">{item.uiTitle}</p>
+                          <div className="ui__row">
+                            <span>{item.row1[0]}</span>
+                            <span>{item.row1[1]}</span>
+                          </div>
+                          <div className="ui__row">
+                            <span>{item.row2[0]}</span>
+                            <span>{item.row2[1]}</span>
+                          </div>
+                          <div className="ui__row">
+                            <span>{item.row3[0]}</span>
+                            <span>{item.row3[1]}</span>
+                          </div>
+                        </div>
                       </div>
-                      <p className="ui__title">{item.uiTitle}</p>
-                      <div className="ui__row">
-                        <span>{item.row1[0]}</span>
-                        <span>{item.row1[1]}</span>
-                      </div>
-                      <div className="ui__row">
-                        <span>{item.row2[0]}</span>
-                        <span>{item.row2[1]}</span>
-                      </div>
-                      <div className="ui__row">
-                        <span>{item.row3[0]}</span>
-                        <span>{item.row3[1]}</span>
-                      </div>
-                    </div>
+                    ) : (
+                      <>
+                        <img
+                          src={item.image}
+                          alt={item.tab}
+                          className="w-full h-full object-cover brightness-75 group-hover:scale-105 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
+                        
+                        <div className="ui">
+                          <div className="ui__top">
+                            <span>{item.uiTop}</span>
+                            <span className="ui__live">Ready</span>
+                          </div>
+                          <p className="ui__title">{item.uiTitle}</p>
+                          <div className="ui__row">
+                            <span>{item.row1[0]}</span>
+                            <span>{item.row1[1]}</span>
+                          </div>
+                          <div className="ui__row">
+                            <span>{item.row2[0]}</span>
+                            <span>{item.row2[1]}</span>
+                          </div>
+                          <div className="ui__row">
+                            <span>{item.row3[0]}</span>
+                            <span>{item.row3[1]}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </figure>
                 </div>
               </div>

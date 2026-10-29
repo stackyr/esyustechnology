@@ -1307,6 +1307,24 @@ em.s {
   gap: 10px;
 }
 
+.folder__photo--logo {
+  background: #ffffff !important;
+}
+
+.ui--inline {
+  position: relative !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-top: auto !important;
+  padding: 14px 16px !important;
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, .08) !important;
+  border: 1px solid rgba(0, 0, 0, .07) !important;
+  background: #fbf9f5 !important;
+}
+
 .ui__top {
   display: flex;
   align-items: center;
@@ -1400,6 +1418,11 @@ em.s {
     max-height: 250px !important;
     aspect-ratio: 16/10 !important;
     border-radius: 14px !important;
+  }
+  .folder__photo--logo {
+    min-height: 250px !important;
+    max-height: none !important;
+    height: auto !important;
   }
   .folder__copy {
     gap: 16px !important;
