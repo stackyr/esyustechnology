@@ -62,7 +62,7 @@ export default function AboutUs({ onContactClick }) {
 
           <a className="feature" href="#applications">
             <span className="feature__row">
-              <span className="feature__num">4+</span>
+              <span className="feature__num">5+</span>
               <span className="feature__label">Software applications ready for deployment</span>
               <span className="ibtn ibtn--bare">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

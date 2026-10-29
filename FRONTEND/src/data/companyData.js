@@ -13,7 +13,7 @@ export const COMPANY_INFO = {
   address: "Esyus Technologies Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
   stats: [
     { label: "Offline Uptime", value: "100%", desc: "Works uninterrupted with local databases" },
-    { label: "Software Products", value: "4+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
+    { label: "Software Products", value: "5+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
     { label: "Invoices Generated", value: "50,000+", desc: "Rapid GST billings processed offline" },
     { label: "Client Satisfaction", value: "99.4%", desc: "Rated by retail & enterprise clients" },
   ]
@@ -211,6 +211,29 @@ export const PRODUCTS = [
     badge: "Android App",
     logo: "/bharat-yatra-sathi-logo.png",
     image: "/card-bharat-yatra-sathi.png"
+  },
+  {
+    id: "bharat-yatra-sathi-partner",
+    name: "Bharat Yatra Sathi Partner",
+    category: "Partner & Vendor Suite",
+    platform: "Android 8.0+ & Web",
+    version: "v1.0.2",
+    size: "21.4 MB",
+    isFeatured: false,
+    tagline: "Dedicated business portal & mobile POS for tour guides, hotel vendors, and operators.",
+    description: "Built for verified travel agencies, certified pilgrimage guides, transport fleets, and homestay hosts. Manage traveler bookings, verify digital pilgrimage QR passes offline, print customer receipt slips, and track direct daily payouts with zero cloud downtime.",
+    highlights: [
+      "Offline QR code verification for pilgrim & visitor entry passes",
+      "Instant Bluetooth receipt printing for excursions & bookings",
+      "Commission calculation and automated daily vendor ledger",
+      "Real-time customer itinerary management & notifications",
+      "Low battery and offline SQLite database synchronization"
+    ],
+    downloadFile: "BharatYatraSathiPartner-v1.0.2.apk",
+    accentColor: "from-indigo-600 to-amber-600",
+    badge: "Partner Suite",
+    logo: "/bharat-yatra-sathi-partner-logo.png",
+    image: "/card-bharat-yatra-sathi-partner.png"
   }
 ];
 
