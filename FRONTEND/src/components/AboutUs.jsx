@@ -1,7 +1,9 @@
 import React from 'react';
-import { COMPANY_INFO } from '../data/companyData';
+import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
 export default function AboutUs({ onContactClick }) {
+  const about = LANDING_PAGE_SECTIONS?.about || {};
+
   const domains = [
     {
       title: "Desktop Application Systems",
@@ -44,18 +46,18 @@ export default function AboutUs({ onContactClick }) {
             </svg>
             <blockquote className="voice__text">
               <p>
-                "We bridge the gap between heavy enterprise needs and practical everyday reliability with offline-first desktop software and modern digital systems that never stop working."
+                "{about.founderQuote || 'We bridge the gap between heavy enterprise needs and practical everyday reliability with offline-first desktop software and modern digital systems that never stop working.'}"
               </p>
             </blockquote>
             <figcaption className="voice__who flex items-center gap-3">
               <img
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120"
-                alt="Milan Mandal"
+                src={about.founderPhoto || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120"}
+                alt={COMPANY_INFO.founder}
                 className="w-10 h-10 rounded-full object-cover border-2 border-[var(--c1)] shrink-0"
               />
               <div>
                 <span className="sign font-bold block">{COMPANY_INFO.founder}</span>
-                <span className="text-xs text-stone-500 block">— Founder & CEO, Esyus Technologies</span>
+                <span className="text-xs text-stone-500 block">— Founder & CEO, {COMPANY_INFO.name}</span>
               </div>
             </figcaption>
           </figure>
@@ -80,18 +82,22 @@ export default function AboutUs({ onContactClick }) {
         <div className="mt-20 pt-16 border-t border-[var(--line)]">
           <div className="sec-head">
             <h2 className="h2">
-              Building dependable software for <em className="s">real-world businesses</em>
+              {about.headline ? (
+                about.headline
+              ) : (
+                <>Building dependable software for <em className="s">real-world businesses</em></>
+              )}
             </h2>
             <div className="sec-head__side">
               <p className="lead">
-                {COMPANY_INFO.name} was established to solve one critical problem: businesses losing hours of productivity to cloud server outages and complicated tools.
+                {about.lead || `${COMPANY_INFO.name} was established to solve one critical problem: businesses losing hours of productivity to cloud server outages and complicated tools.`}
               </p>
               <div className="p-3.5 rounded-xl bg-[var(--soft)] border-l-4 border-l-[var(--c1)] border border-[var(--line)] space-y-1">
                 <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--c1)] font-semibold block">
                   Core Engineering Motive
                 </span>
                 <p className="text-xs sm:text-sm text-[var(--ink)] font-medium italic leading-relaxed">
-                  “Transforming complex enterprise technology into simple, intuitive, and easy-to-use software that empowers everyday business.”
+                  “{about.motive || 'Transforming complex enterprise technology into simple, intuitive, and easy-to-use software that empowers everyday business.'}”
                 </p>
               </div>
               <button className="link" onClick={onContactClick}>
@@ -104,8 +110,8 @@ export default function AboutUs({ onContactClick }) {
             {/* Left Corporate Highlight with Subtle Office Background */}
             <div className="lg:col-span-5 rounded-[var(--r)] p-8 bg-[var(--dark)] text-[var(--bg)] flex flex-col justify-between shadow-2xl relative overflow-hidden group">
               <img
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900"
-                alt="Esyus Technologies Team Office"
+                src={about.officePhoto || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900"}
+                alt={`${COMPANY_INFO.name} Team Office`}
                 className="absolute inset-0 w-full h-full object-cover opacity-15 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[var(--dark)] via-[var(--dark)]/90 to-[var(--dark)]/70 pointer-events-none" />
@@ -140,7 +146,7 @@ export default function AboutUs({ onContactClick }) {
               </div>
 
               <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between text-xs text-stone-400 relative z-10">
-                <span>Sector V, Kolkata, WB 700091</span>
+                <span className="truncate pr-2">{COMPANY_INFO.address || 'Sector V, Kolkata, WB 700091'}</span>
                 <button
                   onClick={onContactClick}
                   className="btn btn--sm"

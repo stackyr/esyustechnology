@@ -1,0 +1,15 @@
+{
+  "name": "esyus-mern-suite",
+  "version": "1.0.0",
+  "description": "Esyus Technologies - Production MERN Stack Suite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node BACKEND/dev.js",
+    "dev:backend": "cd BACKEND && npm start",
+    "dev:frontend": "cd FRONTEND && npm run dev",
+    "build": "cd FRONTEND && npm run build",
+    "test": "node BACKEND/test-api.js"
+  }
+}
+

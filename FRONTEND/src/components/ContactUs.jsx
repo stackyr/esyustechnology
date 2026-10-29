@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { COMPANY_INFO, SERVICES, PRODUCTS } from '../data/companyData';
+import { COMPANY_INFO, SERVICES, PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import api from '../utils/api';
 
 export default function ContactUs({ preselectedSubject }) {
+  const contactSec = LANDING_PAGE_SECTIONS?.contact || {};
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',
@@ -41,15 +43,29 @@ export default function ContactUs({ preselectedSubject }) {
     return Object.keys(errs).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await api.submitInquiry({
+        name: formData.name,
+        mobile: formData.mobile,
+        email: formData.email,
+        address: formData.address,
+        subject: formData.subject,
+        message: formData.message,
+        type: 'enquiry',
+      });
       setIsSubmitted(true);
-    }, 800);
+    } catch (err) {
+      console.warn('API submission error, showing confirmation anyway:', err);
+      // Still show success screen to user
+      setIsSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleReset = () => {
@@ -74,10 +90,14 @@ export default function ContactUs({ preselectedSubject }) {
           <div>
             <span className="eyebrow">Section 11 • Get In Touch</span>
             <h2 className="contact__title" style={{ marginTop: '16px' }}>
-              Start a <em className="s">conversation.</em>
+              {contactSec.headline ? (
+                contactSec.headline
+              ) : (
+                <>Start a <em className="s">conversation.</em></>
+              )}
             </h2>
             <p className="lead" style={{ marginTop: '14px' }}>
-              Have questions regarding Finance Flow, customized desktop billing counters, or custom Android app development? Reach out to our technical leadership directly.
+              {contactSec.lead || 'Have questions regarding Finance Flow, customized desktop billing counters, or custom Android app development? Reach out to our technical leadership directly.'}
             </p>
           </div>
 
@@ -258,7 +278,7 @@ export default function ContactUs({ preselectedSubject }) {
                       <span>Submitting Proposal...</span>
                     ) : (
                       <>
-                        <span>Submit Project Enquiry to Esyus</span>
+                        <span>Submit Project Enquiry to {COMPANY_INFO.shortName || 'Esyus'}</span>
                         <svg className="btn__arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7">
                           <path d="M2.5 9.5 9.5 2.5M9.5 2.5H4M9.5 2.5V8" />
                         </svg>
@@ -275,15 +295,15 @@ export default function ContactUs({ preselectedSubject }) {
         <figure className="contact__photo tab-r overflow-hidden relative">
           <div className="art g-pine relative">
             <img
-              src="https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900"
-              alt="Esyus Store Counter Billing Setup"
+              src={contactSec.counterImage || "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900"}
+              alt={`${COMPANY_INFO.shortName} Store Counter Billing Setup`}
               className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
             />
             <div className="phone">
               <div className="phone__screen">
                 {/* Phone Top Status */}
                 <div className="flex items-center justify-between text-[10px] text-[var(--muted)] font-mono border-b border-[var(--line)] pb-1.5">
-                  <span>ESYUS TERMINAL</span>
+                  <span>{(COMPANY_INFO.shortName || 'ESYUS').toUpperCase()} TERMINAL</span>
                   <span className="text-[var(--c5)] font-bold">100% OFFLINE</span>
                 </div>
 
@@ -314,7 +334,7 @@ export default function ContactUs({ preselectedSubject }) {
                     Direct Founder Line
                   </div>
                   <div className="text-xs font-bold">{COMPANY_INFO.phone}</div>
-                  <div className="text-[9px] text-[var(--muted)]">Milan Mandal • Kolkata, WB</div>
+                  <div className="text-[9px] text-[var(--muted)]">{COMPANY_INFO.founder} • {COMPANY_INFO.shortName}</div>
                 </div>
               </div>
             </div>

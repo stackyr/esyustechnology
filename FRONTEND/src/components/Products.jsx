@@ -16,6 +16,8 @@ function ProductCard({
   onSelect,
   onDownload
 }) {
+  const displayImage = (product && product.image) || image;
+
   return (
     <figure className={`shot ${shotType} group/card`}>
       <div
@@ -23,7 +25,7 @@ function ProductCard({
         onClick={() => product && onSelect && onSelect(product)}
       >
         <img
-          src={image}
+          src={displayImage}
           alt={alt}
           className="w-full h-full object-cover brightness-90 group-hover:scale-105 transition-transform duration-700"
         />

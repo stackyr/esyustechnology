@@ -1,17 +1,20 @@
 import React from 'react';
+import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
 export default function Hero({ onExploreServices, onViewApplications, onDownloadClick }) {
+  const hero = LANDING_PAGE_SECTIONS.hero;
+
   return (
     <section id="home" className="hero" data-kind="hero" data-section="hero">
       <div className="hero__stage">
         {/* Head area with Ring, Title, Crew */}
         <div className="wrap hero__head">
-          <a className="ring" href="#featured-product" aria-label="Explore Finance Flow GST billing">
+          <a className="ring" href="#featured-product" aria-label={`Explore Finance Flow GST billing by ${COMPANY_INFO.name}`}>
             <svg className="ring__svg" viewBox="0 0 100 100" aria-hidden="true">
               <path id="ring-path" d="M11 50a39 39 0 1 1 78 0a39 39 0 1 1-78 0" fill="none" />
               <text>
                 <textPath href="#ring-path" textLength="240" lengthAdjust="spacingAndGlyphs">
-                  Offline Billing Suite · Esyus Technologies ·
+                  {hero.ringText || `Offline Billing Suite · ${COMPANY_INFO.name} · `}
                 </textPath>
               </text>
             </svg>
@@ -21,15 +24,29 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           </a>
 
           <h1 className="hero__title">
-            Engineered for speed, built for <em className="s">reliability</em>
+            {hero.title ? (
+              <>
+                {hero.title.split('reliability')[0]}
+                {hero.title.includes('reliability') && <em className="s">reliability</em>}
+                {hero.title.split('reliability')[1]}
+              </>
+            ) : (
+              <>Engineered for speed, built for <em className="s">reliability</em></>
+            )}
           </h1>
 
-          <a className="crew" href="#team" title="Leadership: Milan Mandal & Suman Raptan — Kolkata, WB">
+          <a className="crew" href="#team" title={`Leadership: ${COMPANY_INFO.founder} & ${COMPANY_INFO.coFounder} — Kolkata, WB`}>
             <span className="crew__img">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200" alt="Milan Mandal — Founder" />
+              <img
+                src={hero.founderPhoto || LANDING_PAGE_SECTIONS.about.founderPhoto}
+                alt={`${COMPANY_INFO.founder} — Founder`}
+              />
             </span>
             <span className="crew__img">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200" alt="Suman Raptan — Co-Founder" />
+              <img
+                src={hero.coFounderPhoto || "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"}
+                alt={`${COMPANY_INFO.coFounder} — Co-Founder`}
+              />
             </span>
             <span className="ibtn" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -46,7 +63,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           <div className="collage__col col-a">
             <figure className="look look--xl tab-l overflow-hidden relative group" style={{ '--plate': 'var(--c1)' }}>
               <img
-                src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=800"
+                src={hero.collageA1}
                 alt="Retail POS Billing Counter"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
@@ -64,7 +81,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
 
             <figure className="look look--sm overflow-hidden relative group" style={{ '--plate': 'var(--c3)' }}>
               <img
-                src="https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=800"
+                src={hero.collageA2}
                 alt="Thermal Receipt Printing"
                 className="w-full h-full object-cover brightness-90 group-hover:scale-105 transition-transform duration-700"
               />
@@ -85,7 +102,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           <div className="collage__col col-b">
             <figure className="look look--xxl tab-l overflow-hidden relative group" style={{ '--plate': 'var(--c2)' }}>
               <img
-                src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=800"
+                src={hero.collageB}
                 alt="Supermarket Checkout Counter"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
@@ -125,7 +142,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             </svg>
 
             <figure className="look look--md" style={{ '--plate': 'var(--c3)' }} data-flood-from>
-              <div className="art g-cream" role="img" aria-label="Esyus Technologies Offline Core Engine">
+              <div className="art g-cream" role="img" aria-label={`${COMPANY_INFO.name} Offline Core Engine`}>
                 <svg className="ico" viewBox="0 0 200 200" style={{ '--s': '86%' }}>
                   <use href="#s-orb" />
                 </svg>
@@ -147,7 +164,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           <div className="collage__col col-d">
             <figure className="look look--xxl tab-r overflow-hidden relative group" style={{ '--plate': 'var(--c4)' }}>
               <img
-                src="https://images.unsplash.com/photo-1556742208-999815fca738?auto=format&fit=crop&q=80&w=800"
+                src={hero.collageD}
                 alt="Finance Flow Desktop Billing Counter"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
@@ -168,7 +185,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           <div className="collage__col col-e">
             <figure className="look look--xl tab-r overflow-hidden relative group" style={{ '--plate': 'var(--c2)' }}>
               <img
-                src="https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?auto=format&fit=crop&q=80&w=800"
+                src={hero.collageE1}
                 alt="Android Mobile Billing & POS"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
@@ -178,7 +195,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
                   <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
                 </span>
                 <span>
-                  <b>Esyus Mobile POS</b>
+                  <b>{COMPANY_INFO.shortName} Mobile POS</b>
                   <small>Android APK · Handheld Sync</small>
                 </span>
               </div>
@@ -186,7 +203,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
 
             <figure className="look look--sm overflow-hidden relative group" style={{ '--plate': 'var(--c5)' }}>
               <img
-                src="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800"
+                src={hero.collageE2}
                 alt="Barcode Scanner and Hardware Terminal"
                 className="w-full h-full object-cover brightness-90 group-hover:scale-105 transition-transform duration-700"
               />
@@ -206,9 +223,9 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
 
         {/* Full-Screen Pin Flood Scene */}
         <div className="flood" data-flood>
-          <div className="art g-night" role="img" aria-label="Esyus Technologies offline retail billing software video demonstration">
+          <div className="art g-night" role="img" aria-label={`${COMPANY_INFO.name} offline retail billing software video demonstration`}>
             <video
-              src="/demo-video.mp4?v=2"
+              src={hero.videoUrl || "/demo-video.mp4?v=2"}
               autoPlay
               muted
               loop
@@ -221,12 +238,12 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             <div>
               <span className="eyebrow" style={{ color: 'var(--c3)' }}>Offline Architecture • Zero Latency</span>
               <h2 className="flood__title" style={{ marginTop: '8px' }}>
-                Esyus Technologies. Built for Indian business counters.
+                {hero.floodTitle || `${COMPANY_INFO.name}. Built for Indian business counters.`}
               </h2>
             </div>
             <div>
               <p className="flood__lead">
-                Local SQLite databases, instant 0.2s keystrokes, and plug-and-play thermal printer drivers. Total operational autonomy, no matter what happens to the internet.
+                {hero.floodLead || 'Local SQLite databases, instant 0.2s keystrokes, and plug-and-play thermal printer drivers. Total operational autonomy, no matter what happens to the internet.'}
               </p>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { X, Download, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { COMPANY_INFO } from '../data/companyData';
 
 export default function DownloadModal({ product, onClose }) {
   const [progress, setProgress] = useState(0);
@@ -8,8 +9,8 @@ export default function DownloadModal({ product, onClose }) {
   const triggerActualFileDownload = useCallback(() => {
     if (!product) return;
     const content = `=====================================================
-ESYUS TECHNOLOGIES - SOFTWARE RELEASE
-Domain: esyustechnologies.com
+${(COMPANY_INFO.name || 'ESYUS TECHNOLOGIES').toUpperCase()} - SOFTWARE RELEASE
+Domain: ${COMPANY_INFO.domain}
 =====================================================
 
 Application: ${product.name}
@@ -29,11 +30,11 @@ OFFLINE INSTALLATION INSTRUCTIONS:
 4. No internet connection is required during or after installation.
 
 For technical support or license queries:
-Email: support@esyustechnologies.com
-Domain: esyustechnologies.com
-Founder: Milan Mandal | Co-founder: Suman Raptan
+Email: ${COMPANY_INFO.supportEmail}
+Domain: ${COMPANY_INFO.domain}
+Founder: ${COMPANY_INFO.founder} | Co-founder: ${COMPANY_INFO.coFounder}
 
-(c) 2026-2027 Esyus Technologies. All rights reserved.
+(c) 2026-2027 ${COMPANY_INFO.name}. All rights reserved.
 =====================================================`;
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
