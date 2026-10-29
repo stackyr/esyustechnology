@@ -11,7 +11,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
               <path id="ring-path" d="M11 50a39 39 0 1 1 78 0a39 39 0 1 1-78 0" fill="none" />
               <text>
                 <textPath href="#ring-path" textLength="240" lengthAdjust="spacingAndGlyphs">
-                  Offline Billing Suite · Esyus Technology ·
+                  Offline Billing Suite · Esyus Technologies ·
                 </textPath>
               </text>
             </svg>
@@ -125,7 +125,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             </svg>
 
             <figure className="look look--md" style={{ '--plate': 'var(--c3)' }} data-flood-from>
-              <div className="art g-cream" role="img" aria-label="Esyus Technology Offline Core Engine">
+              <div className="art g-cream" role="img" aria-label="Esyus Technologies Offline Core Engine">
                 <svg className="ico" viewBox="0 0 200 200" style={{ '--s': '86%' }}>
                   <use href="#s-orb" />
                 </svg>
@@ -206,7 +206,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
 
         {/* Full-Screen Pin Flood Scene */}
         <div className="flood" data-flood>
-          <div className="art g-night" role="img" aria-label="Esyus Technology offline retail billing software video demonstration">
+          <div className="art g-night" role="img" aria-label="Esyus Technologies offline retail billing software video demonstration">
             <video
               src="/demo-video.mp4?v=2"
               autoPlay
@@ -221,7 +221,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             <div>
               <span className="eyebrow" style={{ color: 'var(--c3)' }}>Offline Architecture • Zero Latency</span>
               <h2 className="flood__title" style={{ marginTop: '8px' }}>
-                Finance Flow. Built for Indian business counters.
+                Esyus Technologies. Built for Indian business counters.
               </h2>
             </div>
             <div>

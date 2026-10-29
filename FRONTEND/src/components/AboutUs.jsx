@@ -55,7 +55,7 @@ export default function AboutUs({ onContactClick }) {
               />
               <div>
                 <span className="sign font-bold block">{COMPANY_INFO.founder}</span>
-                <span className="text-xs text-stone-500 block">— Founder & CEO, Esyus Technology</span>
+                <span className="text-xs text-stone-500 block">— Founder & CEO, Esyus Technologies</span>
               </div>
             </figcaption>
           </figure>
@@ -97,7 +97,7 @@ export default function AboutUs({ onContactClick }) {
             <div className="lg:col-span-5 rounded-[var(--r)] p-8 bg-[var(--dark)] text-[var(--bg)] flex flex-col justify-between shadow-2xl relative overflow-hidden group">
               <img
                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900"
-                alt="Esyus Technology Team Office"
+                alt="Esyus Technologies Team Office"
                 className="absolute inset-0 w-full h-full object-cover opacity-15 group-hover:scale-105 transition-transform duration-700 pointer-events-none"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[var(--dark)] via-[var(--dark)]/90 to-[var(--dark)]/70 pointer-events-none" />

@@ -33,7 +33,7 @@ export default function FeaturedProduct({ onDownloadFinanceFlow }) {
             Finance Flow: From barcode scan to printed GST invoice in <em className="s">0.2 seconds</em>
           </h2>
           <p className="lead">
-            The premier offline-first billing solution designed by Esyus Technology. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.
+            The premier offline-first billing solution designed by Esyus Technologies. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.
           </p>
 
           {/* Interactive Calculator Input Controls */}

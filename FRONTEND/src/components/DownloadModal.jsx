@@ -8,8 +8,8 @@ export default function DownloadModal({ product, onClose }) {
   const triggerActualFileDownload = useCallback(() => {
     if (!product) return;
     const content = `=====================================================
-ESYUS TECHNOLOGY PVT. LTD. - SOFTWARE RELEASE
-Domain: esyustechnology.com
+ESYUS TECHNOLOGIES - SOFTWARE RELEASE
+Domain: esyustechnologies.com
 =====================================================
 
 Application: ${product.name}
@@ -29,11 +29,11 @@ OFFLINE INSTALLATION INSTRUCTIONS:
 4. No internet connection is required during or after installation.
 
 For technical support or license queries:
-Email: support@esyustechnology.com
-Domain: esyustechnology.com
+Email: support@esyustechnologies.com
+Domain: esyustechnologies.com
 Founder: Milan Mandal | Co-founder: Suman Raptan
 
-(c) 2026-2027 Esyus Technology Pvt. Ltd. All rights reserved.
+(c) 2026-2027 Esyus Technologies. All rights reserved.
 =====================================================`;
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });

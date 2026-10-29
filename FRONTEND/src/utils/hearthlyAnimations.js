@@ -1,5 +1,5 @@
 /**
- * Exact Hearthly Animation Engine for Esyus Technology
+ * Exact Hearthly Animation Engine for Esyus Technologies
  * Implements the 1:1 animations from the original code provided by the user:
  * - Pinned Hero with Orb card flood expansion & collage drift
  * - Folders stacking scale and dimming on scroll

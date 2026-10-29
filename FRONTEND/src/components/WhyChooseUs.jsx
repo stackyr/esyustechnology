@@ -50,7 +50,7 @@ export default function WhyChooseUs({ onContactClick }) {
         </h2>
         <div className="sec-head__side">
           <p className="lead">
-            Every software package from Esyus Technology is architected around absolute uptime, data privacy, and rapid user workflows.
+            Every software package from Esyus Technologies is architected around absolute uptime, data privacy, and rapid user workflows.
           </p>
           <div className="flex flex-wrap items-center gap-4">
             <a className="link" href="#featured-product">

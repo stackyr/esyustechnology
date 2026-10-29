@@ -1,16 +1,16 @@
 export const COMPANY_INFO = {
-  name: "Esyus Technology Pvt. Ltd.",
+  name: "Esyus Technologies",
   shortName: "Esyus",
-  domain: "esyustechnology.com",
+  domain: "esyustechnologies.com",
   tagline: "Smart Software Solutions for Tomorrow's Businesses",
   slogan: "High-Performance Desktop, Web & Android Systems Built for Absolute Reliability",
   founder: "Milan Mandal",
   coFounder: "Suman Raptan",
   establishmentDate: "01/01/2027",
-  email: "contact@esyustechnology.com",
-  supportEmail: "support@esyustechnology.com",
+  email: "contact@esyustechnologies.com",
+  supportEmail: "support@esyustechnologies.com",
   phone: "+91 98765 43210",
-  address: "Esyus Technology Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
+  address: "Esyus Technologies Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
   stats: [
     { label: "Offline Uptime", value: "100%", desc: "Works uninterrupted with local databases" },
     { label: "Software Products", value: "4+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
@@ -241,7 +241,7 @@ export const TEAM_MEMBERS = [
     name: "Milan Mandal",
     role: "Founder & Chief Executive Officer",
     category: "Executive Leadership",
-    bio: "Visionary founder driving Esyus Technology. Passionate about creating software solutions that solve real-world operational challenges for Indian businesses with reliability and speed.",
+    bio: "Visionary founder driving Esyus Technologies. Passionate about creating software solutions that solve real-world operational challenges for Indian businesses with reliability and speed.",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
     initials: "MM",
     specialties: ["Strategic Vision", "Product Architecture", "Business Operations"],
@@ -318,7 +318,7 @@ export const CUSTOMER_REVIEWS = [
     product: "Custom Software Development",
     rating: 5,
     date: "March 2026",
-    comment: "The team at Esyus Technology built a bespoke inventory tracking tool that integrates with our existing barcode hardware. Delivered exactly on schedule with fantastic support."
+    comment: "The team at Esyus Technologies built a bespoke inventory tracking tool that integrates with our existing barcode hardware. Delivered exactly on schedule with fantastic support."
   }
 ];
 
@@ -332,11 +332,11 @@ export const FAQS = [
     a: "Finance Flow supports all standard printers: 2-inch and 3-inch thermal POS receipt printers (USB, Bluetooth, LAN) as well as regular A4/A5 laser and inkjet printers for detailed GST tax invoices with terms and bank details."
   },
   {
-    q: "How does Esyus Technology handle software updates and data safety?",
+    q: "How does Esyus Technologies handle software updates and data safety?",
     a: "All desktop applications include automated local database backup mechanisms. Updates can be installed seamlessly without touching or overwriting your stored customer and invoice records."
   },
   {
-    q: "Can Esyus Technology build custom features or integrations for our business?",
+    q: "Can Esyus Technologies build custom features or integrations for our business?",
     a: "Yes! In addition to our off-the-shelf software packages, we offer end-to-end custom software development. Whether you need specific barcode hardware integration, custom reports, or cloud synchronization, our team will engineer it to your exact specifications."
   },
   {
