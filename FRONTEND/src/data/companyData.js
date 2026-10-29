@@ -13,7 +13,7 @@ export const COMPANY_INFO = {
   address: "Esyus Technologies Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
   stats: [
     { label: "Offline Uptime", value: "100%", desc: "Works uninterrupted with local databases" },
-    { label: "Software Products", value: "4+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
+    { label: "Software Products", value: "5+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
     { label: "Invoices Generated", value: "50,000+", desc: "Rapid GST billings processed offline" },
     { label: "Client Satisfaction", value: "99.4%", desc: "Rated by retail & enterprise clients" },
   ]
@@ -138,7 +138,9 @@ export const PRODUCTS = [
     ],
     downloadFile: "FinanceFlow-v2.4.0-Setup.exe",
     accentColor: "from-blue-600 to-indigo-700",
-    badge: "Flagship Desktop"
+    badge: "Flagship Desktop",
+    logo: "/finance-flow-logo.png",
+    image: "/card-finance-flow.png"
   },
   {
     id: "finance-flow-lite",
@@ -159,7 +161,10 @@ export const PRODUCTS = [
     ],
     downloadFile: "FinanceFlowLite-Setup.exe",
     accentColor: "from-teal-600 to-emerald-600",
-    badge: "Low Footprint"
+    badge: "Low Footprint",
+    logo: "/finance-flow-lite-logo-transparent.png",
+    logoSquare: "/finance-flow-lite-logo.png",
+    image: "/card-finance-flow-lite.png"
   },
   {
     id: "finance-flow-flash",
@@ -180,28 +185,55 @@ export const PRODUCTS = [
     ],
     downloadFile: "FinanceFlowFlash-v1.0.4.exe",
     accentColor: "from-amber-600 to-orange-600",
-    badge: "Rapid POS"
+    badge: "Rapid POS",
+    logo: "/finance-flow-flash-logo.png",
+    image: "/card-finance-flow-flash.png"
   },
   {
     id: "bharat-yatra-sathi",
     name: "Bharat Yatra Sathi",
-    category: "Travel & Companion App",
+    category: "Android Application",
     platform: "Android 8.0+",
     version: "v1.1.0",
     size: "24.8 MB",
     isFeatured: false,
-    tagline: "Smart travel and pilgrimage companion app designed for explorers in India.",
-    description: "Bharat Yatra Sathi is a mobile companion app for domestic travelers and pilgrims navigating tourist destinations and sacred sites across India. Features offline route summaries, local emergency assistance, and personalized itineraries.",
+    tagline: "Smart travel, highway mobility, and pilgrimage companion app designed for explorers in India.",
+    description: "Bharat Yatra Sathi is a production-grade Android mobile application for domestic travelers, drivers, and pilgrims navigating tourist destinations and sacred sites across India. Features 100% offline highway routes, temple timings, local emergency assistance, and driver navigation.",
     highlights: [
-      "Curated travel guides and temple/heritage site timings",
+      "100% offline highway routes & temple/heritage site timings",
+      "Driver mobility assist & turn-by-turn waypoint tracking",
       "Offline emergency contacts & tourist police hotlines",
       "Custom day-by-day travel planner & expense logger",
-      "Multi-language support (English, Hindi, Bengali)",
       "Low battery consumption mode with offline maps integration"
     ],
     downloadFile: "BharatYatraSathi-v1.1.apk",
-    accentColor: "from-purple-600 to-indigo-600",
-    badge: "Android App"
+    accentColor: "from-blue-600 to-indigo-600",
+    badge: "Android App",
+    logo: "/bharat-yatra-sathi-logo.png",
+    image: "/card-bharat-yatra-sathi.png"
+  },
+  {
+    id: "bharat-yatra-sathi-partner",
+    name: "Bharat Yatra Sathi Partner",
+    category: "Partner & Vendor Suite",
+    platform: "Android 8.0+ & Web",
+    version: "v1.0.2",
+    size: "21.4 MB",
+    isFeatured: false,
+    tagline: "Dedicated business portal & mobile POS for tour guides, hotel vendors, and operators.",
+    description: "Built for verified travel agencies, certified pilgrimage guides, transport fleets, and homestay hosts. Manage traveler bookings, verify digital pilgrimage QR passes offline, print customer receipt slips, and track direct daily payouts with zero cloud downtime.",
+    highlights: [
+      "Offline QR code verification for pilgrim & visitor entry passes",
+      "Instant Bluetooth receipt printing for excursions & bookings",
+      "Commission calculation and automated daily vendor ledger",
+      "Real-time customer itinerary management & notifications",
+      "Low battery and offline SQLite database synchronization"
+    ],
+    downloadFile: "BharatYatraSathiPartner-v1.0.2.apk",
+    accentColor: "from-indigo-600 to-amber-600",
+    badge: "Partner Suite",
+    logo: "/bharat-yatra-sathi-partner-logo.png",
+    image: "/card-bharat-yatra-sathi-partner.png"
   }
 ];
 

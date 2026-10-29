@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { Clock } from 'lucide-react';
 
-export default function FeaturedProduct({ onDownloadFinanceFlow }) {
+export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
   const financeFlow = PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0];
   const fp = LANDING_PAGE_SECTIONS?.featuredProduct || {};
 
@@ -103,13 +104,13 @@ export default function FeaturedProduct({ onDownloadFinanceFlow }) {
                 Net Bill: ₹{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </span>
               <button
-                className="btn btn--sm w-full sm:w-auto justify-center"
-                onClick={onDownloadFinanceFlow}
+                type="button"
+                className="btn btn--sm w-full sm:w-auto justify-center cursor-default border border-[var(--c1)]/30 text-[var(--c1)] bg-white"
+                disabled
+                title="Official download link will be available soon"
               >
-                <span>Download v2.4.0 Setup (.exe)</span>
-                <svg className="btn__arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-                  <path d="M3 9 9 3M4 3h5v5" />
-                </svg>
+                <Clock className="w-3.5 h-3.5 mr-1.5 text-[var(--c1)] shrink-0" />
+                <span>Coming Soon (v2.4.0)</span>
               </button>
             </div>
           </div>

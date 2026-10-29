@@ -51,8 +51,8 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
                 <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
               <div>
-                <small>Install Today</small>
-                <b>Download .EXE</b>
+                <small>Release Status</small>
+                <b>Coming Soon</b>
               </div>
             </a>
 
@@ -105,14 +105,18 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
                     onClick={() => onSelectProduct(prod)}
                     className="text-[var(--fm)] hover:text-white transition-colors text-left flex items-center gap-2 cursor-pointer"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--c1)]" />
+                    {prod.logo ? (
+                      <img src={prod.logo} alt={prod.name} className="w-3.5 h-3.5 object-contain shrink-0" />
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--c1)]" />
+                    )}
                     <span>{prod.name}</span>
                   </button>
                 </li>
               ))}
               <li className="pt-1">
                 <a href="#download" className="text-[var(--c3)] hover:underline font-semibold block">
-                  Download All Packages →
+                  Explore Software Packages →
                 </a>
               </li>
             </ul>
