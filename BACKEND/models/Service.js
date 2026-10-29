@@ -8,7 +8,11 @@ const ServiceSchema = new mongoose.Schema({
   badge: { type: String, default: 'Core Service' },
   iconName: { type: String, default: 'Globe' },
   features: [{ type: String }],
-  techStack: [{ type: String }]
+  techStack: [{ type: String }],
+  isComingSoon: { type: Boolean, default: false },
+  actionUrl: { type: String, default: '' },
+  image: { type: String, default: '' },
+  num: { type: String, default: '' }
 }, {
   timestamps: true,
   toJSON: { virtuals: true },

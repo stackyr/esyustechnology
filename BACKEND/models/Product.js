@@ -11,7 +11,12 @@ const ProductSchema = new mongoose.Schema({
   tagline: { type: String, default: '' },
   description: { type: String, default: '' },
   highlights: [{ type: String }],
+  chips: [{ type: String }],
   downloadFile: { type: String, default: 'Setup.exe' },
+  downloadUrl: { type: String, default: '' },
+  isComingSoon: { type: Boolean, default: true },
+  logo: { type: String, default: '' },
+  image: { type: String, default: '' },
   accentColor: { type: String, default: 'from-blue-600 to-indigo-700' },
   badge: { type: String, default: 'Desktop App' }
 }, {

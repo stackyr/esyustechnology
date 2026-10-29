@@ -290,7 +290,7 @@ app.get('/api/services', async (req, res) => {
 
 app.post('/api/services', requireAdminAuth, async (req, res) => {
   try {
-    const { title, shortDesc, fullDesc, badge, iconName, features, techStack } = req.body;
+    const { title, shortDesc, fullDesc, badge, iconName, features, techStack, isComingSoon, actionUrl, image } = req.body;
     if (!title) {
       return res.status(400).json({ success: false, error: 'Service title is required' });
     }
@@ -303,6 +303,9 @@ app.post('/api/services', requireAdminAuth, async (req, res) => {
       fullDesc: (fullDesc || '').trim(),
       badge: badge || 'Core Service',
       iconName: iconName || 'Globe',
+      isComingSoon: Boolean(isComingSoon),
+      actionUrl: (actionUrl || '').trim(),
+      image: (image || '').trim(),
       features: Array.isArray(features) ? features : (typeof features === 'string' ? features.split('\n').filter(Boolean) : []),
       techStack: Array.isArray(techStack) ? techStack : (typeof techStack === 'string' ? techStack.split(',').map(s => s.trim()).filter(Boolean) : [])
     };
@@ -319,9 +322,11 @@ app.put('/api/services/:id', requireAdminAuth, async (req, res) => {
     const { id } = req.params;
     const updates = {
       ...req.body,
+      isComingSoon: req.body.isComingSoon !== undefined ? Boolean(req.body.isComingSoon) : undefined,
       features: Array.isArray(req.body.features) ? req.body.features : (typeof req.body.features === 'string' ? req.body.features.split('\n').filter(Boolean) : req.body.features),
       techStack: Array.isArray(req.body.techStack) ? req.body.techStack : (typeof req.body.techStack === 'string' ? req.body.techStack.split(',').map(s => s.trim()).filter(Boolean) : req.body.techStack)
     };
+    if (updates.isComingSoon === undefined) delete updates.isComingSoon;
     const updated = await updateServiceData(id, updates);
     if (!updated) return res.status(404).json({ success: false, error: 'Service not found' });
     res.json({ success: true, message: 'Service updated successfully', data: updated });
@@ -354,7 +359,11 @@ app.get('/api/products', async (req, res) => {
 
 app.post('/api/products', requireAdminAuth, async (req, res) => {
   try {
-    const { name, category, platform, version, size, tagline, description, highlights, downloadFile, badge, isFeatured, accentColor } = req.body;
+    const {
+      name, category, platform, version, size, tagline, description,
+      highlights, chips, downloadFile, downloadUrl, isComingSoon,
+      badge, isFeatured, accentColor, logo, image
+    } = req.body;
     if (!name) {
       return res.status(400).json({ success: false, error: 'Product name is required' });
     }
@@ -371,9 +380,14 @@ app.post('/api/products', requireAdminAuth, async (req, res) => {
       tagline: (tagline || '').trim(),
       description: (description || '').trim(),
       highlights: Array.isArray(highlights) ? highlights : (typeof highlights === 'string' ? highlights.split('\n').filter(Boolean) : []),
+      chips: Array.isArray(chips) ? chips : (typeof chips === 'string' ? chips.split(',').map(s => s.trim()).filter(Boolean) : []),
       downloadFile: (downloadFile || `${name.replace(/\s+/g, '')}-Setup.exe`).trim(),
+      downloadUrl: (downloadUrl || '').trim(),
+      isComingSoon: isComingSoon !== undefined ? Boolean(isComingSoon) : true,
       accentColor: accentColor || 'from-blue-600 to-indigo-700',
-      badge: badge || 'Desktop App'
+      badge: badge || 'Desktop App',
+      logo: (logo || '').trim(),
+      image: (image || '').trim()
     };
 
     const saved = await createProductData(newProduct);
@@ -388,8 +402,11 @@ app.put('/api/products/:id', requireAdminAuth, async (req, res) => {
     const { id } = req.params;
     const updates = {
       ...req.body,
-      highlights: Array.isArray(req.body.highlights) ? req.body.highlights : (typeof req.body.highlights === 'string' ? req.body.highlights.split('\n').filter(Boolean) : req.body.highlights)
+      highlights: Array.isArray(req.body.highlights) ? req.body.highlights : (typeof req.body.highlights === 'string' ? req.body.highlights.split('\n').filter(Boolean) : req.body.highlights),
+      chips: Array.isArray(req.body.chips) ? req.body.chips : (typeof req.body.chips === 'string' ? req.body.chips.split(',').map(s => s.trim()).filter(Boolean) : req.body.chips),
+      isComingSoon: req.body.isComingSoon !== undefined ? Boolean(req.body.isComingSoon) : undefined
     };
+    if (updates.isComingSoon === undefined) delete updates.isComingSoon;
     const updated = await updateProductData(id, updates);
     if (!updated) return res.status(404).json({ success: false, error: 'Product not found' });
     res.json({ success: true, message: 'Product updated successfully', data: updated });

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
-import { Clock } from 'lucide-react';
+import { Clock, Download } from 'lucide-react';
 
 export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
   const financeFlow = PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0];
@@ -103,15 +103,29 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
               <span className="text-xs font-bold text-[var(--ink)]">
                 Net Bill: ₹{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </span>
-              <button
-                type="button"
-                className="btn btn--sm w-full sm:w-auto justify-center cursor-default border border-[var(--c1)]/30 text-[var(--c1)] bg-white"
-                disabled
-                title="Official download link will be available soon"
-              >
-                <Clock className="w-3.5 h-3.5 mr-1.5 text-[var(--c1)] shrink-0" />
-                <span>Coming Soon (v2.4.0)</span>
-              </button>
+              {financeFlow.isComingSoon === false && Boolean(financeFlow.downloadUrl) ? (
+                <a
+                  href={financeFlow.downloadUrl}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn--sm w-full sm:w-auto justify-center font-bold bg-[var(--c1)] hover:bg-[#d64b22] text-white shadow-md transition-colors"
+                  title={`Download ${financeFlow.name} Setup`}
+                >
+                  <Download className="w-3.5 h-3.5 mr-1.5 text-white shrink-0" />
+                  <span>Download Setup ({financeFlow.version || 'v2.4.0'})</span>
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn--sm w-full sm:w-auto justify-center cursor-default border border-[var(--c1)]/30 text-[var(--c1)] bg-white"
+                  disabled
+                  title="Official download link will be available soon"
+                >
+                  <Clock className="w-3.5 h-3.5 mr-1.5 text-[var(--c1)] shrink-0" />
+                  <span>Coming Soon ({financeFlow.version || 'v2.4.0'})</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
