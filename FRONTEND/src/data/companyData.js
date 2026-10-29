@@ -139,7 +139,8 @@ export const PRODUCTS = [
     downloadFile: "FinanceFlow-v2.4.0-Setup.exe",
     accentColor: "from-blue-600 to-indigo-700",
     badge: "Flagship Desktop",
-    logo: "/finance-flow-logo.png"
+    logo: "/finance-flow-logo.png",
+    image: "/card-finance-flow.png"
   },
   {
     id: "finance-flow-lite",
@@ -162,7 +163,8 @@ export const PRODUCTS = [
     accentColor: "from-teal-600 to-emerald-600",
     badge: "Low Footprint",
     logo: "/finance-flow-lite-logo-transparent.png",
-    logoSquare: "/finance-flow-lite-logo.png"
+    logoSquare: "/finance-flow-lite-logo.png",
+    image: "/card-finance-flow-lite.png"
   },
   {
     id: "finance-flow-flash",
@@ -183,7 +185,9 @@ export const PRODUCTS = [
     ],
     downloadFile: "FinanceFlowFlash-v1.0.4.exe",
     accentColor: "from-amber-600 to-orange-600",
-    badge: "Rapid POS"
+    badge: "Rapid POS",
+    logo: "/finance-flow-flash-logo.png",
+    image: "/card-finance-flow-flash.png"
   },
   {
     id: "bharat-yatra-sathi",
@@ -204,7 +208,9 @@ export const PRODUCTS = [
     ],
     downloadFile: "BharatYatraSathi-v1.1.apk",
     accentColor: "from-purple-600 to-indigo-600",
-    badge: "Android App"
+    badge: "Android App",
+    logo: "/bharat-yatra-sathi-logo.png",
+    image: "/card-bharat-yatra-sathi.png"
   }
 ];
 

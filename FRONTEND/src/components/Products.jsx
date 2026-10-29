@@ -16,6 +16,8 @@ function ProductCard({
   onSelect,
   onDownload
 }) {
+  const cardImage = product?.image || image;
+
   return (
     <figure className={`shot ${shotType} group/card`}>
       <div
@@ -23,18 +25,11 @@ function ProductCard({
         onClick={() => product && onSelect && onSelect(product)}
       >
         <img
-          src={image}
+          src={cardImage}
           alt={alt}
-          className="w-full h-full object-cover brightness-90 group-hover:scale-105 transition-transform duration-700"
+          className="w-full h-full object-cover brightness-100 group-hover:scale-105 transition-transform duration-700"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
-
-        {/* Floating Brand Logo Badge in corner if available */}
-        {product?.logo && (
-          <div className="absolute top-3.5 right-3.5 z-20 w-11 h-11 rounded-2xl bg-white/95 backdrop-blur-md p-1.5 shadow-lg border border-white/80 transition-all duration-300 group-hover:scale-110 flex items-center justify-center pointer-events-none">
-            <img src={product.logo} alt={product.name} className="w-full h-full object-contain" />
-          </div>
-        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
 
         {/* Floating Badge (smoothly slides up on hover so it never overlaps the action buttons) */}
         <div className="chip transition-all duration-300 group-hover:-translate-y-12">
@@ -176,7 +171,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           <div className="gallery__col gallery__col--a">
             <ProductCard
               product={PRODUCTS[3]} // Bharat Yatra Sathi
-              image="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&q=80&w=900"
+              image="/card-bharat-yatra-sathi.png"
               alt="Bharat Yatra Sathi Indian Tourism Companion"
               badgeText="Bharat Yatra Sathi"
               platformText="Android 8.0+ APK · v1.1.0"
@@ -195,7 +190,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           <div className="gallery__col gallery__col--b">
             <ProductCard
               product={PRODUCTS[1]} // Finance Flow Lite
-              image="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=900"
+              image="/card-finance-flow-lite.png"
               alt="Finance Flow Lite on Android Tablet"
               badgeText="Finance Flow Lite (Android)"
               platformText="Android 8.0+ · Tablet POS"
@@ -214,7 +209,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           <div className="gallery__col gallery__col--c">
             <ProductCard
               product={null}
-              image="https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=900"
+              image="/card-hardware-printer.png"
               alt="Mobile Bluetooth Receipt Printer"
               badgeText="Wireless Bluetooth Interop"
               platformText="Bluetooth 5.0 ESC/POS Ready"
@@ -234,7 +229,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           <div className="gallery__col gallery__col--a">
             <ProductCard
               product={PRODUCTS[0]} // Finance Flow
-              image="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"
+              image="/card-finance-flow.png"
               alt="Finance Flow Desktop Billing Counter"
               badgeText="Finance Flow"
               platformText="Windows 10 / 11 · v2.4.0"
@@ -249,7 +244,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
             />
             <ProductCard
               product={PRODUCTS[1]} // Finance Flow Lite
-              image="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=900"
+              image="/card-finance-flow-lite.png"
               alt="Finance Flow Lite on Desktop"
               badgeText="Finance Flow Lite"
               platformText="Windows Desktop · <100MB RAM"
@@ -268,7 +263,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           <div className="gallery__col gallery__col--b">
             <ProductCard
               product={PRODUCTS[2]} // Finance Flow Flash
-              image="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=900"
+              image="/card-finance-flow-flash.png"
               alt="Finance Flow Flash Supermarket POS"
               badgeText="Finance Flow Flash"
               platformText="Split-Second Barcode POS"
@@ -287,7 +282,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           <div className="gallery__col gallery__col--c">
             <ProductCard
               product={null}
-              image="https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=900"
+              image="/card-hardware-printer.png"
               alt="Thermal Receipt Printer ESC/POS"
               badgeText="Thermal Drivers Included"
               platformText={'ESC/POS 2" & 3" Serial/USB'}
@@ -307,7 +302,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           <div className="gallery__col gallery__col--a">
             <ProductCard
               product={PRODUCTS[0]}
-              image="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"
+              image="/card-finance-flow.png"
               alt="Finance Flow Desktop Billing Counter"
               badgeText="Finance Flow"
               platformText="Windows 10 / 11 · v2.4.0"
@@ -322,7 +317,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
             />
             <ProductCard
               product={PRODUCTS[1]}
-              image="https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=900"
+              image="/card-finance-flow-lite.png"
               alt="Finance Flow Lite on Tablet"
               badgeText="Finance Flow Lite"
               platformText="Windows & Android · <100MB RAM"
@@ -341,7 +336,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           <div className="gallery__col gallery__col--b">
             <ProductCard
               product={PRODUCTS[2]}
-              image="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=900"
+              image="/card-finance-flow-flash.png"
               alt="Finance Flow Flash Supermarket POS"
               badgeText="Finance Flow Flash"
               platformText="Split-Second Barcode POS"
@@ -360,7 +355,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
           <div className="gallery__col gallery__col--c">
             <ProductCard
               product={PRODUCTS[3]}
-              image="https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&q=80&w=900"
+              image="/card-bharat-yatra-sathi.png"
               alt="Bharat Yatra Sathi Indian Tourism Companion"
               badgeText="Bharat Yatra Sathi"
               platformText="Android 8.0+ APK · v1.1.0"
@@ -375,7 +370,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
             />
             <ProductCard
               product={null}
-              image="https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=900"
+              image="/card-hardware-printer.png"
               alt="Thermal Receipt Printer ESC/POS"
               badgeText="Thermal Drivers Included"
               platformText={'ESC/POS 2" & 3" Serial/USB'}
