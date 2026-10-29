@@ -225,7 +225,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
               product={PRODUCTS[0]} // Finance Flow
               image="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"
               alt="Finance Flow Desktop Billing Counter"
-              badgeText="Finance Flow Flagship"
+              badgeText="Finance Flow"
               platformText="Windows 10 / 11 · v2.4.0"
               captionTitle="Finance Flow Desktop Billing"
               captionCategory="100% Offline GST"
@@ -298,7 +298,7 @@ export default function Products({ onSelectProduct, onDownloadProduct }) {
               product={PRODUCTS[0]}
               image="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"
               alt="Finance Flow Desktop Billing Counter"
-              badgeText="Finance Flow Flagship"
+              badgeText="Finance Flow"
               platformText="Windows 10 / 11 · v2.4.0"
               captionTitle="Finance Flow Desktop Billing"
               captionCategory="100% Offline GST"
