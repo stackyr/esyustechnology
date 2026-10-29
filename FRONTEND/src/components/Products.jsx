@@ -29,8 +29,8 @@ function ProductCard({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
 
-        {/* Floating Top Badge */}
-        <div className="chip">
+        {/* Floating Badge (smoothly slides up on hover so it never overlaps the action buttons) */}
+        <div className="chip transition-all duration-300 group-hover:-translate-y-12">
           <span className="chip__ic">
             <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
           </span>
@@ -40,16 +40,16 @@ function ProductCard({
           </span>
         </div>
 
-        {/* Quick Action Overlay on Hover */}
+        {/* Quick Action Overlay on Hover with High Z-Index so Specs & Download are never blocked */}
         {product && (
-          <div className="absolute inset-x-0 bottom-0 p-3.5 flex items-center justify-between gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
+          <div className="absolute inset-x-0 bottom-0 z-30 p-3.5 flex items-center justify-between gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-t from-black/95 via-black/70 to-transparent pointer-events-none group-hover:pointer-events-auto">
             <button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 if (onSelect) onSelect(product);
               }}
-              className="px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-md text-white text-[11px] font-semibold border border-white/30 transition-all cursor-pointer"
+              className="relative z-30 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-md text-white text-[11px] font-semibold border border-white/30 transition-all cursor-pointer shadow-md hover:scale-105 active:scale-95"
             >
               Specs & Features
             </button>
@@ -59,10 +59,10 @@ function ProductCard({
                 e.stopPropagation();
                 if (onDownload) onDownload(product);
               }}
-              className="px-3 py-1.5 rounded-full bg-[var(--c1)] hover:bg-[var(--c1)]/90 text-white text-[11px] font-bold shadow-lg transition-transform hover:scale-105 flex items-center gap-1 cursor-pointer"
+              className="relative z-30 px-3.5 py-1.5 rounded-full bg-[var(--c1)] hover:bg-[var(--c1)]/90 text-white text-[11px] font-bold shadow-lg transition-transform hover:scale-105 active:scale-95 flex items-center gap-1 cursor-pointer"
             >
               <span>Download</span>
-              <span className="opacity-80 text-[10px]">({downloadLabel || (product.downloadFile.endsWith('.apk') ? '.apk' : '.exe')})</span>
+              <span className="opacity-90 text-[10px] font-mono">({product.downloadFile.endsWith('.apk') ? 'APK' : (product.id === 'finance-flow-lite' ? 'EXE/APK' : 'EXE')})</span>
             </button>
           </div>
         )}
