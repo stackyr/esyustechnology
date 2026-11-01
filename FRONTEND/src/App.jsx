@@ -26,7 +26,7 @@ import AdminPanel from './admin/AdminPanel';
 import AdminLogin from './admin/AdminLogin';
 import api from './utils/api';
 import { PRODUCTS, applyDynamicData } from './data/companyData';
-import { initHearthlyAnimations } from './utils/hearthlyAnimations';
+import { initHearthlyAnimations, lenisScrollTo } from './utils/hearthlyAnimations';
 
 export default function App() {
   // Admin View & Authentication State
@@ -122,10 +122,8 @@ export default function App() {
 
   // Navigation handlers
   const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    const target = id === 'home' || id === '#home' ? 0 : (id.startsWith('#') ? id : `#${id}`);
+    lenisScrollTo(target, { offset: -80 });
   };
 
   const handleEnquireService = (serviceTitle) => {

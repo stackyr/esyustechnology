@@ -1,7 +1,15 @@
 // API Client Service for Frontend & Admin Panel
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
+const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+const API_BASE = import.meta.env.VITE_API_URL || (isLocalhost ? 'http://localhost:5000/api' : '/api');
 
 async function request(path, options = {}) {
+  if (isHttps && API_BASE.startsWith('http://')) {
+    // Avoid mixed-content blocking on secure hosting environments like Vercel
+    return { data: null };
+  }
+
   const url = `${API_BASE}${path}`;
   const defaultHeaders = {
     'Content-Type': 'application/json',
