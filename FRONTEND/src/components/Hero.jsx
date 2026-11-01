@@ -204,7 +204,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             <figure className="look look--sm overflow-hidden relative group" style={{ '--plate': 'var(--c5)' }}>
               <img
                 src={hero.collageE2}
-                alt="Barcode Scanner and Hardware Terminal"
+                alt="POS Thermal Hardware Terminal"
                 className="w-full h-full object-cover brightness-90 group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />

@@ -13,7 +13,7 @@ export default function FAQSection({ onContactClick }) {
             Straightforward <em className="s">answers.</em>
           </h2>
           <p className="lead">
-            Everything you need to know about our 100% offline local databases, thermal receipt printers, barcode scanner integration, and custom software architecture.
+            Everything you need to know about our 100% offline local databases, thermal receipt printers, POS hardware integration, and custom software architecture.
           </p>
 
           <div className="pt-4 flex flex-col gap-3">

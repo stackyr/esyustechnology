@@ -140,7 +140,7 @@ export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq 
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Does Finance Flow work with USB barcode scanners?"
+                  placeholder="e.g. Does Finance Flow work with USB thermal printers?"
                   value={form.q}
                   onChange={(e) => setForm({ ...form, q: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"

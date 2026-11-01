@@ -32,10 +32,10 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
         <div className="process__copy">
           <span className="eyebrow">Flagship Desktop Software</span>
           <h2 className="h2">
-            {fp.headline ? (
+            {fp.headline && !fp.headline.toLowerCase().includes('barcode') ? (
               fp.headline
             ) : (
-              <>Finance Flow: From barcode scan to printed GST invoice in <em className="s">0.2 seconds</em></>
+              <>Finance Flow: From item entry to printed GST invoice in <em className="s">0.2 seconds</em></>
             )}
           </h2>
           <p className="lead">
@@ -180,7 +180,7 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
           <p className="step__time">Step 01 · 0.0s</p>
           <h3 className="step__title">Instant Item Entry</h3>
           <p className="step__text">
-            High-speed USB barcode scanner or keyboard-first shortcut lookup without touching a mouse.
+            Keyboard-first rapid shortcut lookup and instant item code entry without touching a mouse.
           </p>
         </li>
 

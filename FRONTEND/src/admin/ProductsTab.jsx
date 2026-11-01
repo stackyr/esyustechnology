@@ -59,7 +59,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
       badge: 'Desktop App',
       isFeatured: false,
       chipsText: '⚡ 100% Offline, 🔒 Local Database, 🖨️ Hardware Ready',
-      specsText: 'Works 100% offline with zero cloud dependency\nEncrypted local SQLite database\nInstant thermal printer & barcode integration'
+      specsText: 'Works 100% offline with zero cloud dependency\nEncrypted local SQLite database\nInstant thermal printer & POS integration'
     });
     setModalOpen(true);
   };
@@ -608,7 +608,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
                 </div>
                 <textarea
                   rows={4}
-                  placeholder="Works 100% offline with zero cloud dependency&#10;Compliant with current GST tax slabs&#10;Thermal (2&quot;/3&quot;) and Laser A4/A5 printing&#10;Instant barcode scanning & stock tracking"
+                  placeholder="Works 100% offline with zero cloud dependency&#10;Compliant with current GST tax slabs&#10;Thermal (2&quot;/3&quot;) and Laser A4/A5 printing&#10;Instant stock tracking & rapid item lookup"
                   value={form.specsText}
                   onChange={(e) => setForm({ ...form, specsText: e.target.value })}
                   className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-white text-xs text-[var(--ink)] font-mono leading-relaxed focus:outline-none focus:border-[var(--c1)]"

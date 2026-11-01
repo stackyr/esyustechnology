@@ -18,7 +18,7 @@ export default function WhyChooseUs({ onContactClick }) {
       image: pillarImages[1] || "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&q=80&w=700",
       name: "Zero Lag",
       count: "<0.2s Keystroke Latency",
-      desc: "Instant barcode scan and checkout designed for rapid retail counters."
+      desc: "Instant keystroke checkout designed for rapid retail counters."
     },
     {
       tone: "tone-4",

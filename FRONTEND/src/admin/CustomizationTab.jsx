@@ -513,7 +513,7 @@ export default function CustomizationTab({
               {[
                 { key: 'collageA1', label: 'Collage A1 (POS Billing Counter)' },
                 { key: 'collageA2', label: 'Collage A2 (Thermal Receipt Print)' },
-                { key: 'collageB', label: 'Collage B (Barcode Scanner)' },
+                { key: 'collageB', label: 'Collage B (Retail Counter)' },
                 { key: 'collageD', label: 'Collage D (Store Checkout Lane)' },
                 { key: 'collageE1', label: 'Collage E1 (GST Invoice Ledger)' },
                 { key: 'collageE2', label: 'Collage E2 (Enterprise Terminal)' }

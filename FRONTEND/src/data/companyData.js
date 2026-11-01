@@ -78,7 +78,7 @@ export const SERVICES = [
     features: [
       "Native Android Architecture (Kotlin/Java)",
       "Offline SQLite / Room Database Storage",
-      "Bluetooth Thermal Printer & Barcode Scanner Integration",
+      "Bluetooth Thermal Printer & POS Hardware Integration",
       "Background Workers & Geofencing",
       "Compatibility across Android 8.0 through 14+"
     ],
@@ -133,7 +133,7 @@ export const PRODUCTS = [
       "Works 100% offline with zero cloud dependency",
       "Compliant with current GST tax slabs (CGST, SGST, IGST)",
       "Thermal (2\" / 3\") and Laser A4/A5 invoice printing",
-      "Instant barcode scanning & stock tracking",
+      "Instant stock tracking & inventory ledger",
       "Automated daily sales summary & tax reports"
     ],
     chips: ["⚡ 0.2s Keystrokes", "🔒 Encrypted SQLite DB", "🖨️ Thermal 2\"/3\" & A4"],
@@ -181,15 +181,15 @@ export const PRODUCTS = [
     size: "22.0 MB",
     isFeatured: false,
     tagline: "High-speed point-of-sale software engineered for busy checkout lanes.",
-    description: "Built specifically for high-footfall environments like supermarkets, bakeries, and fast-food counters. Finance Flow Flash provides lightning-quick split-second barcode processing, queue busting, and instant thermal receipt generation.",
+    description: "Built specifically for high-footfall environments like supermarkets, bakeries, and fast-food counters. Finance Flow Flash provides lightning-quick split-second counter processing, queue busting, and instant thermal receipt generation.",
     highlights: [
-      "Sub-second barcode scan & invoice generation",
+      "Sub-second keystroke & invoice generation",
       "Multi-payment split mode (Cash, UPI, Card, Credit)",
       "Customer queue hold and recall feature",
       "Direct integration with thermal POS receipt printers",
       "Automated shift handovers & cashier tracking"
     ],
-    chips: ["⚡ 0.1s Barcode Scan", "🛒 Supermarket Lanes", "💳 Multi-Split Payment"],
+    chips: ["⚡ 0.1s Keystrokes", "🛒 Supermarket Lanes", "💳 Multi-Split Payment"],
     downloadFile: "FinanceFlowFlash-v1.0.4.exe",
     downloadUrl: "",
     isComingSoon: true,
@@ -345,7 +345,7 @@ export const CUSTOMER_REVIEWS = [
     product: "Finance Flow Flash",
     rating: 5,
     date: "January 2026",
-    comment: "We handle over 300 walk-in customers during evening rush hours. Finance Flow Flash handles barcode scanning instantly without any lag. Queue clearance time reduced by more than 50%!"
+    comment: "We handle over 300 walk-in customers during evening rush hours. Finance Flow Flash handles billing keystrokes instantly without any lag. Queue clearance time reduced by more than 50%!"
   },
   {
     id: 3,
@@ -365,7 +365,7 @@ export const CUSTOMER_REVIEWS = [
     product: "Custom Software Development",
     rating: 5,
     date: "March 2026",
-    comment: "The team at Esyus Technologies built a bespoke inventory tracking tool that integrates with our existing barcode hardware. Delivered exactly on schedule with fantastic support."
+    comment: "The team at Esyus Technologies built a bespoke inventory tracking tool that integrates with our existing warehouse POS hardware. Delivered exactly on schedule with fantastic support."
   }
 ];
 
@@ -384,7 +384,7 @@ export const FAQS = [
   },
   {
     q: "Can Esyus Technologies build custom features or integrations for our business?",
-    a: "Yes! In addition to our off-the-shelf software packages, we offer end-to-end custom software development. Whether you need specific barcode hardware integration, custom reports, or cloud synchronization, our team will engineer it to your exact specifications."
+    a: "Yes! In addition to our off-the-shelf software packages, we offer end-to-end custom software development. Whether you need specific POS hardware integration, custom reports, or cloud synchronization, our team will engineer it to your exact specifications."
   },
   {
     q: "How can I download and test Finance Flow or Bharat Yatra Sathi?",
@@ -427,7 +427,7 @@ export const LANDING_PAGE_SECTIONS = {
     lead: "Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience."
   },
   featuredProduct: {
-    headline: "Finance Flow: From barcode scan to printed GST invoice in 0.2 seconds",
+    headline: "Finance Flow: From item entry to printed GST invoice in 0.2 seconds",
     lead: "The premier offline-first billing solution designed by Esyus Technologies. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.",
     stationImage: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900",
     isComingSoon: true,

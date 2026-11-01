@@ -64,7 +64,7 @@ const DEFAULT_DATA = {
       lead: "Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience."
     },
     featuredProduct: {
-      headline: "Finance Flow: From barcode scan to printed GST invoice in 0.2 seconds",
+      headline: "Finance Flow: From item entry to printed GST invoice in 0.2 seconds",
       lead: "The premier offline-first billing solution designed by Esyus Technologies. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.",
       stationImage: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900",
       isComingSoon: true,
@@ -167,7 +167,7 @@ const DEFAULT_DATA = {
       features: [
         "Native Android Architecture (Kotlin/Java)",
         "Offline SQLite / Room Database Storage",
-        "Bluetooth Thermal Printer & Barcode Scanner Integration",
+        "Bluetooth Thermal Printer & POS Hardware Integration",
         "Background Workers & Geofencing",
         "Compatibility across Android 8.0 through 14+"
       ],
@@ -225,7 +225,7 @@ const DEFAULT_DATA = {
         "Works 100% offline with zero cloud dependency",
         "Compliant with current GST tax slabs (CGST, SGST, IGST)",
         "Thermal (2\" / 3\") and Laser A4/A5 invoice printing",
-        "Instant barcode scanning & stock tracking",
+        "Instant stock tracking & rapid item lookup",
         "Automated daily sales summary & tax reports"
       ],
       chips: ["⚡ 0.2s Keystrokes", "🔒 Encrypted SQLite DB", "🖨️ Thermal 2\"/3\" & A4"],
@@ -272,15 +272,15 @@ const DEFAULT_DATA = {
       size: "22.0 MB",
       isFeatured: false,
       tagline: "High-speed point-of-sale software engineered for busy checkout lanes.",
-      description: "Built specifically for high-footfall environments like supermarkets, bakeries, and fast-food counters. Finance Flow Flash provides lightning-quick split-second barcode processing, queue busting, and instant thermal receipt generation.",
+      description: "Built specifically for high-footfall environments like supermarkets, bakeries, and fast-food counters. Finance Flow Flash provides lightning-quick split-second counter processing, queue busting, and instant thermal receipt generation.",
       highlights: [
-        "Sub-second barcode scan & invoice generation",
+        "Sub-second keystroke & invoice generation",
         "Multi-payment split mode (Cash, UPI, Card, Credit)",
         "Customer queue hold and recall feature",
         "Direct integration with thermal POS receipt printers",
         "Automated shift handovers & cashier tracking"
       ],
-      chips: ["⚡ 0.1s Barcode Scan", "🛒 Supermarket Lanes", "💳 Multi-Split Payment"],
+      chips: ["⚡ 0.1s Keystrokes", "🛒 Supermarket Lanes", "💳 Multi-Split Payment"],
       downloadFile: "FinanceFlowFlash-v1.0.4.exe",
       downloadUrl: "",
       isComingSoon: true,
@@ -361,7 +361,7 @@ const DEFAULT_DATA = {
     {
       id: "faq-4",
       q: "Can Esyus Technologies build custom features or integrations for our business?",
-      a: "Yes! In addition to our off-the-shelf software packages, we offer end-to-end custom software development. Whether you need specific barcode hardware integration, custom reports, or cloud synchronization, our team will engineer it to your exact specifications."
+      a: "Yes! In addition to our off-the-shelf software packages, we offer end-to-end custom software development. Whether you need specific POS hardware integration, custom reports, or cloud synchronization, our team will engineer it to your exact specifications."
     },
     {
       id: "faq-5",
