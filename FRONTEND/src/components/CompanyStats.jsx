@@ -1,4 +1,5 @@
 import React from 'react';
+import { COMPANY_INFO } from '../data/companyData';
 
 export default function CompanyStats() {
   const bars = [
@@ -15,7 +16,7 @@ export default function CompanyStats() {
         <div className="facts__copy">
           <span className="eyebrow">Enterprise Reliability Track Record</span>
           <h2 className="h2">
-            What Esyus software handled <em className="s">this year</em>
+            What {COMPANY_INFO.shortName || 'Esyus'} software handled <em className="s">this year</em>
           </h2>
           <p className="lead">
             Tested across active commercial billing counters and field devices. Designed to never stall during rush hours or internet dropouts.

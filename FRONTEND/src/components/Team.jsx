@@ -27,14 +27,15 @@ export default function Team({ onContactClick }) {
         {TEAM_MEMBERS.map((member, idx) => {
           const tone = tones[idx % tones.length];
           const art = arts[idx % arts.length];
+          const displayName = idx === 0 ? (COMPANY_INFO.founder || member.name) : idx === 1 ? (COMPANY_INFO.coFounder || member.name) : member.name;
 
           return (
             <li key={idx} className={`person ${tone}`}>
               <figure className="person__photo tab-l">
-                <div className={`art ${art}`} role="img" aria-label={`Portrait of ${member.name}`}>
+                <div className={`art ${art}`} role="img" aria-label={`Portrait of ${displayName}`}>
                   <img
                     src={member.avatar}
-                    alt={member.name}
+                    alt={displayName}
                     className="full object-cover"
                     onError={(e) => {
                       e.target.style.opacity = '0.7';
@@ -42,7 +43,7 @@ export default function Team({ onContactClick }) {
                   />
                 </div>
               </figure>
-              <h3 className="person__name">{member.name}</h3>
+              <h3 className="person__name">{displayName}</h3>
               <p className="person__role">{member.role}</p>
             </li>
           );

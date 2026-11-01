@@ -3736,7 +3736,6 @@ em.s {
 
 /* Smooth Unread Badge Glow Animation */
 @keyframes badge-glow {
-
   0%,
   100% {
     transform: scale(1);

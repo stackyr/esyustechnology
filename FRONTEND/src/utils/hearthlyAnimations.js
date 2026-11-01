@@ -58,7 +58,6 @@ export function lenisScrollTo(target, options = {}) {
     }
   }
 }
-
 export function initHearthlyAnimations() {
   const root = document.documentElement;
   if (!root.classList.contains('motion')) {

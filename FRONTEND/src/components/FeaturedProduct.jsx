@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { PRODUCTS } from '../data/companyData';
-import { Clock } from 'lucide-react';
+import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { Clock, Download } from 'lucide-react';
 
 export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
   const financeFlow = PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0];
+  const fp = LANDING_PAGE_SECTIONS?.featuredProduct || {};
 
   // Interactive Live Invoice Simulator State
   const [customerName, setCustomerName] = useState('Sharma General Store');
@@ -31,10 +32,14 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
         <div className="process__copy">
           <span className="eyebrow">Flagship Desktop Software</span>
           <h2 className="h2">
-            Finance Flow: From barcode scan to printed GST invoice in <em className="s">0.2 seconds</em>
+            {fp.headline ? (
+              fp.headline
+            ) : (
+              <>Finance Flow: From barcode scan to printed GST invoice in <em className="s">0.2 seconds</em></>
+            )}
           </h2>
           <p className="lead">
-            The premier offline-first billing solution designed by Esyus Technologies. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.
+            {fp.lead || `The premier offline-first billing solution designed by ${COMPANY_INFO.name}. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.`}
           </p>
 
           {/* Interactive Calculator Input Controls */}
@@ -98,15 +103,29 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
               <span className="text-xs font-bold text-[var(--ink)]">
                 Net Bill: ₹{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </span>
-              <button
-                type="button"
-                className="btn btn--sm w-full sm:w-auto justify-center cursor-default border border-[var(--c1)]/30 text-[var(--c1)] bg-white"
-                disabled
-                title="Official download link will be available soon"
-              >
-                <Clock className="w-3.5 h-3.5 mr-1.5 text-[var(--c1)] shrink-0" />
-                <span>Coming Soon (v2.4.0)</span>
-              </button>
+              {financeFlow.isComingSoon === false && Boolean(financeFlow.downloadUrl) ? (
+                <a
+                  href={financeFlow.downloadUrl}
+                  download
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn--sm w-full sm:w-auto justify-center font-bold bg-[var(--c1)] hover:bg-[#d64b22] text-white shadow-md transition-colors"
+                  title={`Download ${financeFlow.name} Setup`}
+                >
+                  <Download className="w-3.5 h-3.5 mr-1.5 text-white shrink-0" />
+                  <span>Download Setup ({financeFlow.version || 'v2.4.0'})</span>
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn--sm w-full sm:w-auto justify-center cursor-default border border-[var(--c1)]/30 text-[var(--c1)] bg-white"
+                  disabled
+                  title="Official download link will be available soon"
+                >
+                  <Clock className="w-3.5 h-3.5 mr-1.5 text-[var(--c1)] shrink-0" />
+                  <span>Coming Soon ({financeFlow.version || 'v2.4.0'})</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -115,7 +134,7 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
         <figure className="process__photo tab-r overflow-hidden relative">
           <div className="art g-night relative">
             <img
-              src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"
+              src={fp.stationImage || "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"}
               alt="Finance Flow POS Invoicing Station"
               className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
             />

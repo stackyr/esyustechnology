@@ -1,92 +1,43 @@
 import React, { useState } from 'react';
-import { PRODUCTS } from '../data/companyData';
-import { Clock } from 'lucide-react';
+import { PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { Clock, Download } from 'lucide-react';
 
 export default function Products({ onSelectProduct, _onDownloadProduct }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'desktop' | 'mobile'
+  const sec = LANDING_PAGE_SECTIONS?.productsSection || {};
 
-  // Items configuration combining software products and hardware integration
+  // Build software items dynamically from PRODUCTS state
+  const softwareItems = PRODUCTS.map((p, idx) => {
+    const isWindows = (p.platform || '').toLowerCase().includes('windows');
+    const isAndroid = (p.platform || '').toLowerCase().includes('android');
+
+    return {
+      id: p.id,
+      product: p,
+      num: String(idx + 1).padStart(2, '0'),
+      name: p.name,
+      category: p.category,
+      platformTag: p.platform,
+      isWindows,
+      isAndroid,
+      version: p.version || 'v1.0.0 Stable',
+      size: p.size || '25.0 MB',
+      downloadLabel: isWindows && isAndroid ? 'Download EXE / APK' : isAndroid ? 'Download APK' : 'Download EXE',
+      logo: p.logo || '/finance-flow-logo.png',
+      tagline: p.tagline || p.description,
+      chips: Array.isArray(p.chips) && p.chips.length > 0 ? p.chips : [
+        '⚡ 100% Offline',
+        isAndroid ? '📱 Mobile Ready' : '🖥️ Desktop Native',
+        '🔒 Encrypted Storage'
+      ],
+      isComingSoon: p.isComingSoon !== false,
+      downloadUrl: p.downloadUrl || ''
+    };
+  });
+
+  // Additional 6th suite package: Hardware Drivers
   const allItems = [
-    {
-      id: "finance-flow",
-      product: PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0],
-      num: "01",
-      name: "Finance Flow",
-      category: "Desktop Billing",
-      platformTag: "Windows 10 / 11",
-      isWindows: true,
-      isAndroid: false,
-      version: "v2.4.0 Stable",
-      size: "48.2 MB",
-      downloadLabel: "Download EXE",
-      logo: "/finance-flow-logo.png",
-      tagline: "Premier offline-first desktop billing software with instant GST invoices, barcode lookup, and zero cloud dependency.",
-      chips: ["⚡ 0.2s Keystrokes", "🔒 Encrypted SQLite DB", "🖨️ Thermal 2\"/3\" & A4"]
-    },
-    {
-      id: "finance-flow-lite",
-      product: PRODUCTS.find((p) => p.id === 'finance-flow-lite') || PRODUCTS[1],
-      num: "02",
-      name: "Finance Flow Lite",
-      category: "Lightweight POS",
-      platformTag: "Windows & Android",
-      isWindows: true,
-      isAndroid: true,
-      version: "v1.2.1 Stable",
-      size: "18.5 MB",
-      downloadLabel: "Download EXE / APK",
-      logo: "/finance-flow-lite-logo-transparent.png",
-      tagline: "Ultra-compact, low-resource billing app designed for small counters, pop-up stalls, and Android tablets.",
-      chips: ["⚡ <100MB Memory", "📱 Android Tablet POS", "🧾 Offline Quick Touch"]
-    },
-    {
-      id: "finance-flow-flash",
-      product: PRODUCTS.find((p) => p.id === 'finance-flow-flash') || PRODUCTS[2],
-      num: "03",
-      name: "Finance Flow Flash",
-      category: "High-Speed POS",
-      platformTag: "Windows Touch POS",
-      isWindows: true,
-      isAndroid: false,
-      version: "v1.0.4 Rapid",
-      size: "22.0 MB",
-      downloadLabel: "Download EXE",
-      logo: "/finance-flow-flash-logo.png",
-      tagline: "Split-second point-of-sale software engineered for high-footfall checkout lanes, supermarkets, and queue busting.",
-      chips: ["⚡ 0.1s Barcode Scan", "🛒 Supermarket Lanes", "💳 Multi-Split Payment"]
-    },
-    {
-      id: "bharat-yatra-sathi",
-      product: PRODUCTS.find((p) => p.id === 'bharat-yatra-sathi') || PRODUCTS[3],
-      num: "04",
-      name: "Bharat Yatra Sathi",
-      category: "Android Application",
-      platformTag: "Android 8.0+",
-      isWindows: false,
-      isAndroid: true,
-      version: "v1.1.0 Mobile",
-      size: "24.8 MB",
-      downloadLabel: "Download APK",
-      logo: "/bharat-yatra-sathi-logo.png",
-      tagline: "Smart travel, highway mobility, and pilgrimage companion app designed for explorers and drivers in India with 100% offline maps.",
-      chips: ["🧭 100% Offline Maps", "🚗 Driver & Route Assist", "🛕 Temple Timings"]
-    },
-    {
-      id: "bharat-yatra-sathi-partner",
-      product: PRODUCTS.find((p) => p.id === 'bharat-yatra-sathi-partner') || PRODUCTS[4],
-      num: "05",
-      name: "Bharat Yatra Sathi Partner",
-      category: "Partner & Vendor Suite",
-      platformTag: "Android 8.0+ & Web",
-      isWindows: false,
-      isAndroid: true,
-      version: "v1.0.2 Partner",
-      size: "21.4 MB",
-      downloadLabel: "Download APK",
-      logo: "/bharat-yatra-sathi-partner-logo.png",
-      tagline: "Dedicated business portal & mobile POS for verified tour guides, hotel vendors, pilgrimage homestays, and transport operators.",
-      chips: ["🤝 Vendor Bookings", "🎫 Offline QR Passes", "💰 Direct Payout Ledger"]
-    },
+    ...softwareItems,
     {
       id: "hardware-drivers",
       product: null,
@@ -101,7 +52,9 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
       downloadLabel: "Download Drivers",
       logo: "/card-hardware-printer.png",
       tagline: "Plug-and-play drivers and direct communication protocols for standard 58mm/80mm thermal receipt printers, USB cash drawers, and barcode scanners.",
-      chips: ["🔌 Plug-and-Play USB", "📶 Bluetooth 5.0 ESC/POS", "⚡ Zero Driver Lag"]
+      chips: ["🔌 Plug-and-Play USB", "📶 Bluetooth 5.0 ESC/POS", "⚡ Zero Driver Lag"],
+      isComingSoon: true,
+      downloadUrl: ""
     }
   ];
 
@@ -118,14 +71,18 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
         {/* Section Header */}
         <div className="sec-head">
           <div>
-            <span className="eyebrow">Production Software Blueprint</span>
+            <span className="eyebrow">{sec.eyebrow || "Production Software Blueprint"}</span>
             <h2 className="h2" style={{ marginTop: '16px' }}>
-              Inside our software <em className="s">ecosystem</em>
+              {sec.headline ? (
+                sec.headline
+              ) : (
+                <>Inside our software <em className="s">ecosystem</em></>
+              )}
             </h2>
           </div>
           <div className="sec-head__side">
             <p className="lead">
-              Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience.
+              {sec.lead || "Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience."}
             </p>
 
             {/* Filter Toggle Pills */}
@@ -144,7 +101,7 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
                 aria-pressed={filter === 'desktop'}
                 onClick={() => setFilter('desktop')}
               >
-                Windows Desktop (4)
+                Windows Desktop ({allItems.filter(i => i.isWindows).length})
               </button>
               <button
                 className="toggle__btn"
@@ -152,7 +109,7 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
                 aria-pressed={filter === 'mobile'}
                 onClick={() => setFilter('mobile')}
               >
-                Android Mobile (4)
+                Android Mobile ({allItems.filter(i => i.isAndroid).length})
               </button>
             </div>
           </div>
@@ -162,7 +119,7 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
         <div className="mt-6 mb-10 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--soft)] border border-[var(--line)] text-xs text-[var(--ink)] font-medium">
           <span className="w-2 h-2 rounded-full bg-[var(--c1)] animate-pulse" />
           <span>
-            {filter === 'all' && 'Showing all 5 production software systems & hardware driver suite'}
+            {filter === 'all' && 'Showing all production software systems & hardware driver suite'}
             {filter === 'desktop' && 'Showing Windows Desktop billing suites, POS engines & printer drivers'}
             {filter === 'mobile' && 'Showing Android Mobile applications, partner portals & mobile POS solutions'}
           </span>
@@ -172,6 +129,7 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
           {filteredItems.map((item) => {
             const hasProduct = Boolean(item.product);
+            const isLiveDownload = !item.isComingSoon && Boolean(item.downloadUrl);
 
             return (
               <article
@@ -196,6 +154,10 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
                       src={item.logo}
                       alt={item.name}
                       className="max-h-24 sm:max-h-28 w-auto max-w-[85%] object-contain transition-transform duration-500 group-hover:scale-105 filter drop-shadow-xs"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = '/finance-flow-logo.png';
+                      }}
                     />
                   </div>
                   <span className="absolute bottom-2.5 right-3 text-[10px] font-mono font-bold text-[var(--muted)]">
@@ -243,14 +205,28 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
                       <span className="ml-1" aria-hidden="true">→</span>
                     </button>
 
-                    <button
-                      type="button"
-                      className="flex-1 px-3 py-2.5 rounded-full bg-[var(--bg)] border border-[var(--c1)]/30 text-[var(--c1)] text-xs font-bold text-center flex items-center justify-center gap-1.5 cursor-default shadow-xs"
-                      title="Official download link will be available soon"
-                    >
-                      <Clock className="w-3.5 h-3.5 text-[var(--c1)] shrink-0" />
-                      <span>Coming Soon</span>
-                    </button>
+                    {isLiveDownload ? (
+                      <a
+                        href={item.downloadUrl}
+                        download
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 px-3 py-2.5 rounded-full bg-[var(--c1)] hover:bg-[#d64b22] text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                        title={`Download official ${item.name} installer`}
+                      >
+                        <Download className="w-3.5 h-3.5 shrink-0" />
+                        <span>{item.downloadLabel || 'Download'}</span>
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        className="flex-1 px-3 py-2.5 rounded-full bg-[var(--bg)] border border-[var(--c1)]/30 text-[var(--c1)] text-xs font-bold text-center flex items-center justify-center gap-1.5 cursor-default shadow-xs"
+                        title="Official download link will be available soon"
+                      >
+                        <Clock className="w-3.5 h-3.5 text-[var(--c1)] shrink-0" />
+                        <span>Coming Soon</span>
+                      </button>
+                    )}
                   </div>
                 </div>
               </article>

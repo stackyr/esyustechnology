@@ -1,5 +1,6 @@
 import React from 'react';
-import { SERVICES } from '../data/companyData';
+import { SERVICES, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { Clock } from 'lucide-react';
 
 export default function Services({ onSelectService, onEnquireService }) {
   const serviceFolders = [
@@ -84,19 +85,24 @@ export default function Services({ onSelectService, onEnquireService }) {
   return (
     <section id="services" className="coll" data-kind="collections" data-section="services">
       {/* Section Header */}
-      <div className="wrap sec-head">
-        <h2 className="h2">
-          Five ways we engineer <em className="s">business reliability</em>
-        </h2>
-        <div className="sec-head__side">
-          <p className="lead">
-            From offline Windows billing software and thermal printer POS to cloud enterprise applications, we build robust systems with zero downtime.
-          </p>
-          <a className="link" href="#applications">
-            Explore our ready-to-use software suite →
-          </a>
-        </div>
-      </div>
+      {(() => {
+        const srvSec = LANDING_PAGE_SECTIONS?.servicesSection || {};
+        return (
+          <div className="wrap sec-head">
+            <h2 className="h2">
+              {srvSec.headline ? srvSec.headline : <>Five ways we engineer <em className="s">business reliability</em></>}
+            </h2>
+            <div className="sec-head__side">
+              <p className="lead">
+                {srvSec.lead || "From offline Windows billing software and thermal printer POS to cloud enterprise applications, we build robust systems with zero downtime."}
+              </p>
+              <a className="link" href="#applications">
+                Explore our ready-to-use software suite →
+              </a>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Stacked Interactive Folders */}
       <div className="wrap folders" data-folders data-component="service-folders">

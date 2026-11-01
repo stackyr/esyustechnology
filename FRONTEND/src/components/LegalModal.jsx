@@ -61,7 +61,7 @@ export default function LegalModal({ type, onClose }) {
               </div>
 
               <div className="pt-2 text-[var(--muted)] text-[11px] font-mono">
-                Last updated: October 2026 • Esyus Technologies Legal Desk.
+                Last updated: October 2026 • {COMPANY_INFO.name} Legal Desk.
               </div>
             </>
           ) : (
@@ -73,7 +73,7 @@ export default function LegalModal({ type, onClose }) {
               <div className="p-4 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-1">
                 <h4 className="font-bold text-[var(--ink)] text-sm mb-1 font-mono uppercase tracking-wide">1. Software License Grant</h4>
                 <p>
-                  Esyus Technologies grants you a non-exclusive license to operate Finance Flow, Finance Flow Lite, Finance Flow Flash, and Bharat Yatra Sathi for lawful business and personal operations on authorized hardware systems.
+                  {COMPANY_INFO.name} grants you a non-exclusive license to operate Finance Flow, Finance Flow Lite, Finance Flow Flash, and Bharat Yatra Sathi for lawful business and personal operations on authorized hardware systems.
                 </p>
               </div>
 
