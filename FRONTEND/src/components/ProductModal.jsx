@@ -114,7 +114,7 @@ export default function ProductModal({ product, onClose, _onDownload }) {
               Deployment & Support from Esyus Technology
             </span>
             <p className="text-xs text-[var(--muted)] leading-relaxed font-medium">
-              Full technical support is provided for installing and calibrating POS hardware, thermal printer drivers, and encrypted database backups.
+              Full technical support is provided for installing and calibrating thermal printer drivers, receipt hardware, and encrypted database backups.
             </p>
           </div>
 

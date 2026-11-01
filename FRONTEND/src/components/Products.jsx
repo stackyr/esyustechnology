@@ -99,8 +99,8 @@ export default function Products({ onSelectProduct, _onDownloadProduct, onViewAl
           <span className="w-2 h-2 rounded-full bg-[var(--c1)] animate-pulse" />
           <span>
             {filter === 'all' && 'Showing all production software systems'}
-            {filter === 'desktop' && 'Showing Windows Desktop billing suites & POS engines'}
-            {filter === 'mobile' && 'Showing Android Mobile applications, partner portals & mobile POS solutions'}
+            {filter === 'desktop' && 'Showing Windows Desktop billing suites & business engines'}
+            {filter === 'mobile' && 'Showing Android Mobile applications, partner portals & mobile billing solutions'}
           </span>
         </div>
 

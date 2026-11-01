@@ -289,11 +289,11 @@ export default function ContactUs({ preselectedSubject }) {
                   <span className="text-[var(--c5)] font-bold">100% OFFLINE</span>
                 </div>
 
-                {/* Mini POS Bill Preview */}
+                {/* Mini Bill Preview */}
                 <div className="p-2.5 rounded-xl bg-white border border-[var(--line)] space-y-1.5 shadow-xs">
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-xs text-[var(--ink)]">Finance Flow v2.4</span>
-                    <span className="text-[9px] font-mono text-[var(--c1)]">Active POS</span>
+                    <span className="text-[9px] font-mono text-[var(--c1)]">Active Engine</span>
                   </div>
                   <div className="text-[10px] text-[var(--muted)]">Counter #01 • GST Compliant</div>
                   <div className="pt-1.5 border-t border-[var(--line)] flex justify-between font-mono text-xs font-bold text-[var(--ink)]">

@@ -135,12 +135,12 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
           <div className="art g-night relative">
             <img
               src={fp.stationImage || "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900"}
-              alt="Finance Flow POS Invoicing Station"
+              alt="Finance Flow Invoicing Station"
               className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
             />
             <div className="convo" aria-label="Finance Flow live invoice preview">
               <div className="msg msg--ai">
-                <span className="msg__who">Finance Flow POS</span>
+                <span className="msg__who">Finance Flow Billing</span>
                 Invoice #INV-2027-0842 generated in 0.18s.
                 <div className="msg__card">
                   <span>Customer: {customerName}</span>
@@ -162,7 +162,7 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
               </div>
 
               <div className="msg msg--me">
-                Print ESC/POS Thermal Receipt 🖨️
+                Print Thermal Receipt 🖨️
               </div>
 
               <div className="typing" aria-hidden="true">

@@ -59,7 +59,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
       badge: 'Desktop App',
       isFeatured: false,
       chipsText: '⚡ 100% Offline, 🔒 Local Database, 🖨️ Hardware Ready',
-      specsText: 'Works 100% offline with zero cloud dependency\nEncrypted local SQLite database\nInstant thermal printer & POS integration'
+      specsText: 'Works 100% offline with zero cloud dependency\nEncrypted local SQLite database\nInstant thermal printer & hardware integration'
     });
     setModalOpen(true);
   };

@@ -194,7 +194,7 @@ export default function DownloadSection({ _onDownloadApp, onOpenDownloadsPage })
                     <span><strong>Offline Storage:</strong> Local SQLite encrypted storage</span>
                   </li>
                   <li>
-                    <span><strong>Hardware Ready:</strong> {isAndroid ? 'Mobile Bluetooth printer sync' : 'Thermal POS printer ready'}</span>
+                    <span><strong>Hardware Ready:</strong> {isAndroid ? 'Mobile Bluetooth printer sync' : 'Thermal receipt printer ready'}</span>
                   </li>
                 </ul>
 

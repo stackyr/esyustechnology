@@ -27,7 +27,7 @@ const LandingPageSchema = new mongoose.Schema({
   servicesSection: {
     eyebrow: { type: String, default: "Engineering Capabilities" },
     headline: { type: String, default: "Five ways we engineer business reliability" },
-    lead: { type: String, default: "From offline Windows billing software and thermal printer POS to cloud enterprise applications, we build robust systems with zero downtime." }
+    lead: { type: String, default: "From offline Windows billing software and thermal receipt printing to cloud enterprise applications, we build robust systems with zero downtime." }
   },
   featuredProduct: {
     headline: { type: String, default: "Finance Flow: From item entry to printed GST invoice in 0.2 seconds" },

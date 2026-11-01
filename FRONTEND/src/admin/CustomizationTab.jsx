@@ -504,14 +504,14 @@ export default function CustomizationTab({
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
                 <h3 className="text-base font-bold text-[var(--ink)]">Hero 6-Card Collage Visual Images</h3>
-                <p className="text-xs text-[var(--muted)]">Real photography links for POS counters, thermal printers and screens</p>
+                <p className="text-xs text-[var(--muted)]">Real photography links for billing counters, thermal printers and screens</p>
               </div>
               <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Collage Visuals</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
-                { key: 'collageA1', label: 'Collage A1 (POS Billing Counter)' },
+                { key: 'collageA1', label: 'Collage A1 (Billing Counter)' },
                 { key: 'collageA2', label: 'Collage A2 (Thermal Receipt Print)' },
                 { key: 'collageB', label: 'Collage B (Retail Counter)' },
                 { key: 'collageD', label: 'Collage D (Store Checkout Lane)' },
@@ -653,7 +653,7 @@ export default function CustomizationTab({
                 rows={3}
                 value={pageData.servicesSection?.lead || ''}
                 onChange={(e) => handlePageChange('servicesSection', 'lead', e.target.value)}
-                placeholder="From offline Windows billing software and thermal printer POS to cloud enterprise applications, we build robust systems with zero downtime."
+                placeholder="From offline Windows billing software and thermal receipt printing to cloud enterprise applications, we build robust systems with zero downtime."
                 className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
               />
             </div>

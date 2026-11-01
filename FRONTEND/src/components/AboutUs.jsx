@@ -73,7 +73,7 @@ export default function AboutUs({ onContactClick }) {
               </span>
             </span>
             <span className="feature__title">
-              Finance Flow Desktop GST Billing & Android POS Suite
+              Finance Flow Desktop GST Billing & Android App Suite
             </span>
           </a>
         </div>

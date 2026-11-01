@@ -64,7 +64,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             <figure className="look look--xl tab-l overflow-hidden relative group" style={{ '--plate': 'var(--c1)' }}>
               <img
                 src={hero.collageA1}
-                alt="Retail POS Billing Counter"
+                alt="Retail Billing Counter"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
@@ -73,7 +73,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
                   <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
                 </span>
                 <span>
-                  <b>100% Offline POS</b>
+                  <b>100% Offline Billing</b>
                   <small>0.2s Keystroke · Local SQLite</small>
                 </span>
               </div>
@@ -186,7 +186,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             <figure className="look look--xl tab-r overflow-hidden relative group" style={{ '--plate': 'var(--c2)' }}>
               <img
                 src={hero.collageE1}
-                alt="Android Mobile Billing & POS"
+                alt="Android Mobile Billing"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
@@ -195,7 +195,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
                   <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
                 </span>
                 <span>
-                  <b>{COMPANY_INFO.shortName} Mobile POS</b>
+                  <b>{COMPANY_INFO.shortName} Mobile Billing</b>
                   <small>Android APK · Handheld Sync</small>
                 </span>
               </div>
@@ -204,7 +204,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             <figure className="look look--sm overflow-hidden relative group" style={{ '--plate': 'var(--c5)' }}>
               <img
                 src={hero.collageE2}
-                alt="POS Thermal Hardware Terminal"
+                alt="Thermal Hardware Terminal"
                 className="w-full h-full object-cover brightness-90 group-hover:scale-105 transition-transform duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />

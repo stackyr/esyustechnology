@@ -51,7 +51,7 @@ export default function SvgSprite() {
           <circle cx="100" cy="100" r="54" fill="none" stroke="url(#g-arc)" strokeWidth="6" strokeDasharray=".8 2.97" mask="url(#m-arc)"/>
           <circle cx="102.8" cy="46.1" r="3.4" fill="#fff" filter="url(#f-glow)"/>
           <text x="100" y="112" textAnchor="middle" fill="#fff" style={{ font: "300 36px 'Instrument Sans',sans-serif", letterSpacing: "-1px" }}>100%</text>
-          <text x="100" y="130" textAnchor="middle" fill="#ff9a4a" style={{ font: "600 7px 'Instrument Sans',sans-serif", letterSpacing: "2px" }}>OFFLINE POS</text>
+          <text x="100" y="130" textAnchor="middle" fill="#ff9a4a" style={{ font: "600 7px 'Instrument Sans',sans-serif", letterSpacing: "2px" }}>OFFLINE BILLING</text>
           <path d="M40 90A62 62 0 0 1 152 66C120 52 70 58 40 90z" fill="url(#g-refl)"/>
           <ellipse cx="66" cy="36" rx="28" ry="5" transform="rotate(-30 66 36)" fill="#fff" opacity=".9" filter="url(#f-b2)"/>
         </symbol>

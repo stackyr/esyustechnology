@@ -56,7 +56,7 @@ const DEFAULT_DATA = {
     servicesSection: {
       eyebrow: "Engineering Capabilities",
       headline: "Five ways we engineer business reliability",
-      lead: "From offline Windows billing software and thermal printer POS to cloud enterprise applications, we build robust systems with zero downtime."
+      lead: "From offline Windows billing software and thermal receipt printing to cloud enterprise applications, we build robust systems with zero downtime."
     },
     productsSection: {
       eyebrow: "Production Software Blueprint",
@@ -159,7 +159,7 @@ const DEFAULT_DATA = {
       id: "android-dev",
       title: "Android Application Development",
       shortDesc: "Specialized native Android applications optimized for hardware, sensors, and offline utility.",
-      fullDesc: "With deep expertise in the Android ecosystem, we build high-performance applications designed specifically for Android smartphones, POS tablets, and handheld devices. Engineered with Room SQLite databases for robust offline data preservation.",
+      fullDesc: "With deep expertise in the Android ecosystem, we build high-performance applications designed specifically for Android smartphones, tablets, and handheld devices. Engineered with Room SQLite databases for robust offline data preservation.",
       badge: "Specialized",
       iconName: "Cpu",
       isComingSoon: false,
@@ -167,7 +167,7 @@ const DEFAULT_DATA = {
       features: [
         "Native Android Architecture (Kotlin/Java)",
         "Offline SQLite / Room Database Storage",
-        "Bluetooth Thermal Printer & POS Hardware Integration",
+        "Bluetooth Thermal Printer & Hardware Integration",
         "Background Workers & Geofencing",
         "Compatibility across Android 8.0 through 14+"
       ],
@@ -254,7 +254,7 @@ const DEFAULT_DATA = {
         "Daily revenue totals and cash drawer reconciliation",
         "Zero installation overhead"
       ],
-      chips: ["⚡ <100MB Memory", "📱 Android Tablet POS", "🧾 Offline Quick Touch"],
+      chips: ["⚡ <100MB Memory", "📱 Android Tablet Ready", "🧾 Offline Quick Touch"],
       downloadFile: "FinanceFlowLite-Setup.exe",
       downloadUrl: "",
       isComingSoon: true,
@@ -266,18 +266,18 @@ const DEFAULT_DATA = {
     {
       id: "finance-flow-flash",
       name: "Finance Flow Flash",
-      category: "High-Speed POS",
-      platform: "Windows POS / Touch Terminal",
+      category: "High-Speed Billing",
+      platform: "Windows Desktop / Touch Terminal",
       version: "v1.0.4",
       size: "22.0 MB",
       isFeatured: false,
-      tagline: "High-speed point-of-sale software engineered for busy checkout lanes.",
+      tagline: "High-speed billing software engineered for busy checkout lanes.",
       description: "Built specifically for high-footfall environments like supermarkets, bakeries, and fast-food counters. Finance Flow Flash provides lightning-quick split-second counter processing, queue busting, and instant thermal receipt generation.",
       highlights: [
         "Sub-second keystroke & invoice generation",
         "Multi-payment split mode (Cash, UPI, Card, Credit)",
         "Customer queue hold and recall feature",
-        "Direct integration with thermal POS receipt printers",
+        "Direct integration with thermal receipt printers",
         "Automated shift handovers & cashier tracking"
       ],
       chips: ["⚡ 0.1s Keystrokes", "🛒 Supermarket Lanes", "💳 Multi-Split Payment"],
@@ -285,7 +285,7 @@ const DEFAULT_DATA = {
       downloadUrl: "",
       isComingSoon: true,
       accentColor: "from-amber-600 to-orange-600",
-      badge: "Rapid POS",
+      badge: "Rapid Billing",
       logo: "/finance-flow-flash-logo.png",
       image: "/card-finance-flow-flash.png"
     },
@@ -323,7 +323,7 @@ const DEFAULT_DATA = {
       version: "v1.0.2",
       size: "21.4 MB",
       isFeatured: false,
-      tagline: "Dedicated business portal & mobile POS for tour guides, hotel vendors, and operators.",
+      tagline: "Dedicated business portal & mobile billing for tour guides, hotel vendors, and operators.",
       description: "Built for verified travel agencies, certified pilgrimage guides, transport fleets, and homestay hosts. Manage traveler bookings, verify digital pilgrimage QR passes offline, print customer receipt slips, and track direct daily payouts with zero cloud downtime.",
       highlights: [
         "Offline QR code verification for pilgrim & visitor entry passes",
@@ -351,7 +351,7 @@ const DEFAULT_DATA = {
     {
       id: "faq-2",
       q: "What types of printers are supported by the Finance Flow software suite?",
-      a: "Finance Flow supports all standard printers: 2-inch and 3-inch thermal POS receipt printers (USB, Bluetooth, LAN) as well as regular A4/A5 laser and inkjet printers for detailed GST tax invoices with terms and bank details."
+      a: "Finance Flow supports all standard printers: 2-inch and 3-inch thermal receipt printers (USB, Bluetooth, LAN) as well as regular A4/A5 laser and inkjet printers for detailed GST tax invoices with terms and bank details."
     },
     {
       id: "faq-3",
@@ -361,7 +361,7 @@ const DEFAULT_DATA = {
     {
       id: "faq-4",
       q: "Can Esyus Technology build custom features or integrations for our business?",
-      a: "Yes! In addition to our off-the-shelf software packages, we offer end-to-end custom software development. Whether you need specific POS hardware integration, custom reports, or cloud synchronization, our team will engineer it to your exact specifications."
+      a: "Yes! In addition to our off-the-shelf software packages, we offer end-to-end custom software development. Whether you need specific receipt printer hardware integration, custom reports, or cloud synchronization, our team will engineer it to your exact specifications."
     },
     {
       id: "faq-5",

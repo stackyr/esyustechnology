@@ -3,7 +3,7 @@ import { COMPANY_INFO } from '../data/companyData';
 
 export default function CompanyStats() {
   const bars = [
-    { label: "Retail Billing & Offline POS", value: 38, tone: "tone-1", fill: "38%" },
+    { label: "Retail Billing & Offline Software", value: 38, tone: "tone-1", fill: "38%" },
     { label: "Wholesale Inventory & GST Reports", value: 27, tone: "tone-4", fill: "27%" },
     { label: "Tour & Travel Management ERP", value: 19, tone: "tone-2", fill: "19%" },
     { label: "Custom Cloud Portals & Corporate Web", value: 16, tone: "tone-5", fill: "16%" }

@@ -53,7 +53,7 @@ export default function Services({ onSelectService, onEnquireService }) {
     {
       id: "android-dev",
       serviceIndex: 3, // Android Dev in SERVICES
-      tab: "Android Mobile POS",
+      tab: "Android Mobile Apps",
       tone: "tone-4",
       image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=900",
       num: "04",
@@ -61,7 +61,7 @@ export default function Services({ onSelectService, onEnquireService }) {
       lead: "Specialized native Android applications optimized for hardware, sensors, Bluetooth thermal receipt printers, and offline caching.",
       uiTop: "Mobile Android Jetpack",
       uiTitle: "Handheld Billing & Field Apps",
-      row1: ["Hardware Connectivity", "Bluetooth ESC/POS Thermal"],
+      row1: ["Hardware Connectivity", "Bluetooth Thermal Receipt"],
       row2: ["Offline Database", "Room SQLite Storage"],
       row3: ["OS Compatibility", "Android 8.0 through 14+"]
     },
@@ -94,7 +94,7 @@ export default function Services({ onSelectService, onEnquireService }) {
             </h2>
             <div className="sec-head__side">
               <p className="lead">
-                {srvSec.lead || "From offline Windows billing software and thermal printer POS to cloud enterprise applications, we build robust systems with zero downtime."}
+                {srvSec.lead || "From offline Windows billing software and thermal receipt printing to cloud enterprise applications, we build robust systems with zero downtime."}
               </p>
               <a className="link" href="#applications">
                 Explore our ready-to-use software suite →
