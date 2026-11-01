@@ -178,10 +178,10 @@ export default function Products({ onSelectProduct, _onDownloadProduct, onViewAl
                     <button
                       type="button"
                       onClick={() => hasProduct && onSelectProduct(item.product)}
-                      className="flex-1 px-3 py-2.5 rounded-full border border-[var(--ink)] text-xs font-semibold text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--bg)] transition-colors text-center cursor-pointer"
+                      className="spec-btn flex-1"
                     >
                       <span>Specs & Features</span>
-                      <span className="ml-1" aria-hidden="true">→</span>
+                      <span className="spec-btn__arr" aria-hidden="true">→</span>
                     </button>
 
                     {isLiveDownload ? (
@@ -190,7 +190,7 @@ export default function Products({ onSelectProduct, _onDownloadProduct, onViewAl
                         download
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 px-3 py-2.5 rounded-full bg-[var(--c1)] hover:bg-[#d64b22] text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-sm transition-all"
+                        className="btn btn--sm flex-1 bg-[var(--c1)] hover:bg-[#d64b22] text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-sm transition-all"
                         title={`Download official ${item.name} installer`}
                       >
                         <Download className="w-3.5 h-3.5 shrink-0" />
@@ -199,11 +199,16 @@ export default function Products({ onSelectProduct, _onDownloadProduct, onViewAl
                     ) : (
                       <button
                         type="button"
-                        className="flex-1 px-3 py-2.5 rounded-full bg-[var(--bg)] border border-[var(--c1)]/30 text-[var(--c1)] text-xs font-bold text-center flex items-center justify-center gap-1.5 cursor-default shadow-xs"
-                        title="Official download link will be available soon"
+                        onClick={() => {
+                          if (onViewAllPackages) onViewAllPackages(item.product);
+                          else if (onDownloadClick) onDownloadClick(item.product);
+                        }}
+                        className="coming-soon-btn flex-1"
+                        title={`Click to download ${item.name} in Release Center`}
                       >
-                        <Clock className="w-3.5 h-3.5 text-[var(--c1)] shrink-0" />
+                        <Clock className="w-3.5 h-3.5 shrink-0" />
                         <span>Coming Soon</span>
+                        <span className="btn__arr ml-0.5">→</span>
                       </button>
                     )}
                   </div>
