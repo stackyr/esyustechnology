@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { COMPANY_INFO, PRODUCTS } from '../data/companyData';
+import { lenisScrollTo } from '../utils/hearthlyAnimations';
 
-export default function Navbar({ onDownloadClick, onContactClick }) {
+export default function Navbar({
+  onDownloadClick,
+  onContactClick,
+  isDownloadsPage = false,
+  onBackToHome,
+  onNavigateSection
+}) {
   const [isSolid, setIsSolid] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -49,14 +56,30 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
 
   const scrollTo = (id) => {
     setMobileMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({
-        top: elementPosition - offset,
-        behavior: 'smooth'
-      });
+    lenisScrollTo(id === 'home' || id === '#home' ? 0 : id, { offset: -80 });
+  };
+
+  const handleNavClick = (id) => {
+    setMobileMenuOpen(false);
+    if (isDownloadsPage) {
+      if (id === 'download') {
+        lenisScrollTo(0);
+        return;
+      }
+      if (onNavigateSection) {
+        onNavigateSection(id);
+      } else if (onBackToHome) {
+        onBackToHome();
+        setTimeout(() => {
+          lenisScrollTo(id, { offset: -80 });
+        }, 150);
+      }
+    } else {
+      if (id === 'download' && onDownloadClick) {
+        onDownloadClick();
+      } else {
+        scrollTo(id);
+      }
     }
   };
 
@@ -86,41 +109,53 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
             href="#home"
             onClick={(e) => {
               e.preventDefault();
-              scrollTo('home');
+              if (isDownloadsPage && onBackToHome) {
+                onBackToHome();
+              } else {
+                scrollTo('home');
+              }
             }}
-            aria-label="Esyus Technologies Home"
+            aria-label={`${COMPANY_INFO.name} Home`}
           >
             <img
               src="/logo-horizontal.png"
-              alt="Esyus Technologies"
+              alt={COMPANY_INFO.name}
               className="h-9 sm:h-10 w-auto object-contain shrink-0 transition-transform duration-300 group-hover:scale-[1.02]"
             />
             <span className="hidden xl:inline-flex items-center text-[9.5px] tracking-widest uppercase text-[var(--muted)] font-mono border-l border-[var(--line)] pl-2.5 ml-0.5 whitespace-nowrap">
-              Offline First
+              {isDownloadsPage ? 'Software Center' : 'Offline First'}
             </span>
           </a>
 
           {/* Desktop Navigation Links */}
           <nav className="nav desktop-nav" aria-label="Main Navigation">
-            <button className="link" onClick={() => scrollTo('about')}>About</button>
-            <button className="link" onClick={() => scrollTo('services')}>Services</button>
-            <button className="link" onClick={() => scrollTo('applications')}>Applications</button>
-            <button className="link font-semibold text-[var(--c1)]" onClick={() => scrollTo('featured-product')}>
+            <button className="link" onClick={() => handleNavClick('about')}>About</button>
+            <button className="link" onClick={() => handleNavClick('services')}>Services</button>
+            <button className="link" onClick={() => handleNavClick('applications')}>Applications</button>
+            <button className="link font-semibold text-[var(--c1)]" onClick={() => handleNavClick('featured-product')}>
               Finance Flow
             </button>
-            <button className="link" onClick={() => scrollTo('why-choose-us')}>Why Us</button>
-            <button className="link" onClick={() => scrollTo('team')}>Team</button>
-            <button className="link" onClick={() => scrollTo('reviews')}>Reviews</button>
-            <button className="link" onClick={() => scrollTo('download')}>Downloads</button>
-            <button className="link" onClick={() => scrollTo('faq')}>FAQ</button>
-            <button className="link" onClick={() => scrollTo('contact')}>Contact</button>
+            <button className="link" onClick={() => handleNavClick('why-choose-us')}>Why Us</button>
+            <button className="link" onClick={() => handleNavClick('team')}>Team</button>
+            <button className="link" onClick={() => handleNavClick('reviews')}>Reviews</button>
+            <button
+              className={`link font-medium ${isDownloadsPage
+                  ? 'text-[var(--c1)] font-bold bg-[var(--c1)]/10 px-2.5 py-1 rounded-lg'
+                  : 'hover:text-[var(--c1)]'
+                }`}
+              onClick={() => handleNavClick('download')}
+            >
+              Downloads
+            </button>
+            <button className="link" onClick={() => handleNavClick('faq')}>FAQ</button>
+            <button className="link" onClick={() => handleNavClick('contact')}>Contact</button>
           </nav>
 
           {/* Header Action Tools */}
           <div className="hdr__tools">
-            {/* Quick Call Button */}
+            {/* Quick Call Button (Desktop Only) */}
             <a
-              className="ibtn ibtn--bare hidden sm:inline-grid"
+              className="ibtn ibtn--bare hdr__tool-btn hidden md:inline-grid"
               href={`tel:${COMPANY_INFO.phone}`}
               aria-label={`Call ${COMPANY_INFO.phone}`}
               title={`Call Desk: ${COMPANY_INFO.phone}`}
@@ -130,10 +165,10 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
               </svg>
             </a>
 
-            {/* Quick FAQ / Help button */}
+            {/* Quick FAQ / Help button (Desktop Only) */}
             <button
-              className="ibtn ibtn--bare hidden md:inline-grid"
-              onClick={() => scrollTo('faq')}
+              className="ibtn ibtn--bare hdr__tool-btn hidden md:inline-grid"
+              onClick={() => handleNavClick('faq')}
               aria-label="FAQ & Help"
               title="Help & Questions"
             >
@@ -144,19 +179,38 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
               </svg>
             </button>
 
-            {/* Primary Download CTA Button */}
-            <button
-              className="btn btn--line btn--sm hidden lg:inline-flex shrink-0 whitespace-nowrap shadow-sm"
-              onClick={() => {
-                if (onDownloadClick) onDownloadClick();
-                else scrollTo('download');
-              }}
-            >
-              <span>Download Apps</span>
-              <svg className="btn__arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7">
-                <path d="M2.5 9.5 9.5 2.5M9.5 2.5H4M9.5 2.5V8" />
-              </svg>
-            </button>
+            {/* Primary Action CTA Button */}
+            {isDownloadsPage ? (
+              <button
+                className="btn btn--line btn--sm hidden lg:inline-flex shrink-0 whitespace-nowrap shadow-sm group"
+                onClick={onBackToHome}
+                title="Return to Home Landing Page"
+              >
+                <svg
+                  className="w-3.5 h-3.5 mr-1.5 text-[var(--c1)] transition-transform group-hover:-translate-x-1"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                <span>Back to Home</span>
+              </button>
+            ) : (
+              <button
+                className="btn btn--line btn--sm hidden lg:inline-flex shrink-0 whitespace-nowrap shadow-sm"
+                onClick={() => {
+                  if (onDownloadClick) onDownloadClick();
+                  else scrollTo('download');
+                }}
+              >
+                <span>Download Apps</span>
+                <svg className="btn__arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.7">
+                  <path d="M2.5 9.5 9.5 2.5M9.5 2.5H4M9.5 2.5V8" />
+                </svg>
+              </button>
+            )}
 
             {/* Mobile / Tablet Menu Button with animated hamburger */}
             <button
@@ -209,10 +263,10 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
           <div className="space-y-6">
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
               <span className="text-xs uppercase tracking-widest text-[var(--muted)] font-mono">
-                Esyus Technologies Navigation
+                {COMPANY_INFO.name} Navigation
               </span>
               <span className="text-xs font-mono text-[var(--c1)] font-semibold">
-                10 Core Sections
+                Navigation Menu
               </span>
             </div>
 
@@ -220,8 +274,11 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
               {navLinks.map((item, idx) => (
                 <button
                   key={item.id}
-                  onClick={() => scrollTo(item.id)}
-                  className="flex items-center justify-between p-3.5 rounded-xl bg-white/70 hover:bg-white border border-[var(--line)] text-left transition-all group"
+                  onClick={() => handleNavClick(item.id)}
+                  className={`flex items-center justify-between p-3.5 rounded-xl border border-[var(--line)] text-left transition-all group ${isDownloadsPage && item.id === 'download'
+                      ? 'bg-[var(--c1)]/10 border-[var(--c1)]/40 font-bold'
+                      : 'bg-white/70 hover:bg-white'
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-mono text-[var(--muted)] group-hover:text-[var(--c1)]">
@@ -246,7 +303,8 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
                   <button
                     key={prod.id}
                     onClick={() => {
-                      scrollTo('download');
+                      setMobileMenuOpen(false);
+                      handleNavClick('download');
                     }}
                     className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-[var(--soft)] hover:bg-[var(--line)] text-[var(--ink)] transition-colors flex items-center gap-1.5"
                   >
@@ -271,18 +329,21 @@ export default function Navbar({ onDownloadClick, onContactClick }) {
                 className="btn btn--sm flex-1 sm:flex-none justify-center"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  if (onDownloadClick) onDownloadClick();
-                  else scrollTo('download');
+                  if (isDownloadsPage) {
+                    if (onBackToHome) onBackToHome();
+                  } else {
+                    if (onDownloadClick) onDownloadClick();
+                    else scrollTo('download');
+                  }
                 }}
               >
-                <span>Explore Packages</span>
+                <span>{isDownloadsPage ? 'Back to Home' : 'Explore Packages'}</span>
               </button>
               <button
                 className="btn btn--line btn--sm flex-1 sm:flex-none justify-center"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  if (onContactClick) onContactClick();
-                  else scrollTo('contact');
+                  handleNavClick('contact');
                 }}
               >
                 <span>Contact Desk</span>
