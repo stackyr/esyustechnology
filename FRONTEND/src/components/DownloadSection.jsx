@@ -99,9 +99,9 @@ export default function DownloadSection({ _onDownloadApp }) {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-3 mb-1">
+                  <div className="flex items-center gap-2.5 sm:gap-3 mb-1">
                     {isFeatured ? (
-                      <div className="w-11 h-11 rounded-2xl bg-white border border-white/40 p-1.5 flex items-center justify-center shadow-lg shadow-black/40 shrink-0">
+                      <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-white border border-white/40 p-1 flex items-center justify-center shadow-lg shadow-black/40 shrink-0">
                         <img
                           src="/finance-flow-emblem.png"
                           alt={app.name}
@@ -126,7 +126,7 @@ export default function DownloadSection({ _onDownloadApp }) {
                       </div>
                     ) : null}
                     <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className={`plan__name font-bold ${isFeatured ? 'text-white text-xl sm:text-2xl' : ''}`}>
+                      <h3 className={`plan__name font-bold ${isFeatured ? 'text-white text-lg sm:text-2xl' : ''}`}>
                         {app.name}
                       </h3>
                       {isFeatured && (
@@ -166,7 +166,7 @@ export default function DownloadSection({ _onDownloadApp }) {
                 </ul>
 
                 {/* CTA Button: Dynamic Live Download Link OR Coming Soon */}
-                <div className="w-full mt-auto pt-3">
+                <div className="w-full mt-auto pt-2 sm:pt-3">
                   {isFeatured ? (
                     isLiveDownload ? (
                       <>
@@ -175,7 +175,7 @@ export default function DownloadSection({ _onDownloadApp }) {
                           download
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full h-12 rounded-full font-bold text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] hover:from-[#e86a48] hover:to-[var(--c1)] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-pointer"
+                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] hover:from-[#e86a48] hover:to-[var(--c1)] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-pointer"
                           title={`Download ${app.name} (${app.downloadFile})`}
                         >
                           <Download className="w-4 h-4 mr-1 text-white shrink-0" />
@@ -183,7 +183,7 @@ export default function DownloadSection({ _onDownloadApp }) {
                             Download {app.downloadFile || 'Installer (.EXE)'}
                           </span>
                         </a>
-                        <div className="text-[11px] text-center font-mono mt-2 truncate text-amber-200/80 font-medium">
+                        <div className="text-[11px] text-center font-mono mt-1.5 truncate text-amber-200/80 font-medium">
                           Verified Official Installer • {app.size}
                         </div>
                       </>
@@ -192,7 +192,7 @@ export default function DownloadSection({ _onDownloadApp }) {
                         <button
                           type="button"
                           disabled
-                          className="w-full h-12 rounded-full font-bold text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-default"
+                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-default"
                           title="Official download link will be available soon"
                         >
                           <Clock className="w-4 h-4 mr-1 text-white shrink-0 animate-pulse" />
@@ -200,7 +200,7 @@ export default function DownloadSection({ _onDownloadApp }) {
                             Coming Soon (Windows .EXE)
                           </span>
                         </button>
-                        <div className="text-[11px] text-center font-mono mt-2 truncate text-amber-200/80 font-medium">
+                        <div className="text-[11px] text-center font-mono mt-1.5 truncate text-amber-200/80 font-medium">
                           Official release in preparation • {app.size}
                         </div>
                       </>
@@ -213,15 +213,15 @@ export default function DownloadSection({ _onDownloadApp }) {
                           download
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full h-12 rounded-full font-bold text-[13.5px] flex items-center justify-center gap-2 bg-[var(--c1)] hover:bg-[#d64b22] text-white shadow-md cursor-pointer transition-colors"
+                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[13.5px] flex items-center justify-center gap-2 bg-[var(--c1)] hover:bg-[#d64b22] text-white shadow-md cursor-pointer transition-colors"
                           title={`Download ${app.name} (${app.downloadFile})`}
                         >
                           <Download className="w-4 h-4 mr-1 shrink-0 text-white" />
-                          <span className="truncate font-bold text-[13.5px] text-white">
+                          <span className="truncate font-bold text-[13px] sm:text-[13.5px] text-white">
                             Download {isAndroid ? 'APK' : 'EXE'} ({app.size})
                           </span>
                         </a>
-                        <div className="text-[11px] text-center font-mono mt-2 truncate text-[var(--muted)]">
+                        <div className="text-[11px] text-center font-mono mt-1.5 truncate text-[var(--muted)]">
                           Verified Official Package • {app.size}
                         </div>
                       </>
@@ -230,15 +230,15 @@ export default function DownloadSection({ _onDownloadApp }) {
                         <button
                           type="button"
                           disabled
-                          className="w-full h-12 rounded-full font-bold text-[13.5px] flex items-center justify-center gap-2 bg-white text-[var(--c1)] border border-[var(--c1)]/30 shadow-xs cursor-default hover:bg-stone-50 transition-colors"
+                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[13.5px] flex items-center justify-center gap-2 bg-white text-[var(--c1)] border border-[var(--c1)]/30 shadow-xs cursor-default hover:bg-stone-50 transition-colors"
                           title="Official download link will be available soon"
                         >
                           <Clock className="w-4 h-4 mr-1 shrink-0 text-[var(--c1)]" />
-                          <span className="truncate font-bold text-[13.5px] text-[var(--c1)]">
+                          <span className="truncate font-bold text-[13px] sm:text-[13.5px] text-[var(--c1)]">
                             Coming Soon ({isAndroid ? 'Android .APK' : 'Windows .EXE'})
                           </span>
                         </button>
-                        <div className="text-[11px] text-center font-mono mt-2 truncate text-[var(--muted)]">
+                        <div className="text-[11px] text-center font-mono mt-1.5 truncate text-[var(--muted)]">
                           Official release in preparation • {app.size}
                         </div>
                       </>

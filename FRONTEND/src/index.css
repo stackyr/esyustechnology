@@ -3458,17 +3458,82 @@ em.s {
 
   .plans {
     grid-template-columns: minmax(0, 1fr) !important;
-    gap: 14px !important;
-    padding-top: 16px !important;
+    gap: 22px !important;
+    padding-top: 36px !important;
+    max-width: 440px !important;
+    margin-inline: auto !important;
   }
 
   .plan {
-    padding: 18px 14px !important;
-    border-radius: 18px !important;
+    padding: 16px 14px !important;
+    border-radius: 16px !important;
+    gap: 12px !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .plan--main {
+    border-top-left-radius: 0 !important;
+  }
+
+  .plan__tab {
+    height: 30px !important;
+    font-size: 11px !important;
+    padding: 0 10px !important;
+    border-radius: 10px 10px 0 0 !important;
+  }
+
+  .plan__name {
+    font-size: 18px !important;
+  }
+
+  .plan__price {
+    margin: 2px 0 4px !important;
+    gap: 6px !important;
+    align-items: baseline !important;
   }
 
   .plan__num {
-    font-size: 34px !important;
+    font-size: 26px !important;
+    line-height: 1 !important;
+  }
+
+  .plan__per {
+    font-size: 11.5px !important;
+    padding-bottom: 0 !important;
+  }
+
+  .plan__text {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    min-height: 0 !important;
+    -webkit-line-clamp: 2 !important;
+    margin: 0 !important;
+  }
+
+  .plan__list {
+    gap: 6px !important;
+    padding-top: 10px !important;
+    font-size: 12px !important;
+  }
+
+  .plan__list li {
+    gap: 7px !important;
+    line-height: 1.35 !important;
+  }
+
+  .plan__list li::before {
+    width: 5px !important;
+    height: 5px !important;
+    margin-top: 0.45em !important;
+  }
+
+  .plan .btn {
+    height: 42px !important;
+    font-size: 13px !important;
+    padding: 0 14px !important;
+    margin-top: 6px !important;
   }
 
   /* 10. FAQ Section on Mobile */
