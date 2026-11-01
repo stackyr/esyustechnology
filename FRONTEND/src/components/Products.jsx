@@ -35,28 +35,7 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
     };
   });
 
-  // Additional 6th suite package: Hardware Drivers
-  const allItems = [
-    ...softwareItems,
-    {
-      id: "hardware-drivers",
-      product: null,
-      num: "06",
-      name: "Hardware Drivers & Interop",
-      category: "Hardware Suite",
-      platformTag: "Universal Drivers",
-      isWindows: true,
-      isAndroid: true,
-      version: "v3.0.0 ESC/POS",
-      size: "Universal Package",
-      downloadLabel: "Download Drivers",
-      logo: "/card-hardware-printer.png",
-      tagline: "Plug-and-play drivers and direct communication protocols for standard 58mm/80mm thermal receipt printers, USB cash drawers, and barcode scanners.",
-      chips: ["🔌 Plug-and-Play USB", "📶 Bluetooth 5.0 ESC/POS", "⚡ Zero Driver Lag"],
-      isComingSoon: true,
-      downloadUrl: ""
-    }
-  ];
+  const allItems = softwareItems;
 
   const filteredItems = allItems.filter((item) => {
     if (filter === 'desktop') return item.isWindows;
@@ -119,8 +98,8 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
         <div className="mt-6 mb-10 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--soft)] border border-[var(--line)] text-xs text-[var(--ink)] font-medium">
           <span className="w-2 h-2 rounded-full bg-[var(--c1)] animate-pulse" />
           <span>
-            {filter === 'all' && 'Showing all production software systems & hardware driver suite'}
-            {filter === 'desktop' && 'Showing Windows Desktop billing suites, POS engines & printer drivers'}
+            {filter === 'all' && 'Showing all production software systems'}
+            {filter === 'desktop' && 'Showing Windows Desktop billing suites & POS engines'}
             {filter === 'mobile' && 'Showing Android Mobile applications, partner portals & mobile POS solutions'}
           </span>
         </div>
