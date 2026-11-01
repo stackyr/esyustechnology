@@ -309,10 +309,10 @@ export default function DownloadsPage({
                         className={`coming-soon-btn w-full h-11 justify-center text-xs uppercase tracking-wider group ${
                           isFeatured ? '!bg-amber-400 !text-stone-950 !border-amber-400 hover:!bg-amber-300' : ''
                         }`}
-                        title="View release package and download installer"
+                        title={`Official ${product.name} release in preparation`}
                       >
                         <Clock className="w-3.5 h-3.5 shrink-0" />
-                        <span>Get Package / Coming Soon ({isAndroid ? 'Android APK' : 'Windows EXE'})</span>
+                        <span>Coming Soon ({isAndroid ? 'Android APK' : 'Windows EXE'})</span>
                         <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
                       </button>
                     )}

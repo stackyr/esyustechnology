@@ -131,15 +131,10 @@ export default function App() {
     lenisScrollTo(target, { offset: -80 });
   };
 
-  const handleOpenDownloadsPage = (productToDownload = null) => {
+  const handleOpenDownloadsPage = () => {
     setIsDownloadsPage(true);
     window.location.hash = '#downloads';
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (productToDownload && typeof productToDownload === 'object' && productToDownload.id) {
-      setTimeout(() => {
-        setDownloadingProduct(productToDownload);
-      }, 150);
-    }
   };
 
   const handleBackToHome = () => {
