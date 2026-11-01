@@ -131,10 +131,15 @@ export default function App() {
     lenisScrollTo(target, { offset: -80 });
   };
 
-  const handleOpenDownloadsPage = () => {
+  const handleOpenDownloadsPage = (productToDownload = null) => {
     setIsDownloadsPage(true);
     window.location.hash = '#downloads';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (productToDownload && typeof productToDownload === 'object' && productToDownload.id) {
+      setTimeout(() => {
+        setDownloadingProduct(productToDownload);
+      }, 150);
+    }
   };
 
   const handleBackToHome = () => {
@@ -150,8 +155,8 @@ export default function App() {
     scrollToSection('contact');
   };
 
-  const handleDownloadClick = () => {
-    handleOpenDownloadsPage();
+  const handleDownloadClick = (productToDownload = null) => {
+    handleOpenDownloadsPage(productToDownload);
   };
 
   const handleContactClick = () => {
@@ -268,7 +273,8 @@ export default function App() {
             {/* 06. Featured Product — Finance Flow (Desktop Billing, GST Invoices, 100% Offline) */}
             <FeaturedProduct
               dataVersion={dataVersion}
-              onDownloadFinanceFlow={handleDownloadFinanceFlow}
+              onDownloadFinanceFlow={() => handleOpenDownloadsPage(PRODUCTS[0])}
+              onDownloadClick={(prod) => handleOpenDownloadsPage(prod || PRODUCTS[0])}
             />
 
             {/* 07. Why Choose Us */}

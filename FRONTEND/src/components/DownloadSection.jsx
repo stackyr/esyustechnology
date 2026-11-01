@@ -224,14 +224,17 @@ export default function DownloadSection({ _onDownloadApp, onOpenDownloadsPage })
                       <>
                         <button
                           type="button"
-                          disabled
-                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-default"
-                          title="Official download link will be available soon"
+                          onClick={() => {
+                            if (onOpenDownloadsPage) onOpenDownloadsPage(app);
+                          }}
+                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-pointer hover:shadow-xl active:scale-95 group"
+                          title={`Click to download ${app.name} in Release Center`}
                         >
                           <Clock className="w-4 h-4 mr-1 text-white shrink-0 animate-pulse" />
                           <span className="text-white font-bold tracking-wide">
                             Coming Soon (Windows .EXE)
                           </span>
+                          <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
                         </button>
                         <div className="text-[11px] text-center font-mono mt-1.5 truncate text-amber-200/80 font-medium">
                           Official release in preparation • {app.size}
@@ -262,14 +265,17 @@ export default function DownloadSection({ _onDownloadApp, onOpenDownloadsPage })
                       <>
                         <button
                           type="button"
-                          disabled
-                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[13.5px] flex items-center justify-center gap-2 bg-white text-[var(--c1)] border border-[var(--c1)]/30 shadow-xs cursor-default hover:bg-stone-50 transition-colors"
-                          title="Official download link will be available soon"
+                          onClick={() => {
+                            if (onOpenDownloadsPage) onOpenDownloadsPage(app);
+                          }}
+                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[13.5px] flex items-center justify-center gap-2 coming-soon-btn cursor-pointer shadow-xs active:scale-95 transition-all group"
+                          title={`Click to download ${app.name} in Release Center`}
                         >
-                          <Clock className="w-4 h-4 mr-1 shrink-0 text-[var(--c1)]" />
-                          <span className="truncate font-bold text-[13px] sm:text-[13.5px] text-[var(--c1)]">
+                          <Clock className="w-4 h-4 mr-1 shrink-0" />
+                          <span className="truncate font-bold text-[13px] sm:text-[13.5px]">
                             Coming Soon ({isAndroid ? 'Android .APK' : 'Windows .EXE'})
                           </span>
+                          <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
                         </button>
                         <div className="text-[11px] text-center font-mono mt-1.5 truncate text-[var(--muted)]">
                           Official release in preparation • {app.size}

@@ -46,7 +46,7 @@ export default function Products({ onSelectProduct, _onDownloadProduct, onViewAl
   return (
     <section id="applications" className="py-20 border-b border-[var(--line)]" data-kind="gallery" data-section="gallery">
       <div className="wrap">
-        
+
         {/* Section Header */}
         <div className="sec-head">
           <div>

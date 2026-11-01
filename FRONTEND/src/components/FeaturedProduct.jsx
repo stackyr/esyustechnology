@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import { Clock, Download } from 'lucide-react';
 
-export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
+export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick }) {
   const financeFlow = PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0];
   const fp = LANDING_PAGE_SECTIONS?.featuredProduct || {};
 
@@ -118,12 +118,16 @@ export default function FeaturedProduct({ _onDownloadFinanceFlow }) {
               ) : (
                 <button
                   type="button"
-                  className="btn btn--sm w-full sm:w-auto justify-center cursor-default border border-[var(--c1)]/30 text-[var(--c1)] bg-white"
-                  disabled
-                  title="Official download link will be available soon"
+                  onClick={() => {
+                    if (onDownloadClick) onDownloadClick(financeFlow);
+                    else if (onDownloadFinanceFlow) onDownloadFinanceFlow(financeFlow);
+                  }}
+                  className="coming-soon-btn w-full sm:w-auto cursor-pointer"
+                  title="Click to view download package in Release Center"
                 >
-                  <Clock className="w-3.5 h-3.5 mr-1.5 text-[var(--c1)] shrink-0" />
+                  <Clock className="w-3.5 h-3.5 mr-1.5 shrink-0" />
                   <span>Coming Soon ({financeFlow.version || 'v2.4.0'})</span>
+                  <span className="btn__arr ml-1">→</span>
                 </button>
               )}
             </div>

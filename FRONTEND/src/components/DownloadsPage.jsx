@@ -306,15 +306,14 @@ export default function DownloadsPage({
                       <button
                         type="button"
                         onClick={() => onDownloadApp(product)}
-                        className={`w-full h-11 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                          isFeatured
-                            ? 'bg-amber-400 text-stone-900 hover:bg-amber-300 shadow-md'
-                            : 'bg-[var(--soft)] border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--line)]'
+                        className={`coming-soon-btn w-full h-11 justify-center text-xs uppercase tracking-wider group ${
+                          isFeatured ? '!bg-amber-400 !text-stone-950 !border-amber-400 hover:!bg-amber-300' : ''
                         }`}
-                        title="View release status and get installer"
+                        title="View release package and download installer"
                       >
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>Coming Soon ({isAndroid ? 'Android APK' : 'Windows EXE'})</span>
+                        <Clock className="w-3.5 h-3.5 shrink-0" />
+                        <span>Get Package / Coming Soon ({isAndroid ? 'Android APK' : 'Windows EXE'})</span>
+                        <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
                       </button>
                     )}
 
@@ -322,13 +321,12 @@ export default function DownloadsPage({
                     <button
                       type="button"
                       onClick={() => onSelectProduct(product)}
-                      className={`w-full py-2 text-center text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
-                        isFeatured 
-                          ? 'text-stone-300 hover:text-white' 
-                          : 'text-[var(--muted)] hover:text-[var(--ink)]'
+                      className={`spec-btn w-full justify-center group ${
+                        isFeatured ? '!text-stone-200 !border-stone-400/40 hover:!text-white' : ''
                       }`}
                     >
-                      View Specifications & Features →
+                      <span>View Specifications & Features</span>
+                      <span className="spec-btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
                     </button>
                   </div>
 
