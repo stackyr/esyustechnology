@@ -9,14 +9,14 @@ const StatSchema = new mongoose.Schema({
 const BrandSchema = new mongoose.Schema({
   name: { type: String, required: true, default: 'Esyus Technology' },
   shortName: { type: String, default: 'Esyus' },
-  domain: { type: String, default: 'esyustechnologies.com' },
+  domain: { type: String, default: 'esyustechnology.com' },
   tagline: { type: String, default: "Smart Software Solutions for Tomorrow's Businesses" },
   slogan: { type: String, default: 'High-Performance Desktop, Web & Android Systems Built for Absolute Reliability' },
   founder: { type: String, default: 'Milan Mandal' },
   coFounder: { type: String, default: 'Suman Raptan' },
   establishmentDate: { type: String, default: '01/01/2027' },
-  email: { type: String, default: 'contact@esyustechnologies.com' },
-  supportEmail: { type: String, default: 'support@esyustechnologies.com' },
+  email: { type: String, default: 'contact@esyustechnology.com' },
+  supportEmail: { type: String, default: 'support@esyustechnology.com' },
   phone: { type: String, default: '+91 98765 43210' },
   address: { type: String, default: 'Esyus Technology Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091' },
   stats: [StatSchema]

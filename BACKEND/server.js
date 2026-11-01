@@ -112,7 +112,7 @@ app.post('/api/admin/login', (req, res) => {
     const envUser = (process.env.ADMIN_USERNAME || 'admin').trim().toLowerCase();
     const envPass = (process.env.ADMIN_PASSWORD || 'admin').trim();
 
-    const validUsers = [envUser, 'admin', 'admin@esyus.com', 'admin@esyustechnologies.com', 'milan'];
+    const validUsers = [envUser, 'admin', 'admin@esyus.com', 'admin@esyustechnology.com', 'admin@esyustechnologies.com', 'milan'];
     const validPass = [envPass, 'admin', 'admin123', 'esyus2027', '123456'];
 
     if (validUsers.includes(cleanUser) && validPass.includes(cleanPass)) {
@@ -126,7 +126,7 @@ app.post('/api/admin/login', (req, res) => {
           username: cleanUser,
           role: 'Super Administrator',
           name: 'Milan Mandal',
-          email: 'admin@esyustechnologies.com'
+          email: 'admin@esyustechnology.com'
         }
       });
     }

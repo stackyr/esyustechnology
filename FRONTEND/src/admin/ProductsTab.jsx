@@ -398,7 +398,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
                       <input
                         type="url"
                         required={!form.isComingSoon}
-                        placeholder="https://downloads.esyustechnologies.com/FinanceFlow-Setup.exe"
+                        placeholder="https://downloads.esyustechnology.com/FinanceFlow-Setup.exe"
                         value={form.downloadUrl}
                         onChange={(e) => setForm({ ...form, downloadUrl: e.target.value })}
                         className="w-full px-3 py-2 rounded-xl border border-emerald-500/40 bg-emerald-50/30 text-xs text-[var(--ink)] font-mono focus:outline-none focus:border-emerald-600"
