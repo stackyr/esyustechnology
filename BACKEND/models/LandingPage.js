@@ -31,7 +31,7 @@ const LandingPageSchema = new mongoose.Schema({
   },
   featuredProduct: {
     headline: { type: String, default: "Finance Flow: From item entry to printed GST invoice in 0.2 seconds" },
-    lead: { type: String, default: "The premier offline-first billing solution designed by Esyus Technologies. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency." },
+    lead: { type: String, default: "The premier offline-first billing solution designed by Esyus Technology. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency." },
     stationImage: { type: String, default: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900" },
     isComingSoon: { type: Boolean, default: true },
     downloadUrl: { type: String, default: "" }

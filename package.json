@@ -1,7 +1,7 @@
 {
   "name": "esyus-mern-suite",
   "version": "1.0.0",
-  "description": "Esyus Technologies - Production MERN Stack Suite",
+  "description": "Esyus Technology - Production MERN Stack Suite",
   "private": true,
   "type": "module",
   "scripts": {

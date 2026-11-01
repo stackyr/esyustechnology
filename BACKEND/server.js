@@ -71,7 +71,7 @@ app.get('/api/overview', async (req, res) => {
         totalServices: services.length,
         totalProducts: products.length,
         totalFaqs: faqs.length,
-        brandName: brand?.name || 'Esyus Technologies',
+        brandName: brand?.name || 'Esyus Technology',
         mongoConnected: isMongoConnected()
       }
     });

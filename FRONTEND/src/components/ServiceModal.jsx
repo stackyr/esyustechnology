@@ -66,7 +66,7 @@ export default function ServiceModal({ service, onClose, onEnquire }) {
           {/* Service Commitment Note */}
           <div className="p-4 rounded-xl bg-[var(--dark)] text-[var(--bg)] space-y-1 shadow-md border border-white/10">
             <span className="font-bold text-[var(--c3)] block text-xs font-mono uppercase tracking-wider">
-              Esyus Technologies Assurance
+              Esyus Technology Assurance
             </span>
             <p className="text-xs leading-relaxed text-stone-300">
               Each software delivery includes structured source code, staging tests, deployment walk-throughs, and warranty technical support.

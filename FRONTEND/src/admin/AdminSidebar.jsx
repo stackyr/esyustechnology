@@ -213,7 +213,7 @@ export default function AdminSidebar({
 
         {/* Small Copyright */}
         <p className="text-[10px] text-center text-[var(--muted)] font-mono pt-1">
-          © 2026–2027 Esyus Technologies
+          © 2026–2027 Esyus Technology
         </p>
       </div>
 

@@ -1,7 +1,7 @@
 {
   "name": "esyus-backend",
   "version": "1.0.0",
-  "description": "Backend API Server for Esyus Technologies",
+  "description": "Backend API Server for Esyus Technology",
   "main": "server.js",
   "type": "module",
   "scripts": {

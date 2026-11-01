@@ -111,7 +111,7 @@ export default function ProductModal({ product, onClose, _onDownload }) {
           {/* Deployment Support info */}
           <div className="p-4 rounded-xl bg-[var(--soft)] border-l-4 border-l-[var(--c1)] border border-[var(--line)] space-y-1">
             <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--c1)] font-bold block">
-              Deployment & Support from Esyus Technologies
+              Deployment & Support from Esyus Technology
             </span>
             <p className="text-xs text-[var(--muted)] leading-relaxed font-medium">
               Full technical support is provided for installing and calibrating POS hardware, thermal printer drivers, and encrypted database backups.

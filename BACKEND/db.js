@@ -10,7 +10,7 @@ const DB_FILE = path.join(DATA_DIR, 'db.json');
 // Initial seed data aligned with frontend companyData.js
 const DEFAULT_DATA = {
   brand: {
-    name: "Esyus Technologies",
+    name: "Esyus Technology",
     shortName: "Esyus",
     domain: "esyustechnologies.com",
     tagline: "Smart Software Solutions for Tomorrow's Businesses",
@@ -21,7 +21,7 @@ const DEFAULT_DATA = {
     email: "contact@esyustechnologies.com",
     supportEmail: "support@esyustechnologies.com",
     phone: "+91 98765 43210",
-    address: "Esyus Technologies Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
+    address: "Esyus Technology Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
     stats: [
       { label: "Offline Uptime", value: "100%", desc: "Works uninterrupted with local databases" },
       { label: "Software Products", value: "5+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
@@ -65,7 +65,7 @@ const DEFAULT_DATA = {
     },
     featuredProduct: {
       headline: "Finance Flow: From item entry to printed GST invoice in 0.2 seconds",
-      lead: "The premier offline-first billing solution designed by Esyus Technologies. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.",
+      lead: "The premier offline-first billing solution designed by Esyus Technology. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.",
       stationImage: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900",
       isComingSoon: true,
       downloadUrl: ""
@@ -355,12 +355,12 @@ const DEFAULT_DATA = {
     },
     {
       id: "faq-3",
-      q: "How does Esyus Technologies handle software updates and data safety?",
+      q: "How does Esyus Technology handle software updates and data safety?",
       a: "All desktop applications include automated local database backup mechanisms. Updates can be installed seamlessly without touching or overwriting your stored customer and invoice records."
     },
     {
       id: "faq-4",
-      q: "Can Esyus Technologies build custom features or integrations for our business?",
+      q: "Can Esyus Technology build custom features or integrations for our business?",
       a: "Yes! In addition to our off-the-shelf software packages, we offer end-to-end custom software development. Whether you need specific POS hardware integration, custom reports, or cloud synchronization, our team will engineer it to your exact specifications."
     },
     {
