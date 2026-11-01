@@ -58,7 +58,7 @@ export default function ProductModal({ product, onClose, _onDownload }) {
             </p>
           </div>
 
-          {/* Key Confirmed Features (from SRS) */}
+          {/* Key Confirmed Features */}
           <div>
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-xs font-mono uppercase tracking-widest text-[var(--ink)] font-bold">

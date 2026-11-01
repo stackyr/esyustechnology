@@ -36,9 +36,6 @@ export default function ContactUs({ preselectedSubject }) {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errs.email = 'Please enter a valid email address';
     }
-    if (!formData.message.trim()) {
-      errs.message = 'Please provide details about your software or enquiry requirement';
-    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -237,33 +234,18 @@ export default function ContactUs({ preselectedSubject }) {
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                   >
-                    <optgroup label="Applications (from SRS)">
+                    <optgroup label="Applications">
                       {PRODUCTS.map((p) => (
                         <option key={p.id} value={p.name}>{p.name} ({p.category})</option>
                       ))}
                     </optgroup>
-                    <optgroup label="Core Services (from SRS)">
+                    <optgroup label="Core Services">
                       {SERVICES.map((s) => (
                         <option key={s.id} value={s.title}>{s.title}</option>
                       ))}
                     </optgroup>
                     <option value="General Enterprise Software Enquiry">General Enterprise Software Enquiry</option>
                   </select>
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
-                    Software Specifications or Requirements *
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="Describe your requirements (e.g. 2 counter POS setup, thermal printer model, local SQLite offline backup, or custom Android features)..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
-                  />
-                  {errors.message && <p className="text-[11px] text-red-600 mt-1">{errors.message}</p>}
                 </div>
 
                 {/* Submit CTA */}

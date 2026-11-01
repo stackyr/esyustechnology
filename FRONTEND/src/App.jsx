@@ -200,7 +200,7 @@ export default function App() {
           onDownloadClick={handleDownloadClick}
         />
 
-        {/* Company Statistics (from SRS Page 5 Recommended Features) */}
+        {/* Company Statistics */}
         <CompanyStats dataVersion={dataVersion} />
 
         {/* 03. About Us / Company Introduction */}
@@ -253,7 +253,7 @@ export default function App() {
           onDownloadApp={handleDownloadAppDirectly}
         />
 
-        {/* FAQ Section (from SRS Page 5 Recommended Features) */}
+        {/* FAQ Section */}
         <FAQSection
           dataVersion={dataVersion}
           onContactClick={handleContactClick}
