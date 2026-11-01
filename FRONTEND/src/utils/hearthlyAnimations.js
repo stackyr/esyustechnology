@@ -122,10 +122,12 @@ export function initHearthlyAnimations() {
 
   // Initialize Lenis smooth scroll
   let lenis = null;
+  let tickerCb = null;
   try {
     lenis = new Lenis({ lerp: 0.1 });
     lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    tickerCb = (time) => lenis.raf(time * 1000);
+    gsap.ticker.add(tickerCb);
     gsap.ticker.lagSmoothing(0);
     globalLenis = lenis;
     if (typeof window !== 'undefined') {
@@ -238,7 +240,9 @@ export function initHearthlyAnimations() {
     const text = flood.querySelector('.flood__text');
     const head = hero.querySelector('.hero__head');
 
-    gsap.matchMedia().add('(min-width: 769px)', () => {
+    const mm = gsap.matchMedia();
+
+    mm.add('(min-width: 769px)', () => {
       // Clean any prior inline styles before measuring rest positions
       gsap.set([flood, head, ...hero.querySelectorAll('.collage__col')], {
         clearProps: 'transform,x,y,clipPath,opacity,visibility,autoAlpha'
@@ -282,14 +286,9 @@ export function initHearthlyAnimations() {
 
       tl.fromTo(flood,
         { clipPath: getStartClip, autoAlpha: 0, pointerEvents: 'none' },
-        { clipPath: 'inset(0px 0px 0px 0px round 0px)', pointerEvents: 'auto', duration: 0.55, ease: 'power2.inOut' },
+        { clipPath: 'inset(0px 0px 0px 0px round 0px)', autoAlpha: 1, pointerEvents: 'auto', duration: 0.55, ease: 'power2.inOut' },
         0
-      )
-        .fromTo(flood,
-          { autoAlpha: 0 },
-          { autoAlpha: 1, duration: 0.08, ease: 'none' },
-          0
-        );
+      );
 
       if (img) tl.fromTo(img, { scale: 1.35 }, { scale: 1, duration: 0.7, ease: 'power1.out' }, 0);
 
@@ -326,6 +325,16 @@ export function initHearthlyAnimations() {
           clearProps: 'all'
         });
       };
+    });
+
+    mm.add('(max-width: 768px)', () => {
+      // Clear props on mobile so CSS layout rules take complete priority
+      gsap.set([flood, head, text, ...hero.querySelectorAll('.collage__col')], {
+        clearProps: 'all'
+      });
+      if (text) {
+        gsap.set([...text.children], { clearProps: 'all' });
+      }
     });
   }));
 
@@ -546,10 +555,24 @@ export function initHearthlyAnimations() {
   setTimeout(() => {
     ScrollTrigger.refresh();
   }, 650);
+  setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 1200);
+
+  // Refresh ScrollTrigger as fonts and images complete loading (essential for Vercel edge CDN)
+  if (typeof window !== 'undefined') {
+    window.addEventListener('load', () => ScrollTrigger.refresh());
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => ScrollTrigger.refresh());
+    }
+  }
 
   // Return cleanup
   return () => {
     document.removeEventListener('click', handleAnchorClick);
+    if (tickerCb) {
+      gsap.ticker.remove(tickerCb);
+    }
     ScrollTrigger.getAll().forEach((st) => st.kill());
     if (lenis && typeof lenis.destroy === 'function') {
       lenis.destroy();
