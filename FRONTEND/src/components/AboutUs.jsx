@@ -108,7 +108,7 @@ export default function AboutUs({ onContactClick }) {
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch mt-10">
             {/* Left Corporate Highlight with Subtle Office Background */}
-            <div className="lg:col-span-5 rounded-[var(--r)] p-8 bg-[var(--dark)] text-[var(--bg)] flex flex-col justify-between shadow-2xl relative overflow-hidden group">
+            <div className="lg:col-span-5 rounded-[var(--r)] p-5 sm:p-8 bg-[var(--dark)] text-[var(--bg)] flex flex-col justify-between shadow-2xl relative overflow-hidden group">
               <img
                 src={about.officePhoto || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900"}
                 alt={`${COMPANY_INFO.name} Team Office`}
@@ -145,14 +145,16 @@ export default function AboutUs({ onContactClick }) {
                 </div>
               </div>
 
-              <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between text-xs text-stone-400 relative z-10">
-                <span className="truncate pr-2">{COMPANY_INFO.address || 'Sector V, Kolkata, WB 700091'}</span>
+              <div className="pt-5 mt-6 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-stone-400 relative z-10">
+                <span className="text-xs text-stone-400 leading-relaxed max-w-xs">{COMPANY_INFO.address || 'Sector V, Kolkata, WB 700091'}</span>
                 <button
                   onClick={onContactClick}
-                  className="btn btn--sm"
-                  style={{ background: 'var(--c3)', color: 'var(--ink)' }}
+                  className="w-full sm:w-auto h-10 px-5 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 bg-[var(--c3)] hover:bg-[#e5a835] text-[var(--ink)] shadow-md transition-all shrink-0 cursor-pointer"
                 >
-                  Contact Desk
+                  <span>Contact Desk</span>
+                  <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <path d="M2.5 9.5 9.5 2.5M9.5 2.5H4M9.5 2.5V8" />
+                  </svg>
                 </button>
               </div>
             </div>
