@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { COMPANY_INFO, SERVICES, PRODUCTS } from '../data/companyData';
 import api from '../utils/api';
 
-export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin }) {
+export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin, onOpenDownloadsPage }) {
   const [subscribed, setSubscribed] = useState(false);
   const [emailInput, setEmailInput] = useState('');
 
@@ -44,7 +44,16 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
           </div>
 
           <div className="stores">
-            <a href="#download" className="store">
+            <a
+              href="#downloads"
+              onClick={(e) => {
+                if (onOpenDownloadsPage) {
+                  e.preventDefault();
+                  onOpenDownloadsPage();
+                }
+              }}
+              className="store cursor-pointer"
+            >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                 <polyline points="7 10 12 15 17 10" />
@@ -115,7 +124,16 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
                 </li>
               ))}
               <li className="pt-1">
-                <a href="#download" className="text-[var(--c3)] hover:underline font-semibold block">
+                <a
+                  href="#downloads"
+                  onClick={(e) => {
+                    if (onOpenDownloadsPage) {
+                      e.preventDefault();
+                      onOpenDownloadsPage();
+                    }
+                  }}
+                  className="text-[var(--c3)] hover:underline font-semibold block cursor-pointer"
+                >
                   Explore Software Packages →
                 </a>
               </li>

@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import { PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
-import { Clock, Download } from 'lucide-react';
+import { Clock, Download, Search, X, ExternalLink } from 'lucide-react';
 
-export default function DownloadSection({ _onDownloadApp }) {
+export default function DownloadSection({ _onDownloadApp, onOpenDownloadsPage }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'windows' | 'android'
+  const [searchQuery, setSearchQuery] = useState('');
   const sec = LANDING_PAGE_SECTIONS?.downloadSection || {};
 
   const filteredApps = PRODUCTS.filter((app) => {
-    if (filter === 'windows') return (app.platform || '').toLowerCase().includes('windows');
-    if (filter === 'android') return (app.platform || '').toLowerCase().includes('android');
+    if (filter === 'windows' && !(app.platform || '').toLowerCase().includes('windows')) return false;
+    if (filter === 'android' && !(app.platform || '').toLowerCase().includes('android')) return false;
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      const match = (app.name || '').toLowerCase().includes(q) ||
+                    (app.tagline || '').toLowerCase().includes(q) ||
+                    (app.description || '').toLowerCase().includes(q) ||
+                    (app.platform || '').toLowerCase().includes(q) ||
+                    (app.highlights || []).join(' ').toLowerCase().includes(q);
+      if (!match) return false;
+    }
     return true;
   });
 
@@ -63,11 +73,34 @@ export default function DownloadSection({ _onDownloadApp }) {
                 Android (.APK)
               </button>
             </div>
+
+            {/* Instant Search Bar */}
+            <div className="relative w-full max-w-md">
+              <Search className="w-3.5 h-3.5 absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--muted)] pointer-events-none" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search packages by name, GST, platform..."
+                className="w-full pl-9 pr-8 py-2 rounded-full border border-[var(--line)] bg-[var(--bg)] text-xs text-[var(--ink)] placeholder:text-[var(--muted)] focus:outline-none focus:border-[var(--c1)]"
+              />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full text-[var(--muted)] hover:text-[var(--ink)]"
+                  title="Clear search"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Download Plans Grid */}
-        <div className="plans">
+        {filteredApps.length > 0 ? (
+          <div className="plans">
           {filteredApps.map((app) => {
             const isFeatured = app.id === 'finance-flow';
             const isAndroid = (app.platform || '').toLowerCase().includes('android');
@@ -249,6 +282,33 @@ export default function DownloadSection({ _onDownloadApp }) {
             );
           })}
         </div>
+        ) : (
+          <div className="py-12 text-center rounded-2xl bg-[var(--soft)] border border-[var(--line)] p-6 my-6">
+            <p className="text-sm font-semibold text-[var(--ink)]">No software packages matched "{searchQuery}"</p>
+            <p className="text-xs text-[var(--muted)] mt-1">Try clearing your search query or switching the platform filter.</p>
+            <button
+              type="button"
+              onClick={() => { setSearchQuery(''); setFilter('all'); }}
+              className="mt-3 text-xs font-semibold text-[var(--c1)] underline cursor-pointer"
+            >
+              Reset search & filters
+            </button>
+          </div>
+        )}
+
+        {/* Dedicated Page Link CTA */}
+        {onOpenDownloadsPage && (
+          <div className="text-center mt-8">
+            <button
+              type="button"
+              onClick={onOpenDownloadsPage}
+              className="btn btn--line btn--sm cursor-pointer inline-flex items-center gap-2"
+            >
+              <span>Open Dedicated Full Releases & Search Center</span>
+              <ExternalLink className="w-3.5 h-3.5 text-[var(--c1)]" />
+            </button>
+          </div>
+        )}
 
         {/* Installation Guidelines & System Compatibility Notice */}
         <div

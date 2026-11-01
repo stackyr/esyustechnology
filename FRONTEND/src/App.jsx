@@ -14,6 +14,7 @@ import DownloadSection from './components/DownloadSection';
 import FAQSection from './components/FAQSection';
 import ContactUs from './components/ContactUs';
 import Footer from './components/Footer';
+import DownloadsPage from './components/DownloadsPage';
 
 // Modals
 import ProductModal from './components/ProductModal';
@@ -32,6 +33,9 @@ export default function App() {
   // Admin View & Authentication State
   const [isAdmin, setIsAdmin] = useState(() => {
     return typeof window !== 'undefined' && window.location.hash.toLowerCase().includes('admin');
+  });
+  const [isDownloadsPage, setIsDownloadsPage] = useState(() => {
+    return typeof window !== 'undefined' && window.location.hash.toLowerCase().includes('downloads');
   });
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
     return typeof window !== 'undefined' && !!localStorage.getItem('esyus_admin_token');
@@ -80,10 +84,11 @@ export default function App() {
     loadDynamicData();
   }, [loadDynamicData]);
 
-  // Listen to hash changes (#admin) and keyboard shortcut (Ctrl+Shift+A)
+  // Listen to hash changes (#admin, #downloads) and keyboard shortcut (Ctrl+Shift+A)
   useEffect(() => {
     const handleHashChange = () => {
       setIsAdmin(window.location.hash.toLowerCase().includes('admin'));
+      setIsDownloadsPage(window.location.hash.toLowerCase().includes('downloads'));
     };
 
     const handleKeyDown = (e) => {
@@ -106,9 +111,9 @@ export default function App() {
     };
   }, []);
 
-  // Initialize Hearthly GSAP & Lenis smooth scroll engine
+  // Initialize Hearthly GSAP & Lenis smooth scroll engine (only on landing page)
   useEffect(() => {
-    if (isAdmin) return;
+    if (isAdmin || isDownloadsPage) return;
     let cleanup = null;
     const timeout = setTimeout(() => {
       cleanup = initHearthlyAnimations();
@@ -118,12 +123,26 @@ export default function App() {
       clearTimeout(timeout);
       if (typeof cleanup === 'function') cleanup();
     };
-  }, [isAdmin]);
+  }, [isAdmin, isDownloadsPage]);
 
   // Navigation handlers
   const scrollToSection = (id) => {
     const target = id === 'home' || id === '#home' ? 0 : (id.startsWith('#') ? id : `#${id}`);
     lenisScrollTo(target, { offset: -80 });
+  };
+
+  const handleOpenDownloadsPage = () => {
+    setIsDownloadsPage(true);
+    window.location.hash = '#downloads';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackToHome = () => {
+    setIsDownloadsPage(false);
+    if (window.location.hash.toLowerCase().includes('downloads')) {
+      history.pushState(null, '', window.location.pathname);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleEnquireService = (serviceTitle) => {
@@ -132,7 +151,7 @@ export default function App() {
   };
 
   const handleDownloadClick = () => {
-    scrollToSection('download');
+    handleOpenDownloadsPage();
   };
 
   const handleContactClick = () => {
@@ -187,83 +206,109 @@ export default function App() {
       {/* 01. Navbar / Header */}
       <Navbar
         dataVersion={dataVersion}
-        onDownloadClick={handleDownloadClick}
-        onContactClick={handleContactClick}
+        isDownloadsPage={isDownloadsPage}
+        onBackToHome={handleBackToHome}
+        onNavigateSection={(id) => {
+          handleBackToHome();
+          setTimeout(() => scrollToSection(id), 80);
+        }}
+        onDownloadClick={handleOpenDownloadsPage}
+        onContactClick={() => {
+          if (isDownloadsPage) {
+            handleBackToHome();
+            setTimeout(() => scrollToSection('contact'), 80);
+          } else {
+            handleContactClick();
+          }
+        }}
       />
 
       <main>
-        {/* 02. Hero Banner */}
-        <Hero
-          dataVersion={dataVersion}
-          onExploreServices={() => scrollToSection('services')}
-          onViewApplications={() => scrollToSection('applications')}
-          onDownloadClick={handleDownloadClick}
-        />
+        {isDownloadsPage ? (
+          <DownloadsPage
+            onBackToHome={handleBackToHome}
+            onSelectProduct={(product) => setSelectedProduct(product)}
+            onDownloadApp={handleDownloadAppDirectly}
+          />
+        ) : (
+          <>
+            {/* 02. Hero Banner */}
+            <Hero
+              dataVersion={dataVersion}
+              onExploreServices={() => scrollToSection('services')}
+              onViewApplications={() => scrollToSection('applications')}
+              onDownloadClick={handleOpenDownloadsPage}
+            />
 
-        {/* Company Statistics */}
-        <CompanyStats dataVersion={dataVersion} />
+            {/* Company Statistics */}
+            <CompanyStats dataVersion={dataVersion} />
 
-        {/* 03. About Us / Company Introduction */}
-        <AboutUs
-          dataVersion={dataVersion}
-          onContactClick={handleContactClick}
-        />
+            {/* 03. About Us / Company Introduction */}
+            <AboutUs
+              dataVersion={dataVersion}
+              onContactClick={handleContactClick}
+            />
 
-        {/* 04. Our Services */}
-        <Services
-          dataVersion={dataVersion}
-          onSelectService={(service) => setSelectedService(service)}
-          onEnquireService={handleEnquireService}
-        />
+            {/* 04. Our Services */}
+            <Services
+              dataVersion={dataVersion}
+              onSelectService={(service) => setSelectedService(service)}
+              onEnquireService={handleEnquireService}
+            />
 
-        {/* 05. Our Applications / Products */}
-        <Products
-          dataVersion={dataVersion}
-          onSelectProduct={(product) => setSelectedProduct(product)}
-          onDownloadProduct={handleDownloadAppDirectly}
-        />
+            {/* 05. Our Applications / Products */}
+            <Products
+              dataVersion={dataVersion}
+              onSelectProduct={(product) => setSelectedProduct(product)}
+              onDownloadProduct={handleDownloadAppDirectly}
+              onViewAllPackages={handleOpenDownloadsPage}
+              onDownloadClick={handleOpenDownloadsPage}
+            />
 
-        {/* 06. Featured Product — Finance Flow (Desktop Billing, GST Invoices, 100% Offline) */}
-        <FeaturedProduct
-          dataVersion={dataVersion}
-          onDownloadFinanceFlow={handleDownloadFinanceFlow}
-        />
+            {/* 06. Featured Product — Finance Flow (Desktop Billing, GST Invoices, 100% Offline) */}
+            <FeaturedProduct
+              dataVersion={dataVersion}
+              onDownloadFinanceFlow={handleDownloadFinanceFlow}
+            />
 
-        {/* 07. Why Choose Us */}
-        <WhyChooseUs
-          dataVersion={dataVersion}
-          onContactClick={handleContactClick}
-        />
+            {/* 07. Why Choose Us */}
+            <WhyChooseUs
+              dataVersion={dataVersion}
+              onContactClick={handleContactClick}
+            />
 
-        {/* 08. Our Team (Founder Milan Mandal & Co-founder Suman Raptan) */}
-        <Team
-          dataVersion={dataVersion}
-          onContactClick={handleContactClick}
-        />
+            {/* 08. Our Team (Founder Milan Mandal & Co-founder Suman Raptan) */}
+            <Team
+              dataVersion={dataVersion}
+              onContactClick={handleContactClick}
+            />
 
-        {/* 09. Customer Reviews / Testimonials */}
-        <Reviews
-          dataVersion={dataVersion}
-          onAddFeedbackClick={handleContactClick}
-        />
+            {/* 09. Customer Reviews / Testimonials */}
+            <Reviews
+              dataVersion={dataVersion}
+              onAddFeedbackClick={handleContactClick}
+            />
 
-        {/* 10. Download Our Applications */}
-        <DownloadSection
-          dataVersion={dataVersion}
-          onDownloadApp={handleDownloadAppDirectly}
-        />
+            {/* 10. Download Our Applications */}
+            <DownloadSection
+              dataVersion={dataVersion}
+              onDownloadApp={handleDownloadAppDirectly}
+              onOpenDownloadsPage={handleOpenDownloadsPage}
+            />
 
-        {/* FAQ Section */}
-        <FAQSection
-          dataVersion={dataVersion}
-          onContactClick={handleContactClick}
-        />
+            {/* FAQ Section */}
+            <FAQSection
+              dataVersion={dataVersion}
+              onContactClick={handleContactClick}
+            />
 
-        {/* 11. Contact Us */}
-        <ContactUs
-          dataVersion={dataVersion}
-          preselectedSubject={contactSubject}
-        />
+            {/* 11. Contact Us */}
+            <ContactUs
+              dataVersion={dataVersion}
+              preselectedSubject={contactSubject}
+            />
+          </>
+        )}
       </main>
 
       {/* 12. Footer */}
@@ -271,8 +316,16 @@ export default function App() {
         dataVersion={dataVersion}
         onOpenPrivacy={() => setLegalModalType('privacy')}
         onOpenTerms={() => setLegalModalType('terms')}
-        onSelectService={(srv) => setSelectedService(srv)}
+        onSelectService={(srv) => {
+          if (isDownloadsPage) {
+            handleBackToHome();
+            setTimeout(() => setSelectedService(srv), 80);
+          } else {
+            setSelectedService(srv);
+          }
+        }}
         onSelectProduct={(prod) => setSelectedProduct(prod)}
+        onOpenDownloadsPage={handleOpenDownloadsPage}
         onOpenAdmin={() => {
           window.location.hash = '#admin';
           setIsAdmin(true);

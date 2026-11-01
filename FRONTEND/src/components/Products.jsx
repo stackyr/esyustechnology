@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import { Clock, Download } from 'lucide-react';
 
-export default function Products({ onSelectProduct, _onDownloadProduct }) {
+export default function Products({ onSelectProduct, _onDownloadProduct, onViewAllPackages, onDownloadClick }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'desktop' | 'mobile'
   const sec = LANDING_PAGE_SECTIONS?.productsSection || {};
 
@@ -215,12 +215,19 @@ export default function Products({ onSelectProduct, _onDownloadProduct }) {
 
         {/* Bottom CTA to Software Releases Center */}
         <div className="text-center mt-16">
-          <a className="btn" href="#download">
+          <button
+            type="button"
+            className="btn cursor-pointer inline-flex items-center"
+            onClick={() => {
+              if (onViewAllPackages) onViewAllPackages();
+              else if (onDownloadClick) onDownloadClick();
+            }}
+          >
             <span>View All Packages in Release Center</span>
             <svg className="btn__arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
               <path d="M3 9 9 3M4 3h5v5" />
             </svg>
-          </a>
+          </button>
         </div>
 
       </div>
