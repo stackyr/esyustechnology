@@ -61,6 +61,10 @@
     hyphens: auto;
     text-wrap: balance;
   }
+
+  main > * {
+    overflow-x: clip;
+  }
 }
 
 /* Custom Scrollbar */
@@ -1033,154 +1037,87 @@ em.s {
     display: inline-grid !important;
   }
 
-  /* Mobile Hero: Flow naturally without sticky scroll trap */
-  .hero,
-  .motion .hero {
-    position: relative !important;
-    height: auto !important;
-    min-height: auto !important;
-    padding-top: clamp(70px, 11vh, 88px) !important;
-    padding-bottom: 24px !important;
-    overflow: visible !important;
-  }
-
-  .hero__stage,
-  .motion .hero__stage {
-    position: relative !important;
-    top: auto !important;
-    height: auto !important;
-    padding-top: 0 !important;
-    overflow: visible !important;
+  /* Exact Hearthly Mobile Hero Configuration */
+  .hero__stage {
+    --col: min(48cqi, (100svh - 330px) / 2.09);
+    --h1: clamp(34px, 10cqi, 52px);
   }
 
   .hero__head {
-    position: relative !important;
-    padding-top: 4px !important;
-    text-align: center;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .hero__title {
-    font-size: clamp(26px, 7.5vw, 36px) !important;
-    line-height: 1.16 !important;
-    max-width: 100% !important;
-    margin-inline: auto;
-    padding: 0 4px !important;
+    padding-top: 26px;
   }
 
   .ring,
   .crew {
+    visibility: hidden;
     display: none !important;
-  }
-
-  /* Hero 3-Column Floating Collage */
-  .col-a,
-  .col-e {
-    display: none !important;
-  }
-
-  .collage {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin-top: clamp(12px, 2.5vh, 20px) !important;
-    padding-bottom: 8px !important;
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    justify-content: center !important;
-    align-items: center !important;
-    gap: clamp(6px, 2vw, 12px) !important;
-  }
-
-  .col-b,
-  .col-d {
-    width: clamp(88px, 26vw, 122px) !important;
-    padding-top: clamp(10px, 3vw, 20px) !important;
-    flex-shrink: 0 !important;
   }
 
   .col-c {
-    width: clamp(116px, 35vw, 155px) !important;
-    padding-top: 0 !important;
-    flex-shrink: 0 !important;
+    width: calc(var(--col) * 1.06);
+    padding-top: calc(var(--col) * .62);
+  }
+
+  .burst {
+    top: calc(var(--col) * .62 - var(--col) * .3);
+    width: calc(var(--col) * .17);
+    height: calc(var(--col) * .17);
+    margin-left: calc(var(--col) * -.085);
+  }
+
+  .collage {
+    width: auto;
+    margin-top: 26px;
+    padding-bottom: 86px;
   }
 
   .btn--cta {
-    min-height: 38px !important;
-    height: 38px !important;
-    font-size: clamp(10px, 2.8vw, 12px) !important;
-    padding: 0 clamp(8px, 2vw, 12px) !important;
-    gap: 5px !important;
-    white-space: nowrap !important;
-    margin-top: 6px !important;
-    max-width: 100% !important;
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    translate: -50% 0;
+    min-width: 0;
+    height: 52px;
+    flex: none;
+    padding: 0 1.9em;
+    font-size: 15px;
+    z-index: 2;
   }
 
-  /* Mobile Standalone Flood Video Card */
-  .flood,
-  .motion .flood {
-    position: relative !important;
-    inset: auto !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 30px auto 0 !important;
-    border-radius: 18px !important;
-    overflow: hidden !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    clip-path: none !important;
-    pointer-events: auto !important;
-    background: #090d12 !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12) !important;
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  .flood {
+    aspect-ratio: 4 / 5;
   }
 
-  .flood .art {
-    position: relative !important;
-    width: 100% !important;
-    aspect-ratio: 16 / 9 !important;
-    overflow: hidden !important;
-    background: #05080b !important;
-    transform: none !important;
+  .flood::after {
+    background: linear-gradient(to top, rgba(5, 8, 11, 0.95) 0%, rgba(5, 8, 11, 0.72) 48%, transparent 100%) !important;
   }
 
-  .flood video {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    display: block !important;
-  }
-
-  .flood__text,
-  .motion .flood__text {
-    position: relative !important;
-    inset: auto !important;
-    width: 100% !important;
-    padding: 16px 16px 20px !important;
-    background: #090d12 !important;
-    display: flex !important;
-    flex-direction: column !important;
+  .flood__text {
+    grid-template-columns: minmax(0, 1fr) !important;
+    padding: 0 clamp(16px, 4vw, 24px) clamp(16px, 3vh, 28px) !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
     gap: 6px !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
+  }
+
+  .motion .flood__text {
+    padding: 0 clamp(16px, 4vw, 24px) clamp(16px, 3vh, 28px) !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
   }
 
   .flood__title {
-    font-size: clamp(19px, 5.2vw, 24px) !important;
-    line-height: 1.25 !important;
-    color: #ffffff !important;
-    margin: 4px 0 0 !important;
-    font-weight: 700 !important;
+    font-size: clamp(18px, 5.2vw, 25px) !important;
+    line-height: 1.18 !important;
   }
 
   .flood__lead {
-    font-size: 13px !important;
-    line-height: 1.5 !important;
-    color: rgba(255, 255, 255, 0.76) !important;
+    font-size: clamp(11.5px, 3.2vw, 13.5px) !important;
+    line-height: 1.45 !important;
     max-width: 100% !important;
-    margin: 0 !important;
+    color: rgba(255, 255, 255, 0.88) !important;
   }
 }
 
@@ -1567,45 +1504,38 @@ em.s {
 
 @media (max-width: 760px) {
   .folder {
-    position: relative !important;
-    top: 0 !important;
-    margin-bottom: 24px !important;
+    position: sticky;
+    top: calc(clamp(64px, 8vh, 84px) + var(--i, 0) * var(--tab-h));
   }
 
   .folder__tab {
-    position: relative !important;
-    left: 0 !important;
-    transform: none !important;
-    border-radius: var(--tr) var(--tr) 0 0 !important;
-    font-size: 13.5px !important;
-    height: 40px !important;
-    padding: 0 1.2em !important;
+    font-size: clamp(11.5px, 3.2vw, 15px);
+    height: clamp(38px, 5vh, 46px);
+    padding: 0 clamp(0.7em, 1.8vw, 1.4em);
   }
 
   .folder__tab-num {
-    font-size: 13.5px !important;
+    font-size: clamp(12px, 3vw, 14px);
   }
 
   .folder__tab-title {
-    font-size: 13.5px !important;
-  }
-
-  .folder__tab::before,
-  .folder__tab::after {
-    display: none !important;
+    font-size: clamp(11.5px, 2.9vw, 14px);
+    max-width: clamp(140px, 46vw, 240px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .folders {
-    gap: 0 !important;
-    padding-bottom: 12px !important;
+    gap: clamp(32px, 5vw, 64px);
   }
 
   .folder__body {
     grid-template-columns: minmax(0, 1fr) !important;
     min-height: 0 !important;
-    padding: 20px 16px !important;
-    border-radius: 20px !important;
-    gap: 20px !important;
+    padding: clamp(16px, 3.5vw, 24px) !important;
+    border-radius: clamp(16px, 3vw, 22px) !important;
+    gap: 16px !important;
   }
 
   .folder__photo {
@@ -3342,16 +3272,14 @@ em.s {
   }
 
   .folder {
-    position: relative !important;
-    top: 0 !important;
-    margin-bottom: 18px !important;
+    position: sticky !important;
+    top: calc(clamp(64px, 8vh, 84px) + var(--i, 0) * var(--tab-h)) !important;
   }
 
   .folder__tab {
-    height: 38px !important;
-    padding: 0 1.1em !important;
-    font-size: 12.5px !important;
-    border-radius: 14px 14px 0 0 !important;
+    height: clamp(38px, 5vh, 44px) !important;
+    padding: 0 clamp(0.7em, 1.8vw, 1.3em) !important;
+    font-size: clamp(11.5px, 3vw, 14px) !important;
   }
 
   .folder__body {
@@ -3624,19 +3552,6 @@ em.s {
     font-size: clamp(23px, 7vw, 30px) !important;
   }
 
-  .col-b,
-  .col-d {
-    width: 90px !important;
-  }
-
-  .col-c {
-    width: 114px !important;
-  }
-
-  .collage {
-    gap: 6px !important;
-  }
-
   .plates {
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 10px !important;
@@ -3676,19 +3591,6 @@ em.s {
   .lead {
     font-size: 13px !important;
     line-height: 1.5 !important;
-  }
-
-  .col-b,
-  .col-d {
-    width: 76px !important;
-  }
-
-  .col-c {
-    width: 102px !important;
-  }
-
-  .collage {
-    gap: 4px !important;
   }
 
   .btn--cta {

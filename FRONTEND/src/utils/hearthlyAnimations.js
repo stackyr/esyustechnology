@@ -228,7 +228,7 @@ export function initHearthlyAnimations() {
     });
   });
 
-  // 1. PINNED HERO PIN & FLOOD ANIMATION (Strictly Desktop Screens >= 769px)
+  // 1. PINNED HERO PIN & FLOOD ANIMATION (Exact Hearthly Engine - Universal Desktop & Mobile)
   queue.unshift(() => init('.hero', (hero) => {
     new IntersectionObserver(([en]) => hero.classList.toggle('is-still', !en.isIntersecting)).observe(hero);
     const stage = hero.querySelector('.hero__stage');
@@ -240,129 +240,91 @@ export function initHearthlyAnimations() {
     const text = flood.querySelector('.flood__text');
     const head = hero.querySelector('.hero__head');
 
-    const mm = gsap.matchMedia();
-
-    mm.add('(min-width: 769px)', () => {
-      // Clean any prior inline styles before measuring rest positions
-      gsap.set([flood, head, ...hero.querySelectorAll('.collage__col')], {
-        clearProps: 'transform,x,y,clipPath,opacity,visibility,autoAlpha'
-      });
-
-      const getStartClip = () => {
-        const s = stage.getBoundingClientRect();
-        const f = from.getBoundingClientRect();
-        const r = parseFloat(getComputedStyle(from).borderTopLeftRadius) || 16;
-        const top = Math.max(0, f.top - s.top);
-        const right = Math.max(0, s.right - f.right);
-        const bottom = Math.max(0, s.bottom - f.bottom);
-        const left = Math.max(0, f.left - s.left);
-        return `inset(${top.toFixed(1)}px ${right.toFixed(1)}px ${bottom.toFixed(1)}px ${left.toFixed(1)}px round ${r}px)`;
-      };
-
-      const drift = (el) => {
-        const s = stage.getBoundingClientRect();
-        const f = el.getBoundingClientRect();
-        return (f.left + f.width / 2 - (s.left + s.width / 2)) / (s.width || 1);
-      };
-
-      // Cache drifts while elements are in rest state
-      const colDrifts = new Map();
-      hero.querySelectorAll('.collage__col').forEach((col) => {
-        if (!col.contains(from)) {
-          colDrifts.set(col, drift(col));
-        }
-      });
-
-      const tl = gsap.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: hero,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-        },
-      });
-
-      tl.fromTo(flood,
-        { clipPath: getStartClip, autoAlpha: 0, pointerEvents: 'none' },
-        { clipPath: 'inset(0px 0px 0px 0px round 0px)', autoAlpha: 1, pointerEvents: 'auto', duration: 0.55, ease: 'power2.inOut' },
-        0
-      );
-
-      if (img) tl.fromTo(img, { scale: 1.35 }, { scale: 1, duration: 0.7, ease: 'power1.out' }, 0);
-
-      if (head) {
-        tl.fromTo(head, { yPercent: 0, opacity: 1 }, { yPercent: -45, opacity: 0, duration: 0.35 }, 0);
+    const startClip = () => {
+      const s = stage.getBoundingClientRect();
+      const f = from.getBoundingClientRect();
+      const r = parseFloat(getComputedStyle(from).borderTopLeftRadius) || 16;
+      if (f.width === 0 || f.height === 0) {
+        return `inset(35% 35% 35% 35% round ${r}px)`;
       }
+      return `inset(${(f.top - s.top).toFixed(1)}px ${(s.right - f.right).toFixed(1)}px ${(s.bottom - f.bottom).toFixed(1)}px ${(f.left - s.left).toFixed(1)}px round ${r}px)`;
+    };
 
-      hero.querySelectorAll('.collage__col').forEach((col) => {
-        if (col.contains(from)) return;
-        const d = colDrifts.get(col) ?? drift(col);
-        tl.fromTo(col,
-          { x: 0, y: 0 },
-          {
-            x: () => d * (window.innerWidth || 1200) * 0.5,
-            y: () => -Math.abs(d) * (window.innerHeight || 800) * 0.6,
-            duration: 0.55,
-            ease: 'power1.in',
-          },
-          0
-        );
-      });
+    const drift = (el) => {
+      const s = stage.getBoundingClientRect();
+      const f = el.getBoundingClientRect();
+      return (f.left + f.width / 2 - (s.left + s.width / 2)) / (s.width || 1);
+    };
 
-      if (text) {
-        [...text.children].forEach((el, i) => {
-          tl.fromTo(el, { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, ease: 'power2.out' }, 0.5 + i * 0.06);
-        });
-      }
-
-      tl.to({}, { duration: 0.2 });
-
-      return () => {
-        tl.kill();
-        gsap.set([flood, head, ...hero.querySelectorAll('.collage__col')], {
-          clearProps: 'all'
-        });
-      };
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: hero,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.6,
+        invalidateOnRefresh: true,
+      },
     });
 
-    mm.add('(max-width: 768px)', () => {
-      // Clear props on mobile so CSS layout rules take complete priority
-      gsap.set([flood, head, text, ...hero.querySelectorAll('.collage__col')], {
-        clearProps: 'all'
-      });
-      if (text) {
-        gsap.set([...text.children], { clearProps: 'all' });
-      }
+    tl.fromTo(flood,
+      { clipPath: startClip },
+      { clipPath: 'inset(0px 0px 0px 0px round 0px)', duration: 0.55, ease: 'power2.inOut' },
+      0
+    ).fromTo(flood,
+      { autoAlpha: 0 },
+      { autoAlpha: 1, duration: 0.08 },
+      0
+    );
+
+    if (img) tl.fromTo(img, { scale: 1.35 }, { scale: 1, duration: 0.7, ease: 'power1.out' }, 0);
+
+    if (head) {
+      tl.to(head, { yPercent: -45, opacity: 0, duration: 0.35 }, 0);
+    }
+
+    hero.querySelectorAll('.collage__col').forEach((col) => {
+      if (col.contains(from)) return;
+      tl.to(col, {
+        x: () => drift(col) * (window.innerWidth || 1200) * 0.5,
+        y: () => -Math.abs(drift(col)) * (window.innerHeight || 800) * 0.6,
+        duration: 0.55,
+        ease: 'power1.in',
+      }, 0);
     });
+
+    if (text) {
+      [...text.children].forEach((el, i) => {
+        tl.fromTo(el, { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, ease: 'power2.out' }, 0.5 + i * 0.06);
+      });
+    }
+
+    tl.to({}, { duration: 0.2 });
   }));
 
-  // 2. FOLDERS STACKING SCALE & DIMMING
+  // 2. FOLDERS STACKING SCALE & DIMMING (Exact Hearthly Engine - Universal Desktop & Mobile)
   later(() => init('[data-folders]', (box) => {
     const items = [...box.querySelectorAll('.folder')];
     if (!items.length) return;
 
-    gsap.matchMedia().add('(min-width: 761px)', () => {
-      items.forEach((f, i) => {
-        const next = items[i + 1];
-        const inner = f.querySelector('.folder__in');
-        const body = f.querySelector('.folder__body');
-        if (!next || !inner) return;
+    items.forEach((f, i) => {
+      const next = items[i + 1];
+      const inner = f.querySelector('.folder__in');
+      const body = f.querySelector('.folder__body');
+      if (!next || !inner) return;
 
-        const tl = gsap.timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: {
-            trigger: next,
-            start: 'top bottom',
-            end: () => 'top ' + (parseFloat(getComputedStyle(next).top) || (94 + (i + 1) * 54)) + 'px',
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
-        tl.to(inner, { scale: 0.955 }, 0);
-        if (body) tl.to(body, { '--dim': 0.32 }, 0);
+      const tl = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: next,
+          start: 'top bottom',
+          end: () => 'top ' + (parseFloat(getComputedStyle(next).top) || 0) + 'px',
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
       });
+      tl.to(inner, { scale: 0.955 }, 0);
+      if (body) tl.to(body, { '--dim': 0.3 }, 0);
     });
   }));
 
