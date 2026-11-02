@@ -6,36 +6,44 @@ export default function AboutUs({ onContactClick, dataVersion = 0 }) {
   const COMPANY_INFO = brand || {};
   const about = landingPage?.about || {};
 
-  const domains = [
+  const DEFAULT_DOMAINS = [
     {
+      num: "01",
+      tag: "Domain 01",
       title: "Desktop Application Systems",
       desc: "Robust Windows software built for offline resilience, high-speed point of sale, and instant invoice printing.",
-      tone: "tone-1",
-      plateColor: "var(--c1)",
-      num: "01"
+      badge1: "Enterprise Grade",
+      badge2: "Production Ready"
     },
     {
+      num: "02",
+      tag: "Domain 02",
       title: "Website & Web Applications",
       desc: "Modern corporate websites, cloud web apps, customer portals, and internal management platforms.",
-      tone: "tone-2",
-      plateColor: "var(--c4)",
-      num: "02"
+      badge1: "Enterprise Grade",
+      badge2: "Production Ready"
     },
     {
+      num: "03",
+      tag: "Domain 03",
       title: "Android Mobile Development",
       desc: "Native Android applications optimized for mobility, offline SQLite caching, and handheld hardware support.",
-      tone: "tone-3",
-      plateColor: "var(--c2)",
-      num: "03"
+      badge1: "Enterprise Grade",
+      badge2: "Production Ready"
     },
     {
+      num: "04",
+      tag: "Domain 04",
       title: "Custom Software Solutions",
       desc: "Bespoke database architectures, automated workflows, and tailored enterprise software engineered to your exact requirements.",
-      tone: "tone-4",
-      plateColor: "var(--c3)",
-      num: "04"
+      badge1: "Enterprise Grade",
+      badge2: "Production Ready"
     }
   ];
+
+  const domains = (Array.isArray(about.domains) && about.domains.length > 0)
+    ? about.domains
+    : DEFAULT_DOMAINS;
 
   return (
     <section id="about" className="intro" data-kind="intro" data-section="intro">
@@ -132,7 +140,7 @@ export default function AboutUs({ onContactClick, dataVersion = 0 }) {
                 </div>
 
                 <p className="text-sm leading-relaxed text-stone-300">
-                  Headquartered in Sector V, Kolkata, we engineer reliable Windows desktop software, native Android applications, and enterprise web solutions engineered with 100% offline autonomy.
+                  {about.corporateBio || "Headquartered in Sector V, Kolkata, we engineer reliable Windows desktop software, native Android applications, and enterprise web solutions engineered with 100% offline autonomy."}
                 </p>
 
                 <div className="pt-4 border-t border-white/10 grid grid-cols-2 gap-4">
@@ -170,7 +178,7 @@ export default function AboutUs({ onContactClick, dataVersion = 0 }) {
                 >
                   <div>
                     <span className="text-xs font-bold uppercase tracking-wider text-[var(--c1)]">
-                      Domain {item.num}
+                      {item.tag || `Domain ${item.num || String(idx + 1).padStart(2, '0')}`}
                     </span>
                     <h4 className="text-lg font-bold mt-2 text-[var(--ink)]">
                       {item.title}
@@ -180,8 +188,8 @@ export default function AboutUs({ onContactClick, dataVersion = 0 }) {
                     </p>
                   </div>
                   <div className="mt-4 pt-3 border-t border-[var(--line)] flex items-center justify-between text-xs font-semibold">
-                    <span className="text-[var(--c5)]">Enterprise Grade</span>
-                    <span className="text-stone-400">✓ Production Ready</span>
+                    <span className="text-[var(--c5)]">{item.badge1 || "Enterprise Grade"}</span>
+                    <span className="text-stone-400">✓ {item.badge2 || "Production Ready"}</span>
                   </div>
                 </div>
               ))}

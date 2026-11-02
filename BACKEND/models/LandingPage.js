@@ -22,7 +22,16 @@ const LandingPageSchema = new mongoose.Schema({
     motive: { type: String, default: "Transforming complex enterprise technology into simple, intuitive, and easy-to-use software that empowers everyday business." },
     founderQuote: { type: String, default: "We bridge the gap between heavy enterprise needs and practical everyday reliability with offline-first desktop software and modern digital systems that never stop working." },
     founderPhoto: { type: String, default: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120" },
-    officePhoto: { type: String, default: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900" }
+    officePhoto: { type: String, default: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900" },
+    corporateBio: { type: String, default: "Headquartered in Sector V, Kolkata, we engineer reliable Windows desktop software, native Android applications, and enterprise web solutions engineered with 100% offline autonomy." },
+    domains: [{
+      num: { type: String, default: "01" },
+      tag: { type: String, default: "Domain 01" },
+      title: { type: String, default: "Desktop Application Systems" },
+      desc: { type: String, default: "Robust Windows software built for offline resilience, high-speed point of sale, and instant invoice printing." },
+      badge1: { type: String, default: "Enterprise Grade" },
+      badge2: { type: String, default: "Production Ready" }
+    }]
   },
   servicesSection: {
     eyebrow: { type: String, default: "Engineering Capabilities" },
@@ -66,6 +75,7 @@ const LandingPageSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
+  strict: false,
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });

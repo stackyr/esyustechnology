@@ -286,6 +286,26 @@ export default function CustomizationTab({
     setSaveSuccess(false);
   };
 
+  const handleDomainChange = (index, field, val) => {
+    setPageData((prev) => {
+      const currentDomains = Array.isArray(prev.about?.domains) && prev.about.domains.length === 4
+        ? prev.about.domains.map((d) => ({ ...d }))
+        : (LANDING_PAGE_SECTIONS?.about?.domains || []).map((d) => ({ ...d }));
+
+      if (currentDomains[index]) {
+        currentDomains[index] = { ...currentDomains[index], [field]: val };
+      }
+      return {
+        ...prev,
+        about: {
+          ...prev.about,
+          domains: currentDomains
+        }
+      };
+    });
+    setSaveSuccess(false);
+  };
+
   // Master Save handler
   const handleSaveAll = async (e) => {
     if (e) e.preventDefault();
@@ -850,21 +870,26 @@ export default function CustomizationTab({
       {/* ------------------------------------------------------------- */}
       {activeSubTab === 'about' && (
         <div className="space-y-6">
+          
+          {/* Card 1: Section Header & Core Engineering Motive */}
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">About Us Story &amp; Motive</h3>
-                <p className="text-xs text-[var(--muted)]">Company introduction, mission statement, and quote</p>
+                <h3 className="text-base font-bold text-[var(--ink)]">About Us Story &amp; Philosophy</h3>
+                <p className="text-xs text-[var(--muted)]">Section headline, lead introduction, and core engineering motive</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">About Us</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase px-2 py-0.5 rounded-full bg-[var(--soft)] border border-[var(--line)]">
+                About Section
+              </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Headline</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Section Headline</label>
               <input
                 type="text"
-                value={pageData.about.headline || ''}
+                value={pageData.about?.headline || ''}
                 onChange={(e) => handlePageChange('about', 'headline', e.target.value)}
+                placeholder="Building dependable software for real-world businesses"
                 className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
               />
             </div>
@@ -873,54 +898,216 @@ export default function CustomizationTab({
               <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Lead Paragraph</label>
               <textarea
                 rows={2}
-                value={pageData.about.lead || ''}
+                value={pageData.about?.lead || ''}
                 onChange={(e) => handlePageChange('about', 'lead', e.target.value)}
+                placeholder="Established to solve one critical problem: businesses losing hours of productivity..."
                 className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
               />
+            </div>
+
+            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 space-y-1.5">
+              <label className="block text-xs font-bold text-amber-950 uppercase tracking-wide">
+                Core Engineering Motive Quote
+              </label>
+              <p className="text-[11px] text-amber-900/80 mb-1">
+                Appears inside the orange bordered quote box on the right of the headline on the public website.
+              </p>
+              <textarea
+                rows={2}
+                value={pageData.about?.motive || ''}
+                onChange={(e) => handlePageChange('about', 'motive', e.target.value)}
+                placeholder="Transforming complex enterprise technology into simple, intuitive, and easy-to-use software that empowers everyday business."
+                className="w-full px-3.5 py-2 rounded-xl border border-amber-500/30 bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)] font-medium"
+              />
+            </div>
+          </div>
+
+          {/* Card 2: Corporate Profile Highlight Card (Left Dark Card on Website) */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Corporate Profile Highlight Card</h3>
+                <p className="text-xs text-[var(--muted)]">The large dark feature card displaying corporate bio, office photo &amp; organization details</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c3)] uppercase px-2 py-0.5 rounded-full bg-[var(--dark)] text-white">
+                Left Card
+              </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Founder's Quote</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                Corporate Bio &amp; Operations Description
+              </label>
+              <p className="text-[11px] text-[var(--muted)] mb-1.5">
+                The main paragraph text inside the Corporate Profile card (under company name and domain).
+              </p>
               <textarea
                 rows={3}
-                value={pageData.about.founderQuote || ''}
+                value={pageData.about?.corporateBio || ''}
+                onChange={(e) => handlePageChange('about', 'corporateBio', e.target.value)}
+                placeholder="Headquartered in Sector V, Kolkata, we engineer reliable Windows desktop software, native Android applications, and enterprise web solutions engineered with 100% offline autonomy."
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)] leading-relaxed"
+              />
+            </div>
+
+            <div className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+              <label className="block text-xs font-bold text-[var(--ink)]">
+                Office / Workspace Background Photo URL
+              </label>
+              <input
+                type="text"
+                value={pageData.about?.officePhoto || ''}
+                onChange={(e) => handlePageChange('about', 'officePhoto', e.target.value)}
+                placeholder="https://images.unsplash.com/..."
+                className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+              />
+              {pageData.about?.officePhoto && (
+                <div className="w-full h-20 rounded-lg overflow-hidden border border-[var(--line)]">
+                  <img src={pageData.about.officePhoto} alt="Office Preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+
+            {/* Linked Organization Details Info Strip */}
+            <div className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] flex flex-wrap items-center justify-between gap-3 text-xs">
+              <div className="space-y-0.5">
+                <span className="font-bold text-[var(--ink)] block">
+                  Company: {brandData.name} (Est. {brandData.establishmentDate})
+                </span>
+                <span className="text-[11px] text-[var(--muted)] block">
+                  Founders: {brandData.founder} &amp; {brandData.coFounder} • Location: {brandData.address}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setActiveSubTab('brand')}
+                className="px-3 py-1 rounded-lg border border-[var(--line)] bg-white text-[11px] font-bold text-[var(--c1)] hover:bg-[var(--soft)] transition-colors cursor-pointer"
+              >
+                Edit in Brand Settings →
+              </button>
+            </div>
+          </div>
+
+          {/* Card 3: The 4 Engineering Domain Cards (Right Grid on Website) */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">4 Engineering Domains (Capability Cards)</h3>
+                <p className="text-xs text-[var(--muted)]">Customize all titles, descriptions, domain tags and badges shown in the 2x2 grid</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase px-2 py-0.5 rounded-full bg-[var(--soft)] border border-[var(--line)]">
+                4 Cards Grid
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {(pageData.about?.domains || LANDING_PAGE_SECTIONS.about.domains).map((dom, idx) => (
+                <div
+                  key={idx}
+                  className="p-4 sm:p-5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-3.5"
+                >
+                  <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-2.5">
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--c1)] font-bold">
+                      Domain {String(idx + 1).padStart(2, '0')}
+                    </span>
+                    <input
+                      type="text"
+                      value={dom.tag || `Domain ${String(idx + 1).padStart(2, '0')}`}
+                      onChange={(e) => handleDomainChange(idx, 'tag', e.target.value)}
+                      placeholder={`Domain 0${idx + 1}`}
+                      className="w-28 px-2 py-1 rounded-md border border-[var(--line)] bg-white text-[11px] font-mono font-bold text-[var(--c1)] text-right focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">Domain Title</label>
+                    <input
+                      type="text"
+                      value={dom.title || ''}
+                      onChange={(e) => handleDomainChange(idx, 'title', e.target.value)}
+                      placeholder="e.g. Desktop Application Systems"
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs font-bold text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">Description</label>
+                    <textarea
+                      rows={3}
+                      value={dom.desc || ''}
+                      onChange={(e) => handleDomainChange(idx, 'desc', e.target.value)}
+                      placeholder="Domain technical description..."
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)] leading-relaxed"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 pt-1">
+                    <div>
+                      <label className="block text-[10px] font-mono text-[var(--muted)] mb-0.5">Left Badge</label>
+                      <input
+                        type="text"
+                        value={dom.badge1 || ''}
+                        onChange={(e) => handleDomainChange(idx, 'badge1', e.target.value)}
+                        placeholder="Enterprise Grade"
+                        className="w-full px-2.5 py-1 rounded-md border border-[var(--line)] bg-white text-[11px] font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-mono text-[var(--muted)] mb-0.5">Right Badge</label>
+                      <input
+                        type="text"
+                        value={dom.badge2 || ''}
+                        onChange={(e) => handleDomainChange(idx, 'badge2', e.target.value)}
+                        placeholder="Production Ready"
+                        className="w-full px-2.5 py-1 rounded-md border border-[var(--line)] bg-white text-[11px] font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Card 4: Founder Story & Leadership Quote */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Founder Quote &amp; Story</h3>
+                <p className="text-xs text-[var(--muted)]">Voice quote displayed at the top of the About section</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase px-2 py-0.5 rounded-full bg-[var(--soft)] border border-[var(--line)]">
+                Voice Quote
+              </span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Founder's Leadership Quote</label>
+              <textarea
+                rows={3}
+                value={pageData.about?.founderQuote || ''}
                 onChange={(e) => handlePageChange('about', 'founderQuote', e.target.value)}
+                placeholder="We bridge the gap between heavy enterprise needs..."
                 className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              <div className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
-                <span className="text-xs font-bold text-[var(--ink)]">Founder Photo Link</span>
-                <input
-                  type="text"
-                  value={pageData.about.founderPhoto || ''}
-                  onChange={(e) => handlePageChange('about', 'founderPhoto', e.target.value)}
-                  className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
-                />
-                {pageData.about.founderPhoto && (
-                  <div className="w-16 h-16 rounded-full overflow-hidden border border-[var(--line)]">
-                    <img src={pageData.about.founderPhoto} alt="Founder" className="w-full h-full object-cover" />
-                  </div>
-                )}
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
-                <span className="text-xs font-bold text-[var(--ink)]">Office / Workspace Photo Link</span>
-                <input
-                  type="text"
-                  value={pageData.about.officePhoto || ''}
-                  onChange={(e) => handlePageChange('about', 'officePhoto', e.target.value)}
-                  className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
-                />
-                {pageData.about.officePhoto && (
-                  <div className="w-full h-16 rounded-lg overflow-hidden border border-[var(--line)]">
-                    <img src={pageData.about.officePhoto} alt="Office" className="w-full h-full object-cover" />
-                  </div>
-                )}
-              </div>
+            <div className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+              <span className="text-xs font-bold text-[var(--ink)]">Founder Photo URL</span>
+              <input
+                type="text"
+                value={pageData.about?.founderPhoto || ''}
+                onChange={(e) => handlePageChange('about', 'founderPhoto', e.target.value)}
+                placeholder="https://images.unsplash.com/..."
+                className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+              />
+              {pageData.about?.founderPhoto && (
+                <div className="w-16 h-16 rounded-full overflow-hidden border border-[var(--line)]">
+                  <img src={pageData.about.founderPhoto} alt="Founder Preview" className="w-full h-full object-cover" />
+                </div>
+              )}
             </div>
           </div>
+
         </div>
       )}
 

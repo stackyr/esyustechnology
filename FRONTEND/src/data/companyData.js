@@ -414,7 +414,42 @@ export const LANDING_PAGE_SECTIONS = {
     motive: "Transforming complex enterprise technology into simple, intuitive, and easy-to-use software that empowers everyday business.",
     founderQuote: "We bridge the gap between heavy enterprise needs and practical everyday reliability with offline-first desktop software and modern digital systems that never stop working.",
     founderPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
-    officePhoto: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900"
+    officePhoto: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900",
+    corporateBio: "Headquartered in Sector V, Kolkata, we engineer reliable Windows desktop software, native Android applications, and enterprise web solutions engineered with 100% offline autonomy.",
+    domains: [
+      {
+        num: "01",
+        tag: "Domain 01",
+        title: "Desktop Application Systems",
+        desc: "Robust Windows software built for offline resilience, high-speed point of sale, and instant invoice printing.",
+        badge1: "Enterprise Grade",
+        badge2: "Production Ready"
+      },
+      {
+        num: "02",
+        tag: "Domain 02",
+        title: "Website & Web Applications",
+        desc: "Modern corporate websites, cloud web apps, customer portals, and internal management platforms.",
+        badge1: "Enterprise Grade",
+        badge2: "Production Ready"
+      },
+      {
+        num: "03",
+        tag: "Domain 03",
+        title: "Android Mobile Development",
+        desc: "Native Android applications optimized for mobility, offline SQLite caching, and handheld hardware support.",
+        badge1: "Enterprise Grade",
+        badge2: "Production Ready"
+      },
+      {
+        num: "04",
+        tag: "Domain 04",
+        title: "Custom Software Solutions",
+        desc: "Bespoke database architectures, automated workflows, and tailored enterprise software engineered to your exact requirements.",
+        badge1: "Enterprise Grade",
+        badge2: "Production Ready"
+      }
+    ]
   },
   servicesSection: {
     eyebrow: "Engineering Capabilities",
