@@ -1698,8 +1698,8 @@ em.s {
   }
 
   .folder__tab-title {
-    font-size: clamp(11.5px, 2.9vw, 14px);
-    max-width: clamp(140px, 46vw, 240px);
+    font-size: clamp(11px, 2.8vw, 13.5px);
+    max-width: calc(100vw - 80px);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1726,9 +1726,10 @@ em.s {
   }
 
   .folder__photo--logo {
-    min-height: 250px !important;
+    min-height: auto !important;
     max-height: none !important;
     height: auto !important;
+    aspect-ratio: auto !important;
   }
 
   .folder__copy {
@@ -3551,6 +3552,14 @@ em.s {
     font-size: clamp(11.5px, 3vw, 14px) !important;
   }
 
+  .folder__tab-title {
+    font-size: clamp(11px, 2.8vw, 13.5px) !important;
+    max-width: calc(100vw - 80px) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+  }
+
   .folder__body {
     padding: 16px 14px !important;
     border-radius: 18px !important;
@@ -3562,6 +3571,51 @@ em.s {
     max-height: 220px !important;
     aspect-ratio: 16/10 !important;
     border-radius: 14px !important;
+  }
+
+  .folder__photo--logo {
+    min-height: auto !important;
+    max-height: none !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    overflow: hidden !important;
+  }
+
+  .folder__photo--logo > div {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .folder__photo--logo .ui--inline {
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    width: 100% !important;
+    margin-top: 8px !important;
+    padding: 10px 12px !important;
+    gap: 6px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
+    box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.06) !important;
+    background: #fbf9f5 !important;
+  }
+
+  .folder__photo--logo .ui__top {
+    font-size: 9.5px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .folder__photo--logo .ui__title {
+    font-size: 13.5px !important;
+    line-height: 1.25 !important;
+    margin-bottom: 2px !important;
+  }
+
+  .folder__photo--logo .ui__row {
+    font-size: 10.5px !important;
+    padding-top: 5px !important;
+    gap: 6px !important;
   }
 
   .folder__h3 {
@@ -3981,7 +4035,8 @@ em.s {
   }
 
   .folder__tab-title {
-    max-width: 165px !important;
+    font-size: 11px !important;
+    max-width: calc(100vw - 75px) !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;

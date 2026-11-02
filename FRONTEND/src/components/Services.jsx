@@ -154,10 +154,10 @@ export default function Services({ onSelectService, onEnquireService }) {
                   {/* Right Column: High-Res Real Photography & Floating Live Diagnostics UI */}
                   <figure className={`folder__photo overflow-hidden relative group ${item.isLogo ? 'folder__photo--logo' : ''}`}>
                     {item.isLogo ? (
-                      <div className="w-full h-full flex flex-col justify-between p-3.5 sm:p-5 bg-white relative">
+                      <div className="w-full h-auto sm:h-full flex flex-col justify-between p-3 sm:p-5 bg-white relative">
                         {/* Top: Crisp Finance Flow Brand Logo Card */}
-                        <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-4 bg-gradient-to-b from-stone-50/90 to-white rounded-xl border border-stone-200/70 mb-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)]">
-                          <div className="w-full flex items-center justify-between mb-1.5 px-0.5">
+                        <div className="flex-1 flex flex-col items-center justify-center p-2.5 sm:p-4 bg-gradient-to-b from-stone-50/90 to-white rounded-xl border border-stone-200/70 mb-2 sm:mb-3 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)]">
+                          <div className="w-full flex items-center justify-between mb-1 sm:mb-1.5 px-0.5">
                             <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--c1)] font-bold flex items-center gap-1.5">
                               <span className="w-1.5 h-1.5 rounded-full bg-[var(--c1)] animate-pulse" />
                               Official Flagship Software
@@ -166,11 +166,11 @@ export default function Services({ onSelectService, onEnquireService }) {
                               v2.4.0
                             </span>
                           </div>
-                          <div className="w-full flex items-center justify-center py-2 sm:py-3">
+                          <div className="w-full flex items-center justify-center py-1.5 sm:py-3">
                             <img
                               src={item.image}
                               alt="Finance Flow"
-                              className="h-14 sm:h-16 md:h-18 w-auto max-w-[85%] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
+                              className="h-11 sm:h-16 md:h-18 w-auto max-w-[85%] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
                             />
                           </div>
                         </div>
