@@ -19,6 +19,7 @@ import {
   Clock
 } from 'lucide-react';
 import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import api from '../utils/api';
 
 export default function CustomizationTab({
   brand,
@@ -66,6 +67,85 @@ export default function CustomizationTab({
     downloadSection: { ...(LANDING_PAGE_SECTIONS?.downloadSection || {}), ...(landingPage?.downloadSection || {}) },
     contact: { ...(LANDING_PAGE_SECTIONS?.contact || {}), ...(landingPage?.contact || {}) }
   }));
+
+  // Admin credentials state
+  const [adminUsername, setAdminUsername] = useState('admin');
+  const [currentAdminPassword, setCurrentAdminPassword] = useState('');
+  const [newAdminUsername, setNewAdminUsername] = useState('');
+  const [newAdminPassword, setNewAdminPassword] = useState('');
+  const [confirmAdminPassword, setConfirmAdminPassword] = useState('');
+  const [showCurrentPass, setShowCurrentPass] = useState(false);
+  const [showNewPass, setShowNewPass] = useState(false);
+  const [showConfirmPass, setShowConfirmPass] = useState(false);
+  const [isUpdatingCreds, setIsUpdatingCreds] = useState(false);
+  const [credsSuccess, setCredsSuccess] = useState('');
+  const [credsError, setCredsError] = useState('');
+
+  useEffect(() => {
+    api.getAdminCredentials()
+      .then((res) => {
+        if (res?.data?.username) {
+          setAdminUsername(res.data.username);
+          setNewAdminUsername(res.data.username);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleUpdateCredentials = async (e) => {
+    e.preventDefault();
+    setCredsError('');
+    setCredsSuccess('');
+
+    if (!currentAdminPassword) {
+      setCredsError('Please enter your current admin password to verify your authorization.');
+      return;
+    }
+
+    if (!newAdminUsername.trim()) {
+      setCredsError('Username cannot be empty.');
+      return;
+    }
+
+    if (newAdminPassword && newAdminPassword.length < 4) {
+      setCredsError('New password must be at least 4 characters long.');
+      return;
+    }
+
+    if (newAdminPassword && newAdminPassword !== confirmAdminPassword) {
+      setCredsError('New password and confirmation do not match.');
+      return;
+    }
+
+    setIsUpdatingCreds(true);
+    try {
+      const res = await api.updateAdminCredentials({
+        currentPassword: currentAdminPassword.trim(),
+        newUsername: newAdminUsername.trim(),
+        newPassword: newAdminPassword ? newAdminPassword.trim() : undefined
+      });
+
+      if (res.success) {
+        setCredsSuccess('Admin credentials updated successfully in MERN backend!');
+        setAdminUsername(res.data?.username || newAdminUsername.trim());
+        setCurrentAdminPassword('');
+        setNewAdminPassword('');
+        setConfirmAdminPassword('');
+        try {
+          const userObj = JSON.parse(localStorage.getItem('esyus_admin_user') || '{}');
+          userObj.username = res.data?.username || newAdminUsername.trim();
+          localStorage.setItem('esyus_admin_user', JSON.stringify(userObj));
+        } catch (e) {}
+        setTimeout(() => setCredsSuccess(''), 4000);
+      } else {
+        setCredsError(res.error || 'Failed to update credentials. Please check current password.');
+      }
+    } catch (err) {
+      setCredsError(err.message || 'Error updating administrator credentials.');
+    } finally {
+      setIsUpdatingCreds(false);
+    }
+  };
 
   // Sync when props update
   useEffect(() => {
@@ -448,6 +528,164 @@ export default function CustomizationTab({
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Administrator Access & Backend Security Credentials */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 shrink-0">
+                  <ShieldCheck className="w-5 h-5 text-[var(--c1)]" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[var(--ink)]">
+                    Admin Security &amp; Access Credentials
+                  </h3>
+                  <p className="text-xs text-[var(--muted)]">
+                    Change admin username and login password. Verified with current password and saved directly to the backend database.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 border border-stone-200">
+                  Active User: <strong className="text-[var(--c1)]">{adminUsername}</strong>
+                </span>
+                <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Security</span>
+              </div>
+            </div>
+
+            {credsError && (
+              <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-start gap-2.5 text-red-700 text-xs">
+                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-500" />
+                <span className="font-medium">{credsError}</span>
+              </div>
+            )}
+
+            {credsSuccess && (
+              <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-2.5 text-emerald-800 text-xs">
+                <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-600" />
+                <span className="font-medium">{credsSuccess}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleUpdateCredentials} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* Current Password */}
+                <div className="p-3 rounded-xl bg-amber-50/50 border border-amber-200/70">
+                  <label className="block text-xs font-bold text-amber-950 mb-1 flex items-center gap-1.5">
+                    <KeyRound className="w-3.5 h-3.5 text-amber-700" />
+                    <span>Current Password *</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showCurrentPass ? 'text' : 'password'}
+                      value={currentAdminPassword}
+                      onChange={(e) => setCurrentAdminPassword(e.target.value)}
+                      placeholder="Enter current password..."
+                      required
+                      className="w-full px-3 py-1.5 pr-8 rounded-lg border border-amber-300 bg-white text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-amber-600"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowCurrentPass(!showCurrentPass)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 cursor-pointer"
+                      tabIndex={-1}
+                    >
+                      {showCurrentPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* New Username */}
+                <div className="p-3 rounded-xl bg-[var(--soft)] border border-[var(--line)]">
+                  <label className="block text-xs font-bold text-stone-800 mb-1 flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-stone-500" />
+                    <span>New Username</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={newAdminUsername}
+                    onChange={(e) => setNewAdminUsername(e.target.value)}
+                    placeholder="e.g. admin or milan"
+                    required
+                    className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                  />
+                </div>
+
+                {/* New Password */}
+                <div className="p-3 rounded-xl bg-[var(--soft)] border border-[var(--line)]">
+                  <label className="block text-xs font-bold text-stone-800 mb-1 flex items-center gap-1.5">
+                    <Lock className="w-3.5 h-3.5 text-stone-500" />
+                    <span>New Password</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showNewPass ? 'text' : 'password'}
+                      value={newAdminPassword}
+                      onChange={(e) => setNewAdminPassword(e.target.value)}
+                      placeholder="Leave blank to keep current"
+                      className="w-full px-3 py-1.5 pr-8 rounded-lg border border-[var(--line)] bg-white text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPass(!showNewPass)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 cursor-pointer"
+                      tabIndex={-1}
+                    >
+                      {showNewPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Confirm Password if new password provided */}
+              {newAdminPassword && (
+                <div className="max-w-xs">
+                  <label className="block text-xs font-bold text-stone-800 mb-1 flex items-center gap-1.5">
+                    <Lock className="w-3.5 h-3.5 text-stone-500" />
+                    <span>Confirm New Password *</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showConfirmPass ? 'text' : 'password'}
+                      value={confirmAdminPassword}
+                      onChange={(e) => setConfirmAdminPassword(e.target.value)}
+                      placeholder="Repeat new password..."
+                      required
+                      className="w-full px-3 py-1.5 pr-8 rounded-lg border border-[var(--line)] bg-white text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPass(!showConfirmPass)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-700 cursor-pointer"
+                      tabIndex={-1}
+                    >
+                      {showConfirmPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex items-center justify-end pt-2">
+                <button
+                  type="submit"
+                  disabled={isUpdatingCreds}
+                  className="px-5 py-2 rounded-xl bg-[var(--dark)] hover:bg-black text-[var(--bg)] text-xs font-bold transition-all shadow-xs flex items-center gap-2 cursor-pointer disabled:opacity-60"
+                >
+                  {isUpdatingCreds ? (
+                    <>
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-[var(--c1)]" />
+                      <span>Saving Credentials...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ShieldCheck className="w-3.5 h-3.5 text-[var(--c1)]" />
+                      <span>Update Admin Credentials</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -58,15 +58,19 @@ export default function AdminLogin({ onLoginSuccess, onCancel }) {
         setError(res.error || 'Authentication failed. Please verify credentials.');
       }
     } catch (err) {
-      // Fallback local verification if offline
-      const cleanU = username.trim().toLowerCase();
-      const cleanP = password.trim();
-      if ((cleanU === 'admin' || cleanU === 'admin@esyus.com') && (cleanP === 'admin' || cleanP === 'esyus2027')) {
-        const fallbackToken = `esyus_adm_${Date.now()}`;
-        localStorage.setItem('esyus_admin_token', fallbackToken);
-        if (onLoginSuccess) onLoginSuccess({ username: cleanU, role: 'Super Administrator' });
+      if (err.message && !err.message.includes('Failed to fetch') && !err.message.includes('NetworkError')) {
+        setError(err.message);
       } else {
-        setError(err.message || 'Invalid admin credentials. Please try again.');
+        // Fallback offline verification only when backend is unreachable
+        const cleanU = username.trim().toLowerCase();
+        const cleanP = password.trim();
+        if ((cleanU === 'admin' || cleanU === 'admin@esyus.com') && (cleanP === 'admin' || cleanP === 'esyus2027')) {
+          const fallbackToken = `esyus_adm_${Date.now()}`;
+          localStorage.setItem('esyus_admin_token', fallbackToken);
+          if (onLoginSuccess) onLoginSuccess({ username: cleanU, role: 'Super Administrator' });
+        } else {
+          setError(err.message || 'Invalid admin credentials. Please try again.');
+        }
       }
     } finally {
       setIsLoading(false);

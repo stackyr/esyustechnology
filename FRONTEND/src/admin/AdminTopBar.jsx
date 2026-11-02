@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, RefreshCw, ExternalLink, LogOut } from 'lucide-react';
+import { Menu, RefreshCw, ExternalLink, LogOut, ShieldCheck } from 'lucide-react';
 
 export default function AdminTopBar({
   activeTab,
@@ -8,7 +8,8 @@ export default function AdminTopBar({
   onBackToSite,
   onLogout,
   onRefresh,
-  isRefreshing
+  isRefreshing,
+  onOpenSecurity
 }) {
   const titles = {
     inquiries: { title: 'Inquiries & Customer Leads', sub: 'Visitor inquiries & client leads' },
@@ -62,6 +63,19 @@ export default function AdminTopBar({
           <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin text-[var(--c1)]' : ''}`} />
         </button>
 
+        {/* Admin Security */}
+        {onOpenSecurity && (
+          <button
+            type="button"
+            onClick={onOpenSecurity}
+            className="px-2.5 sm:px-3 py-2 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer shrink-0"
+            title="Change Admin Password & Username"
+          >
+            <ShieldCheck className="w-4 h-4 text-[var(--c1)]" />
+            <span className="hidden sm:inline">Admin Security</span>
+          </button>
+        )}
+
         {/* View Public Website */}
         <button
           type="button"
@@ -89,4 +103,3 @@ export default function AdminTopBar({
     </header>
   );
 }
-

@@ -51,6 +51,11 @@ export const api = {
   verifyAdmin: (token) => request('/admin/verify', {
     headers: { Authorization: `Bearer ${token}` },
   }),
+  getAdminCredentials: () => request('/admin/credentials'),
+  updateAdminCredentials: (data) => request('/admin/credentials', {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  }),
 
   // Brand & Company Settings
   getBrand: () => request('/brand'),

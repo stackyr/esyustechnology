@@ -199,6 +199,24 @@ export default function AdminSidebar({
           <ExternalLink className="w-3.5 h-3.5 text-[var(--muted)]" />
         </button>
 
+        {/* Change Admin Password & Username */}
+        {onOpenSecurity && (
+          <button
+            type="button"
+            onClick={() => {
+              if (onCloseMobile) onCloseMobile();
+              onOpenSecurity();
+            }}
+            className="w-full flex items-center justify-between p-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] hover:bg-white text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
+          >
+            <span className="flex items-center gap-2">
+              <Shield className="w-3.5 h-3.5 text-[var(--c1)]" />
+              <span>Admin Security</span>
+            </span>
+            <span className="text-[10px] font-mono text-[var(--c1)] font-semibold">Change</span>
+          </button>
+        )}
+
         {/* Logout Button */}
         {onLogout && (
           <button

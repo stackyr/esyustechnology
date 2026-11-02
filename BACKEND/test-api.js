@@ -298,6 +298,86 @@ async function runTests() {
     });
   });
 
+  // 14. Admin Security & Credentials Management (GET & PUT)
+  await test('Admin Credentials Management & Password Change (GET & PUT /api/admin/credentials)', async () => {
+    // A. Verify GET /api/admin/credentials
+    const credsRes = await fetch(`${API_BASE}/admin/credentials`, {
+      headers: authHeaders()
+    });
+    const credsData = await credsRes.json();
+    if (!credsData.success || !credsData.data.username) {
+      throw new Error('Failed to retrieve admin credentials');
+    }
+
+    // B. Security Check: Reject update with wrong current password
+    const wrongPassRes = await fetch(`${API_BASE}/admin/credentials`, {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify({
+        currentPassword: 'WRONG_PASSWORD_XYZ',
+        newUsername: 'hacked_admin',
+        newPassword: 'newPassword123'
+      })
+    });
+    if (wrongPassRes.status !== 400) {
+      throw new Error(`Expected 400 for incorrect current password, got ${wrongPassRes.status}`);
+    }
+
+    // C. Update to new username & password
+    const updateCredsRes = await fetch(`${API_BASE}/admin/credentials`, {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify({
+        currentPassword: 'admin',
+        newUsername: 'milan_admin',
+        newPassword: 'securePassword2027'
+      })
+    });
+    const updateCredsData = await updateCredsRes.json();
+    if (!updateCredsData.success || updateCredsData.data.username !== 'milan_admin') {
+      throw new Error('Failed to update admin credentials');
+    }
+
+    // D. Verify Old Login Fails
+    const oldLoginRes = await fetch(`${API_BASE}/admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'admin', password: 'admin' })
+    });
+    if (oldLoginRes.status !== 401) {
+      throw new Error('Old credentials should be rejected after update');
+    }
+
+    // E. Verify New Login Succeeds
+    const newLoginRes = await fetch(`${API_BASE}/admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: 'milan_admin', password: 'securePassword2027' })
+    });
+    const newLoginData = await newLoginRes.json();
+    if (!newLoginData.success || !newLoginData.token) {
+      throw new Error('Login with new credentials failed');
+    }
+
+    // F. Restore back to default admin/admin for seamless test idempotency
+    const restoreRes = await fetch(`${API_BASE}/admin/credentials`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${newLoginData.token}`
+      },
+      body: JSON.stringify({
+        currentPassword: 'securePassword2027',
+        newUsername: 'admin',
+        newPassword: 'admin'
+      })
+    });
+    const restoreData = await restoreRes.json();
+    if (!restoreData.success) {
+      throw new Error('Failed to restore admin credentials back to default');
+    }
+  });
+
   console.log(`\n--- TEST SUMMARY ---`);
   console.log(`Passed: ${passed}`);
   console.log(`Failed: ${failed}`);

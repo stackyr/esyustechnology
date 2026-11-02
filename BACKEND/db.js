@@ -369,7 +369,14 @@ const DEFAULT_DATA = {
       a: "You can download the installers directly from the 'Download Applications' section on this website. Our desktop installers are packaged as easy-to-use Windows .exe setup files, and Android applications are available as secure APKs."
     }
   ],
-  inquiries: []
+  inquiries: [],
+  admin: {
+    username: "admin",
+    password: "admin",
+    role: "Super Administrator",
+    name: "Milan Mandal",
+    email: "admin@esyustechnology.com"
+  }
 };
 
 // Ensure data folder and db.json exist

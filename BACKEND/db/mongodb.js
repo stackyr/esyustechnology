@@ -6,6 +6,7 @@ import { Product } from '../models/Product.js';
 import { Faq } from '../models/Faq.js';
 import { Inquiry } from '../models/Inquiry.js';
 import { LandingPage } from '../models/LandingPage.js';
+import { Admin } from '../models/Admin.js';
 import { getDB, saveDB, resetDB as resetLocalDB } from '../db.js';
 
 dotenv.config();
@@ -87,6 +88,13 @@ async function seedMongoDefaults() {
       await LandingPage.create(local.landingPage);
       console.log(`[MERN: MongoDB] Seeded initial Landing Page section copy and image URLs.`);
     }
+
+    // 7. Admin Credentials
+    const adminCount = await Admin.countDocuments();
+    if (adminCount === 0 && local.admin) {
+      await Admin.create(local.admin);
+      console.log(`[MERN: MongoDB] Seeded initial Admin credentials.`);
+    }
   } catch (e) {
     console.error('[MERN: MongoDB] Seed error:', e.message);
   }
@@ -95,6 +103,87 @@ async function seedMongoDefaults() {
 // ==============================================
 // Unified Store API (Mongoose with fallback)
 // ==============================================
+
+// 0. ADMIN CREDENTIALS & SECURITY
+export async function getAdminCredentials() {
+  if (isMongoConnected()) {
+    const doc = await Admin.findOne().sort({ createdAt: 1 }).lean();
+    if (doc) return doc;
+  }
+  const db = getDB();
+  return db.admin || {
+    username: 'admin',
+    password: 'admin',
+    role: 'Super Administrator',
+    name: 'Milan Mandal',
+    email: 'admin@esyustechnology.com'
+  };
+}
+
+export async function updateAdminCredentials({ currentPassword, newUsername, newPassword, name, email }) {
+  const current = await getAdminCredentials();
+
+  // Validate current password
+  const existingPassword = current?.password || 'admin';
+  if (currentPassword !== existingPassword) {
+    const error = new Error('Current password does not match. Please verify your current password.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const cleanUser = (newUsername || current?.username || 'admin').trim();
+  const cleanPass = (newPassword || current?.password || 'admin').trim();
+  const cleanName = (name !== undefined ? name : current?.name || 'Milan Mandal').trim();
+  const cleanEmail = (email !== undefined ? email : current?.email || 'admin@esyustechnology.com').trim();
+
+  if (!cleanUser || cleanUser.length < 3) {
+    const error = new Error('Username must be at least 3 characters long.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!cleanPass || cleanPass.length < 4) {
+    const error = new Error('Password must be at least 4 characters long.');
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const updatedAdmin = {
+    username: cleanUser,
+    password: cleanPass,
+    role: current?.role || 'Super Administrator',
+    name: cleanName,
+    email: cleanEmail
+  };
+
+  if (isMongoConnected()) {
+    let doc = await Admin.findOne();
+    if (!doc) {
+      doc = await Admin.create(updatedAdmin);
+    } else {
+      doc.username = cleanUser;
+      doc.password = cleanPass;
+      doc.name = cleanName;
+      doc.email = cleanEmail;
+      await doc.save();
+    }
+  }
+
+  // Update local DB
+  const db = getDB();
+  db.admin = {
+    ...(db.admin || {}),
+    ...updatedAdmin
+  };
+  saveDB(db);
+
+  return {
+    username: cleanUser,
+    role: 'Super Administrator',
+    name: cleanName,
+    email: cleanEmail
+  };
+}
 
 // 1. BRAND
 export async function getBrandData() {
@@ -424,6 +513,7 @@ export async function resetAllData() {
     await Promise.all([
       Brand.deleteMany({}),
       LandingPage.deleteMany({}),
+      Admin.deleteMany({}),
       Service.deleteMany({}),
       Product.deleteMany({}),
       Faq.deleteMany({}),

@@ -7,11 +7,13 @@ import CustomizationTab from './CustomizationTab';
 import ServicesTab from './ServicesTab';
 import ProductsTab from './ProductsTab';
 import FaqsTab from './FaqsTab';
+import AdminSecurityModal from './AdminSecurityModal';
 import { CheckCircle2, AlertCircle, X } from 'lucide-react';
 
 export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const [activeTab, setActiveTab] = useState('inquiries'); // Default to Inquiries (MAIN FOCUS)
   const [isOpenMobile, setIsOpenMobile] = useState(false);
+  const [isSecurityOpen, setIsSecurityOpen] = useState(false);
   
   // Data State
   const [inquiries, setInquiries] = useState([]);
@@ -413,6 +415,15 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
         </main>
 
       </div>
+
+      {/* Admin Security & Password Change Modal */}
+      <AdminSecurityModal
+        isOpen={isSecurityOpen}
+        onClose={() => setIsSecurityOpen(false)}
+        onCredentialsUpdated={(updated) => {
+          showToast(`Admin credentials successfully updated (${updated?.username || 'admin'})!`, 'success');
+        }}
+      />
 
     </div>
   );

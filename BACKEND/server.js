@@ -5,6 +5,8 @@ import { randomUUID } from 'node:crypto';
 import {
   connectMongoDB,
   isMongoConnected,
+  getAdminCredentials,
+  updateAdminCredentials,
   getBrandData,
   updateBrandData,
   getLandingPageData,
@@ -103,19 +105,25 @@ const requireAdminAuth = (req, res, next) => {
   });
 };
 
-app.post('/api/admin/login', (req, res) => {
+app.post('/api/admin/login', async (req, res) => {
   try {
     const { username, password } = req.body;
     const cleanUser = (username || '').trim().toLowerCase();
     const cleanPass = (password || '').trim();
 
-    const envUser = (process.env.ADMIN_USERNAME || 'admin').trim().toLowerCase();
-    const envPass = (process.env.ADMIN_PASSWORD || 'admin').trim();
+    // Query active admin credentials from DB (or fallback)
+    const adminCreds = await getAdminCredentials();
+    const activeUsername = (adminCreds?.username || 'admin').trim().toLowerCase();
+    const activePassword = (adminCreds?.password || 'admin').trim();
 
-    const validUsers = [envUser, 'admin', 'admin@esyus.com', 'admin@esyustechnology.com', 'admin@esyustechnologies.com', 'milan'];
-    const validPass = [envPass, 'admin', 'admin123', 'esyus2027', '123456'];
+    const envUser = (process.env.ADMIN_USERNAME || '').trim().toLowerCase();
+    const envPass = (process.env.ADMIN_PASSWORD || '').trim();
 
-    if (validUsers.includes(cleanUser) && validPass.includes(cleanPass)) {
+    // Support DB credentials, or env fallback
+    const isMatch = (cleanUser === activeUsername && cleanPass === activePassword) ||
+                    (envUser && envPass && cleanUser === envUser && cleanPass === envPass);
+
+    if (isMatch) {
       const token = `esyus_adm_${Date.now()}_${randomUUID().slice(0, 8)}`;
       activeAdminTokens.add(token);
       return res.json({
@@ -123,10 +131,10 @@ app.post('/api/admin/login', (req, res) => {
         message: 'Admin authentication successful',
         token,
         admin: {
-          username: cleanUser,
-          role: 'Super Administrator',
-          name: 'Milan Mandal',
-          email: 'admin@esyustechnology.com'
+          username: adminCreds?.username || cleanUser,
+          role: adminCreds?.role || 'Super Administrator',
+          name: adminCreds?.name || 'Milan Mandal',
+          email: adminCreds?.email || 'admin@esyustechnology.com'
         }
       });
     }
@@ -137,6 +145,57 @@ app.post('/api/admin/login', (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// GET current admin credentials & profile
+app.get('/api/admin/credentials', requireAdminAuth, async (req, res) => {
+  try {
+    const admin = await getAdminCredentials();
+    res.json({
+      success: true,
+      data: {
+        username: admin.username,
+        role: admin.role || 'Super Administrator',
+        name: admin.name || 'Milan Mandal',
+        email: admin.email || 'admin@esyustechnology.com'
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// PUT update admin credentials (requires current password)
+app.put('/api/admin/credentials', requireAdminAuth, async (req, res) => {
+  try {
+    const { currentPassword, newUsername, newPassword, name, email } = req.body;
+
+    if (!currentPassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'Current password is required to change administrator credentials.'
+      });
+    }
+
+    const updated = await updateAdminCredentials({
+      currentPassword,
+      newUsername,
+      newPassword,
+      name,
+      email
+    });
+
+    res.json({
+      success: true,
+      message: 'Admin credentials updated successfully.',
+      data: updated
+    });
+  } catch (err) {
+    res.status(err.statusCode || 400).json({
+      success: false,
+      error: err.message
+    });
   }
 });
 
