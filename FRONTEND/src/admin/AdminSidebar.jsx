@@ -17,7 +17,8 @@ export default function AdminSidebar({
   isRefreshing = false,
   isOpenMobile = false,
   onCloseMobile,
-  onOpenSecurity = null
+  onOpenSecurity = null,
+  isInitialLoading = false
 }) {
   const navItems = [
     {
@@ -155,7 +156,9 @@ export default function AdminSidebar({
                 </div>
 
                 {/* Badge / Count */}
-                {item.badge ? (
+                {isInitialLoading ? (
+                  <span className="w-5 h-4 rounded-md bg-stone-200/70 animate-pulse shrink-0 inline-block" />
+                ) : item.badge ? (
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold animate-badge-glow shadow-[0_0_12px_rgba(232,105,60,0.45)] shrink-0 ${
                     isActive ? 'bg-[var(--c1)] text-white' : 'bg-[var(--c1)] text-white'
                   }`}>

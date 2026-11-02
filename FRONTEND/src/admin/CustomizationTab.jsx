@@ -87,6 +87,49 @@ export default function CustomizationTab({
   const [credsSuccess, setCredsSuccess] = useState('');
   const [credsError, setCredsError] = useState('');
 
+  // Synchronize when fresh database props arrive from MongoDB Atlas
+  useEffect(() => {
+    if (brand && typeof brand === 'object') {
+      setBrandData({
+        name: brand.name || COMPANY_INFO.name,
+        shortName: brand.shortName || COMPANY_INFO.shortName,
+        domain: brand.domain || COMPANY_INFO.domain,
+        tagline: brand.tagline || COMPANY_INFO.tagline,
+        slogan: brand.slogan || COMPANY_INFO.slogan,
+        founder: brand.founder || COMPANY_INFO.founder,
+        coFounder: brand.coFounder || COMPANY_INFO.coFounder,
+        establishmentDate: brand.establishmentDate || COMPANY_INFO.establishmentDate,
+        email: brand.email || COMPANY_INFO.email,
+        supportEmail: brand.supportEmail || COMPANY_INFO.supportEmail,
+        phone: brand.phone || COMPANY_INFO.phone,
+        address: brand.address || COMPANY_INFO.address,
+        stats: Array.isArray(brand.stats) ? brand.stats : [...COMPANY_INFO.stats]
+      });
+    }
+  }, [brand]);
+
+  useEffect(() => {
+    if (landingPage && typeof landingPage === 'object') {
+      setPageData({
+        hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage.hero || {}) },
+        about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage.about || {}) },
+        servicesSection: { ...(LANDING_PAGE_SECTIONS?.servicesSection || {}), ...(landingPage.servicesSection || {}) },
+        productsSection: { ...(LANDING_PAGE_SECTIONS?.productsSection || {}), ...(landingPage.productsSection || {}) },
+        featuredProduct: { ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}), ...(landingPage.featuredProduct || {}) },
+        whyChooseUs: {
+          headline: landingPage.whyChooseUs?.headline || LANDING_PAGE_SECTIONS?.whyChooseUs?.headline || '',
+          lead: landingPage.whyChooseUs?.lead || LANDING_PAGE_SECTIONS?.whyChooseUs?.lead || '',
+          pillarImages: Array.isArray(landingPage.whyChooseUs?.pillarImages) && landingPage.whyChooseUs.pillarImages.length === 5
+            ? landingPage.whyChooseUs.pillarImages
+            : [...(LANDING_PAGE_SECTIONS?.whyChooseUs?.pillarImages || [])]
+        },
+        reviewsSection: { ...(LANDING_PAGE_SECTIONS?.reviewsSection || {}), ...(landingPage.reviewsSection || {}) },
+        downloadSection: { ...(LANDING_PAGE_SECTIONS?.downloadSection || {}), ...(landingPage.downloadSection || {}) },
+        contact: { ...(LANDING_PAGE_SECTIONS?.contact || {}), ...(landingPage.contact || {}) }
+      });
+    }
+  }, [landingPage]);
+
   useEffect(() => {
     api.getAdminCredentials()
       .then((res) => {
