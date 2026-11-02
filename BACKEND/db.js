@@ -93,8 +93,8 @@ const DEFAULT_DATA = {
       authorMeta: "Agarwal Mega Store, Kolkata · Verified User"
     },
     contact: {
-      headline: "Start a conversation.",
-      lead: "Have questions regarding Finance Flow, customized desktop billing counters, or custom Android app development? Reach out to our technical leadership directly.",
+      headline: "Start a conversation. For any service or software.",
+      lead: "Looking for custom website development, Android mobile apps, or enterprise web portals? Inquiring about our ready-to-use software suite (Finance Flow, Bharat Yatra Sathi, and more)? Or facing a technical challenge needing bespoke engineering? Reach out to our team directly — we are ready to assist with every requirement.",
       counterImage: "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900",
       footerCtaEyebrow: "Enterprise Precision • Zero Cloud Latency",
       footerCtaTitle: "Bring calm, offline precision to your billing counter."

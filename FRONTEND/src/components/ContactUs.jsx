@@ -9,7 +9,7 @@ export default function ContactUs({ preselectedSubject }) {
     mobile: '',
     email: '',
     address: '',
-    subject: preselectedSubject || 'Finance Flow Desktop Billing',
+    subject: preselectedSubject || 'General Project & Software Enquiry',
     message: '',
   });
 
@@ -71,7 +71,7 @@ export default function ContactUs({ preselectedSubject }) {
       mobile: '',
       email: '',
       address: '',
-      subject: 'Finance Flow Desktop Billing',
+      subject: 'General Project & Software Enquiry',
       message: '',
     });
     setIsSubmitted(false);
@@ -87,14 +87,16 @@ export default function ContactUs({ preselectedSubject }) {
           <div>
             <span className="eyebrow">Get In Touch</span>
             <h2 className="contact__title" style={{ marginTop: '16px' }}>
-              {contactSec.headline ? (
+              {contactSec.headline && contactSec.headline !== "Start a conversation." ? (
                 contactSec.headline
               ) : (
-                <>Start a <em className="s">conversation.</em></>
+                <>Start a conversation. For any <em className="s">service or software.</em></>
               )}
             </h2>
             <p className="lead" style={{ marginTop: '14px' }}>
-              {contactSec.lead || 'Have questions regarding Finance Flow, customized desktop billing counters, or custom Android app development? Reach out to our technical leadership directly.'}
+              {contactSec.lead && !contactSec.lead.includes("Finance Flow, customized desktop billing counters")
+                ? contactSec.lead
+                : "Looking for custom website development, Android mobile apps, or enterprise web portals? Inquiring about our ready-to-use software suite (Finance Flow, Bharat Yatra Sathi, and more)? Or facing a technical challenge needing bespoke engineering? Reach out to our team directly — we are ready to assist with every requirement."}
             </p>
           </div>
 
@@ -154,10 +156,10 @@ export default function ContactUs({ preselectedSubject }) {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <h4 className="text-lg font-bold text-[var(--ink)]">
-                    Send an Enquiry or Project Proposal
+                    Send an Enquiry, Project Request, or Software Consultation
                   </h4>
-                  <p className="text-xs text-[var(--muted)] mt-0.5">
-                    Fields marked with * are required for quotation generation.
+                  <p className="text-xs text-[var(--muted)] mt-1 leading-relaxed">
+                    Whether you need custom web &amp; mobile app development, software licensing inquiries, or solving a technical challenge — share your requirements with our team.
                   </p>
                 </div>
 
@@ -227,24 +229,44 @@ export default function ContactUs({ preselectedSubject }) {
                 {/* Subject Dropdown */}
                 <div>
                   <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
-                    Application or Service of Interest *
+                    Application, Service, or Topic of Interest *
                   </label>
                   <select
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                   >
-                    <optgroup label="Applications">
-                      {PRODUCTS.map((p) => (
-                        <option key={p.id} value={p.name}>{p.name} ({p.category})</option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="Core Services">
+                    <option value="General Project & Software Enquiry">
+                      General Project &amp; Software Enquiry (Web, Mobile App &amp; Custom Builds)
+                    </option>
+
+                    <optgroup label="Custom Engineering Services">
                       {SERVICES.map((s) => (
-                        <option key={s.id} value={s.title}>{s.title}</option>
+                        <option key={s.id} value={s.title}>
+                          {s.title}
+                        </option>
                       ))}
                     </optgroup>
-                    <option value="General Enterprise Software Enquiry">General Enterprise Software Enquiry</option>
+
+                    <optgroup label="Ready-to-Use Software Applications">
+                      {PRODUCTS.map((p) => (
+                        <option key={p.id} value={`${p.name} (${p.category})`}>
+                          {p.name} — {p.category}
+                        </option>
+                      ))}
+                    </optgroup>
+
+                    <optgroup label="Technical Support & Consultation">
+                      <option value="Thermal Printer & Hardware Integration">
+                        Thermal Printer &amp; POS Hardware Setup
+                      </option>
+                      <option value="Database Migration & Offline Systems">
+                        Database Migration &amp; Offline Systems
+                      </option>
+                      <option value="Other Technical Challenge / Bespoke Requirement">
+                        Other Technical Challenge / Consultation
+                      </option>
+                    </optgroup>
                   </select>
                 </div>
 
@@ -278,7 +300,7 @@ export default function ContactUs({ preselectedSubject }) {
           <div className="art g-pine">
             <img
               src={contactSec.counterImage || "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900"}
-              alt={`${COMPANY_INFO.shortName} Store Counter Billing Setup`}
+              alt={`${COMPANY_INFO.shortName} Engineering Setup`}
               className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
             />
             <div className="phone">
@@ -286,27 +308,27 @@ export default function ContactUs({ preselectedSubject }) {
                 {/* Phone Top Status */}
                 <div className="flex items-center justify-between text-[10px] text-[var(--muted)] font-mono border-b border-[var(--line)] pb-1.5">
                   <span>{(COMPANY_INFO.shortName || 'ESYUS').toUpperCase()} TERMINAL</span>
-                  <span className="text-[var(--c5)] font-bold">100% OFFLINE</span>
+                  <span className="text-[var(--c5)] font-bold">100% RELIABLE</span>
                 </div>
 
-                {/* Mini Bill Preview */}
+                {/* Multi-Service Overview */}
                 <div className="p-2.5 rounded-xl bg-white border border-[var(--line)] space-y-1.5 shadow-xs">
                   <div className="flex justify-between items-center">
-                    <span className="font-bold text-xs text-[var(--ink)]">Finance Flow v2.4</span>
-                    <span className="text-[9px] font-mono text-[var(--c1)]">Active Engine</span>
+                    <span className="font-bold text-xs text-[var(--ink)]">Esyus Core Suite</span>
+                    <span className="text-[9px] font-mono text-[var(--c1)] font-semibold">Active Systems</span>
                   </div>
-                  <div className="text-[10px] text-[var(--muted)]">Counter #01 • GST Compliant</div>
+                  <div className="text-[10px] text-[var(--muted)]">Web • Android • Desktop • Cloud</div>
                   <div className="pt-1.5 border-t border-[var(--line)] flex justify-between font-mono text-xs font-bold text-[var(--ink)]">
-                    <span>Today's Invoices</span>
-                    <span>142 Bills</span>
+                    <span>Engineering Scope</span>
+                    <span className="text-emerald-700">All Services Live</span>
                   </div>
                 </div>
 
                 {/* Live Diagnostic */}
                 <div className="p-2.5 rounded-xl bg-white border border-[var(--line)] space-y-1 text-[10px]">
-                  <div className="text-[var(--muted)] font-mono">SQLite Local Database</div>
+                  <div className="text-[var(--muted)] font-mono">Bespoke Builds &amp; Ready Apps</div>
                   <div className="text-emerald-700 font-semibold flex items-center gap-1">
-                    <span>●</span> Encrypted & Verified
+                    <span>●</span> Zero Downtime Architecture
                   </div>
                 </div>
 
