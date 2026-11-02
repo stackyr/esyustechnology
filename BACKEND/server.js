@@ -35,7 +35,88 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// ==========================================
+// PRODUCTION-GRADE CORS & ORIGIN MANAGEMENT
+// ==========================================
+const parseOrigins = () => {
+  const list = [];
+  if (process.env.CLIENT_URL) list.push(process.env.CLIENT_URL);
+  if (process.env.FRONTEND_URL) list.push(process.env.FRONTEND_URL);
+  if (process.env.VERCEL_URL) {
+    const vUrl = process.env.VERCEL_URL.startsWith('http')
+      ? process.env.VERCEL_URL
+      : `https://${process.env.VERCEL_URL}`;
+    list.push(vUrl);
+  }
+  if (process.env.ALLOWED_ORIGINS) {
+    process.env.ALLOWED_ORIGINS.split(',').forEach(o => list.push(o.trim()));
+  }
+  return list.map(o => o.trim().replace(/\/+$/, '')).filter(Boolean);
+};
+
+const configuredOrigins = parseOrigins();
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // 1. Allow non-browser requests (mobile apps, server-to-server, curl, Postman)
+    if (!origin) return callback(null, true);
+
+    const cleanOrigin = origin.trim().replace(/\/+$/, '');
+
+    // 2. Exact match in user-configured origins
+    if (configuredOrigins.includes(cleanOrigin)) {
+      return callback(null, true);
+    }
+
+    // 3. Always allow standard localhost development ports
+    if (/^http:\/\/(localhost|127\.0\.0\.1|0\.0\.0\.0)(:\d+)?$/.test(cleanOrigin)) {
+      return callback(null, true);
+    }
+
+    // 4. Automatically allow all Vercel deployment domains (*.vercel.app)
+    // This allows production, staging, and every git branch/preview URL to work immediately without manual CORS updates
+    try {
+      const parsed = new URL(cleanOrigin);
+      if (parsed.hostname.endsWith('.vercel.app')) {
+        return callback(null, true);
+      }
+    } catch (e) {}
+
+    // 5. Allow custom production domains defined for Esyus
+    if (/^(https?:\/\/)?([a-z0-9-]+\.)*esyustechnology\.com$/i.test(cleanOrigin)) {
+      return callback(null, true);
+    }
+
+    // 6. If ALLOW_ALL_ORIGINS is enabled
+    if (process.env.ALLOW_ALL_ORIGINS === 'true') {
+      return callback(null, true);
+    }
+
+    // 7. Safe fallback to prevent accidental downtime on custom client domains
+    if (process.env.STRICT_CORS === 'true') {
+      console.warn(`[CORS] Blocked request from disallowed origin: ${origin}`);
+      return callback(new Error(`CORS policy blocked access from origin: ${origin}`));
+    }
+
+    // Allow and log origin
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+  allowedHeaders: [
+    'Content-Type',
+    'Authorization',
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'x-admin-key'
+  ],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  maxAge: 86400 // Cache preflight requests for 24 hours
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 // Initialize MongoDB Connection (MERN Stack)
@@ -550,11 +631,16 @@ app.post('/api/reset', requireAdminAuth, async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(` Esyus MERN Stack API Server running at http://localhost:${PORT}`);
-  console.log(` Database: MongoDB Mongoose (/models) + Express + Node.js`);
-  console.log(` REST API Base: http://localhost:${PORT}/api`);
-  console.log(` Health Check: http://localhost:${PORT}/api/health`);
-  console.log(`=======================================================`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(` Esyus MERN Stack API Server running at http://localhost:${PORT}`);
+    console.log(` Database: MongoDB Mongoose (/models) + Express + Node.js`);
+    console.log(` REST API Base: http://localhost:${PORT}/api`);
+    console.log(` Health Check: http://localhost:${PORT}/api/health`);
+    console.log(`=======================================================`);
+  });
+}
+
+export { app };
+export default app;

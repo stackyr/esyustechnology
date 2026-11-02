@@ -1,16 +1,47 @@
-// API Client Service for Frontend & Admin Panel
+// API Client Service for Frontend & Admin Panel (Production & Vercel Ready)
 const isHttps = typeof window !== 'undefined' && window.location.protocol === 'https:';
-const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const isLocalhost = typeof window !== 'undefined' && (
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1' ||
+  window.location.hostname === '0.0.0.0'
+);
 
-const API_BASE = import.meta.env.VITE_API_URL || (isLocalhost ? 'http://localhost:5000/api' : '/api');
+// Resolve production-ready API base URL
+function resolveApiBase() {
+  let envUrl = (import.meta.env.VITE_API_URL || '').trim();
 
-async function request(path, options = {}) {
-  if (isHttps && API_BASE.startsWith('http://')) {
-    // Avoid mixed-content blocking on secure hosting environments like Vercel
-    return { data: null };
+  if (envUrl) {
+    // Remove trailing slashes
+    envUrl = envUrl.replace(/\/+$/, '');
+
+    // Upgrade http to https on secure production origin (prevent browser mixed-content blocks)
+    if (isHttps && envUrl.startsWith('http://') && !isLocalhost) {
+      console.warn('[API] Upgrading insecure HTTP API URL to HTTPS for production:', envUrl);
+      envUrl = envUrl.replace(/^http:\/\//i, 'https://');
+    }
+
+    // Automatically append /api if user only supplied the base origin
+    if (!envUrl.endsWith('/api') && !envUrl.includes('/api/')) {
+      envUrl = `${envUrl}/api`;
+    }
+
+    return envUrl;
   }
 
-  const url = `${API_BASE}${path}`;
+  // Development localhost default
+  if (isLocalhost) {
+    return 'http://localhost:5000/api';
+  }
+
+  // Production fallback if VITE_API_URL was omitted (for reverse proxy or Vercel rewrites)
+  return '/api';
+}
+
+const API_BASE = resolveApiBase();
+
+async function request(path, options = {}) {
+  const cleanPath = path.startsWith('/') ? path : `/${path}`;
+  const url = `${API_BASE}${cleanPath}`;
   const defaultHeaders = {
     'Content-Type': 'application/json',
   };
