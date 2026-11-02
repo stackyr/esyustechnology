@@ -281,6 +281,14 @@ export function initHearthlyAnimations() {
       return (f.left + f.width / 2 - (s.left + s.width / 2)) / (s.width || 1);
     };
 
+    const videoEl = flood.querySelector('video');
+    const resumeVideo = () => {
+      if (videoEl && videoEl.paused) {
+        const p = videoEl.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      }
+    };
+
     const tl = gsap.timeline({
       defaults: { ease: 'none' },
       scrollTrigger: {
@@ -289,6 +297,11 @@ export function initHearthlyAnimations() {
         end: 'bottom bottom',
         scrub: 0.6,
         invalidateOnRefresh: true,
+        onEnter: resumeVideo,
+        onEnterBack: resumeVideo,
+        onUpdate: (self) => {
+          if (self.isActive) resumeVideo();
+        }
       },
     });
 

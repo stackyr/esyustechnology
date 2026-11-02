@@ -1,10 +1,84 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useData } from '../context/DataContext';
 
 export default function Hero({ onExploreServices, onViewApplications, onDownloadClick, dataVersion = 0 }) {
   const { brand, landingPage } = useData();
   const COMPANY_INFO = brand || {};
   const hero = landingPage?.hero || {};
+  const videoRef = useRef(null);
+
+  // Robust, uninterrupted video playback controller
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
+    const playVideo = () => {
+      if (video && video.paused) {
+        const p = video.play();
+        if (p && typeof p.catch === 'function') {
+          p.catch(() => {});
+        }
+      }
+    };
+
+    playVideo();
+
+    const handleEnded = () => {
+      video.currentTime = 0;
+      playVideo();
+    };
+
+    const handlePause = () => {
+      if (document.visibilityState === 'visible') {
+        setTimeout(playVideo, 120);
+      }
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          playVideo();
+        }
+      });
+    }, { threshold: [0, 0.15, 0.5] });
+
+    observer.observe(video);
+
+    const handleUserGesture = () => {
+      playVideo();
+      window.removeEventListener('click', handleUserGesture);
+      window.removeEventListener('touchstart', handleUserGesture);
+      window.removeEventListener('scroll', handleUserGesture);
+    };
+
+    window.addEventListener('click', handleUserGesture, { passive: true });
+    window.addEventListener('touchstart', handleUserGesture, { passive: true });
+    window.addEventListener('scroll', handleUserGesture, { passive: true });
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        playVideo();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    video.addEventListener('ended', handleEnded);
+    video.addEventListener('pause', handlePause);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('click', handleUserGesture);
+      window.removeEventListener('touchstart', handleUserGesture);
+      window.removeEventListener('scroll', handleUserGesture);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      video.removeEventListener('ended', handleEnded);
+      video.removeEventListener('pause', handlePause);
+    };
+  }, [hero.videoUrl]);
 
   return (
     <section id="home" className="hero" data-kind="hero" data-section="hero">
@@ -227,11 +301,22 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
         <div className="flood" data-flood>
           <div className="art g-night" role="img" aria-label={`${COMPANY_INFO.name} software video demonstration`}>
             <video
+              ref={videoRef}
               src={hero.videoUrl || "/demo-video.mp4?v=2"}
               autoPlay
               muted
               loop
               playsInline
+              preload="auto"
+              onEnded={(e) => {
+                e.target.currentTime = 0;
+                e.target.play().catch(() => {});
+              }}
+              onPause={(e) => {
+                if (document.visibilityState === 'visible') {
+                  e.target.play().catch(() => {});
+                }
+              }}
               className="full object-cover"
               style={{ filter: 'brightness(0.65)' }}
             />
