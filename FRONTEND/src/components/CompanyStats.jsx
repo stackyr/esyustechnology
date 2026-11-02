@@ -1,7 +1,9 @@
 import React from 'react';
-import { COMPANY_INFO } from '../data/companyData';
+import { useData } from '../context/DataContext';
 
 export default function CompanyStats({ dataVersion = 0 }) {
+  const { brand } = useData();
+  const COMPANY_INFO = brand || {};
   const bars = [
     { label: "Retail Billing & Offline Software", value: 38, tone: "tone-1", fill: "38%" },
     { label: "Wholesale Inventory & GST Reports", value: 27, tone: "tone-4", fill: "27%" },

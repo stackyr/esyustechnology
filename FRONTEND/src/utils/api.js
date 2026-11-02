@@ -8,15 +8,19 @@ const isLocalhost = typeof window !== 'undefined' && (
 
 // Resolve production-ready API base URL
 function resolveApiBase() {
+  // Development localhost default: always connect to local MERN Express server
+  if (isLocalhost) {
+    return 'http://localhost:5000/api';
+  }
+
   let envUrl = (import.meta.env.VITE_API_URL || '').trim();
 
-  if (envUrl) {
+  if (envUrl && !envUrl.includes('localhost')) {
     // Remove trailing slashes
     envUrl = envUrl.replace(/\/+$/, '');
 
     // Upgrade http to https on secure production origin (prevent browser mixed-content blocks)
-    if (isHttps && envUrl.startsWith('http://') && !isLocalhost) {
-      console.warn('[API] Upgrading insecure HTTP API URL to HTTPS for production:', envUrl);
+    if (isHttps && envUrl.startsWith('http://')) {
       envUrl = envUrl.replace(/^http:\/\//i, 'https://');
     }
 
@@ -26,11 +30,6 @@ function resolveApiBase() {
     }
 
     return envUrl;
-  }
-
-  // Development localhost default
-  if (isLocalhost) {
-    return 'http://localhost:5000/api';
   }
 
   // Production fallback if VITE_API_URL was omitted (for reverse proxy or Vercel rewrites)

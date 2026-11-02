@@ -1,7 +1,9 @@
 import React from 'react';
-import { FAQS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 
 export default function FAQSection({ onContactClick, dataVersion = 0 }) {
+  const { faqs: liveFaqs } = useData();
+  const currentFaqs = Array.isArray(liveFaqs) ? liveFaqs : [];
   return (
     <section id="faq" className="faq" data-sec="faq">
       <div className="wrap faq__in">
@@ -35,7 +37,7 @@ export default function FAQSection({ onContactClick, dataVersion = 0 }) {
 
         {/* Right Column: Q&A Accordion Items */}
         <div className="space-y-1" data-rules>
-          {FAQS.map((faq, idx) => (
+          {currentFaqs.map((faq, idx) => (
             <details className="qa" key={idx} open={idx === 0}>
               <summary>
                 <span>{faq.q}</span>

@@ -1,14 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 import { Clock, Download } from 'lucide-react';
 
 export default function Products({ onSelectProduct, onDownloadProduct, onViewAllPackages, onDownloadClick, dataVersion = 0 }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'desktop' | 'mobile'
-  const sec = LANDING_PAGE_SECTIONS?.productsSection || {};
+  const { products: liveProducts, landingPage } = useData();
+  const sec = landingPage?.productsSection || {};
+  const currentProducts = Array.isArray(liveProducts) ? liveProducts : [];
 
   // Build software items dynamically from PRODUCTS state with dataVersion reactivity
   const softwareItems = useMemo(() => {
-    return PRODUCTS.map((p, idx) => {
+    return currentProducts.map((p, idx) => {
       const isWindows = (p.platform || '').toLowerCase().includes('windows');
       const isAndroid = (p.platform || '').toLowerCase().includes('android');
 
@@ -35,7 +37,7 @@ export default function Products({ onSelectProduct, onDownloadProduct, onViewAll
         downloadUrl: p.downloadUrl || ''
       };
     });
-  }, [dataVersion]);
+  }, [currentProducts, dataVersion]);
 
   const allItems = softwareItems;
 

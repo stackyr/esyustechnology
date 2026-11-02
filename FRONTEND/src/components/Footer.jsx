@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { COMPANY_INFO, SERVICES, PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 import api from '../utils/api';
 
 export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin, onOpenDownloadsPage, dataVersion = 0 }) {
@@ -7,8 +7,10 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
   const [emailInput, setEmailInput] = useState('');
 
   // Live data dynamically bound to dataVersion
-  const activeProducts = useMemo(() => [...PRODUCTS], [dataVersion]);
-  const activeServices = useMemo(() => [...SERVICES], [dataVersion]);
+  const { brand, services: liveServices, products: liveProducts, landingPage } = useData();
+  const COMPANY_INFO = brand || {};
+  const activeProducts = useMemo(() => Array.isArray(liveProducts) ? liveProducts : [], [liveProducts, dataVersion]);
+  const activeServices = useMemo(() => Array.isArray(liveServices) ? liveServices : [], [liveServices, dataVersion]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -41,7 +43,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
           </svg>
 
           {(() => {
-            const contact = LANDING_PAGE_SECTIONS?.contact || {};
+            const contact = landingPage?.contact || {};
             return (
               <div>
                 <span className="fcta__eyebrow">{contact.footerCtaEyebrow || 'Enterprise Precision • Zero Cloud Latency'}</span>

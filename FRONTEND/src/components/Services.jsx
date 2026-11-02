@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { SERVICES, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 import { Clock } from 'lucide-react';
 
 const FALLBACK_PRESETS = [
@@ -62,11 +62,13 @@ const FALLBACK_PRESETS = [
 ];
 
 export default function Services({ onSelectService, onEnquireService, dataVersion = 0 }) {
-  const srvSec = LANDING_PAGE_SECTIONS?.servicesSection || {};
+  const { services: liveServices, landingPage } = useData();
+  const srvSec = landingPage?.servicesSection || {};
+  const currentServices = Array.isArray(liveServices) ? liveServices : [];
 
-  // Build live service cards dynamically from SERVICES database array
+  // Build live service cards dynamically from liveServices array
   const activeServices = useMemo(() => {
-    return SERVICES.map((srv, idx) => {
+    return currentServices.map((srv, idx) => {
       // Find matching preset by ID or index
       const matchedPreset = FALLBACK_PRESETS.find(p => p.id === srv.id) ||
                             FALLBACK_PRESETS[idx % FALLBACK_PRESETS.length];
@@ -124,7 +126,7 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
         isComingSoon: Boolean(srv.isComingSoon)
       };
     });
-  }, [dataVersion]);
+  }, [currentServices, dataVersion]);
 
   return (
     <section id="services" className="coll" data-kind="collections" data-section="services">

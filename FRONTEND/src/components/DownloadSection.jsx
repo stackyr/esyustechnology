@@ -1,14 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 import { Clock, Download, Search, X, ExternalLink } from 'lucide-react';
 
 export default function DownloadSection({ onDownloadApp, onOpenDownloadsPage, dataVersion = 0 }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'windows' | 'android'
   const [searchQuery, setSearchQuery] = useState('');
-  const sec = LANDING_PAGE_SECTIONS?.downloadSection || {};
+  const { products: liveProducts, landingPage } = useData();
+  const sec = landingPage?.downloadSection || {};
+  const currentApps = Array.isArray(liveProducts) ? liveProducts : [];
 
   const filteredApps = useMemo(() => {
-    return PRODUCTS.filter((app) => {
+    return currentApps.filter((app) => {
       if (filter === 'windows' && !(app.platform || '').toLowerCase().includes('windows')) return false;
       if (filter === 'android' && !(app.platform || '').toLowerCase().includes('android')) return false;
       if (searchQuery.trim()) {
@@ -22,7 +24,7 @@ export default function DownloadSection({ onDownloadApp, onOpenDownloadsPage, da
       }
       return true;
     });
-  }, [filter, searchQuery, dataVersion]);
+  }, [filter, searchQuery, currentApps, dataVersion]);
 
   return (
     <section id="download" className="pricing" data-sec="download">
@@ -54,7 +56,7 @@ export default function DownloadSection({ onDownloadApp, onOpenDownloadsPage, da
                 aria-pressed={filter === 'all'}
                 onClick={() => setFilter('all')}
               >
-                All Packages ({PRODUCTS.length})
+                All Packages ({currentApps.length})
               </button>
               <button
                 type="button"

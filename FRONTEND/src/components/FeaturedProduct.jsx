@@ -1,12 +1,16 @@
 import React, { useState, useMemo } from 'react';
-import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 import { Clock, Download } from 'lucide-react';
 
 export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick, dataVersion = 0 }) {
+  const { products: liveProducts, brand, landingPage } = useData();
+  const fp = landingPage?.featuredProduct || {};
+  const companyName = brand?.name || 'Esyus Technology';
+
   const financeFlow = useMemo(() => {
-    return PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0] || {};
-  }, [dataVersion]);
-  const fp = LANDING_PAGE_SECTIONS?.featuredProduct || {};
+    const list = Array.isArray(liveProducts) ? liveProducts : [];
+    return list.find((p) => p.id === 'finance-flow') || list[0] || {};
+  }, [liveProducts, dataVersion]);
 
   // Interactive Live Invoice Simulator State
   const [customerName, setCustomerName] = useState('Sharma General Store');
@@ -41,14 +45,14 @@ export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick
             )}
           </h2>
           <p className="lead">
-            {fp.lead || `The premier offline-first billing solution designed by ${COMPANY_INFO.name}. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.`}
+            {fp.lead || `The premier offline-first billing solution designed by ${companyName}. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.`}
           </p>
 
           {/* Interactive Calculator Input Controls */}
           <div className="p-5 rounded-[var(--r)] bg-[var(--soft)] border border-[var(--line)] w-full space-y-3.5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-[var(--ink)]">
-                ⚡ Live Bill Simulator ({financeFlow.name} v{financeFlow.version})
+                ⚡ Live Bill Simulator ({financeFlow.name || 'Finance Flow'} {financeFlow.version ? `v${financeFlow.version}` : ''})
               </span>
               <button
                 type="button"

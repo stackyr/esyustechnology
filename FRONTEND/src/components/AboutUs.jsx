@@ -1,8 +1,10 @@
 import React from 'react';
-import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 
 export default function AboutUs({ onContactClick, dataVersion = 0 }) {
-  const about = LANDING_PAGE_SECTIONS?.about || {};
+  const { brand, landingPage } = useData();
+  const COMPANY_INFO = brand || {};
+  const about = landingPage?.about || {};
 
   const domains = [
     {

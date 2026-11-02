@@ -14,7 +14,7 @@ import {
   FileCode2,
   RefreshCw
 } from 'lucide-react';
-import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 
 export default function DownloadsPage({ 
   onBackToHome, 
@@ -24,7 +24,9 @@ export default function DownloadsPage({
   onRefresh,
   isRefreshing = false
 }) {
-  const dlSec = LANDING_PAGE_SECTIONS?.downloadSection || {};
+  const { products: liveProducts, landingPage, reloadAll } = useData();
+  const dlSec = landingPage?.downloadSection || {};
+  const currentProducts = Array.isArray(liveProducts) ? liveProducts : [];
   const [searchQuery, setSearchQuery] = useState('');
   const [platformFilter, setPlatformFilter] = useState('all'); // 'all' | 'windows' | 'android'
 
@@ -37,7 +39,7 @@ export default function DownloadsPage({
 
   // Filter software packages based on live search query and platform tab
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((product) => {
+    return currentProducts.filter((product) => {
       // Platform filter
       const platformLower = (product.platform || '').toLowerCase();
       const isWindows = platformLower.includes('windows') || platformLower.includes('desktop');
@@ -70,11 +72,11 @@ export default function DownloadsPage({
         chips.includes(q)
       );
     });
-  }, [searchQuery, platformFilter, dataVersion]);
+  }, [searchQuery, platformFilter, currentProducts, dataVersion]);
 
-  const totalCount = useMemo(() => PRODUCTS.length, [dataVersion]);
-  const windowsCount = useMemo(() => PRODUCTS.filter(p => (p.platform || '').toLowerCase().includes('windows')).length, [dataVersion]);
-  const androidCount = useMemo(() => PRODUCTS.filter(p => (p.platform || '').toLowerCase().includes('android')).length, [dataVersion]);
+  const totalCount = useMemo(() => currentProducts.length, [currentProducts, dataVersion]);
+  const windowsCount = useMemo(() => currentProducts.filter(p => (p.platform || '').toLowerCase().includes('windows')).length, [currentProducts, dataVersion]);
+  const androidCount = useMemo(() => currentProducts.filter(p => (p.platform || '').toLowerCase().includes('android')).length, [currentProducts, dataVersion]);
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] pt-24 pb-20">

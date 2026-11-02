@@ -1,8 +1,10 @@
 import React from 'react';
-import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 
 export default function WhyChooseUs({ onContactClick, dataVersion = 0 }) {
-  const wcu = LANDING_PAGE_SECTIONS?.whyChooseUs || {};
+  const { brand, landingPage } = useData();
+  const COMPANY_INFO = brand || {};
+  const wcu = landingPage?.whyChooseUs || {};
   const pillarImages = wcu.pillarImages || [];
 
   const pillars = [

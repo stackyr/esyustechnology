@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { COMPANY_INFO, PRODUCTS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 import { lenisScrollTo } from '../utils/hearthlyAnimations';
 
 export default function Navbar({
@@ -10,6 +10,9 @@ export default function Navbar({
   onNavigateSection,
   dataVersion = 0
 }) {
+  const { brand, products: liveProducts } = useData();
+  const COMPANY_INFO = brand || {};
+  const PRODUCTS = Array.isArray(liveProducts) ? liveProducts : [];
   const [isSolid, setIsSolid] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

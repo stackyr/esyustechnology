@@ -1,8 +1,10 @@
 import React from 'react';
-import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 
 export default function Hero({ onExploreServices, onViewApplications, onDownloadClick, dataVersion = 0 }) {
-  const hero = LANDING_PAGE_SECTIONS.hero;
+  const { brand, landingPage } = useData();
+  const COMPANY_INFO = brand || {};
+  const hero = landingPage?.hero || {};
 
   return (
     <section id="home" className="hero" data-kind="hero" data-section="hero">
@@ -38,7 +40,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           <a className="crew" href="#team" title={`Leadership: ${COMPANY_INFO.founder} & ${COMPANY_INFO.coFounder} — Kolkata, WB`}>
             <span className="crew__img">
               <img
-                src={hero.founderPhoto || LANDING_PAGE_SECTIONS.about.founderPhoto}
+                src={hero.founderPhoto || landingPage?.about?.founderPhoto}
                 alt={`${COMPANY_INFO.founder} — Founder`}
               />
             </span>

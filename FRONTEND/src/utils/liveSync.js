@@ -12,8 +12,16 @@ import { applyDynamicData } from '../data/companyData';
 
 // Determine backend socket host URL
 export function getSocketUrl() {
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    // Development localhost or local network IP: always use local port 5000
+    if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') {
+      return 'http://localhost:5000';
+    }
+  }
+
   const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL;
-  if (envUrl) {
+  if (envUrl && !envUrl.includes('localhost')) {
     try {
       const parsed = new URL(envUrl);
       return parsed.origin;
@@ -24,13 +32,8 @@ export function getSocketUrl() {
 
   if (typeof window !== 'undefined') {
     const host = window.location.hostname;
-    // Development localhost or local network IP
-    if (host === 'localhost' || host === '127.0.0.1' || host === '0.0.0.0') {
-      return 'http://localhost:5000';
-    }
-    // Production on custom domain or Vercel
     if (host.includes('esyustechnology.com')) {
-      return 'https://esyustechnology-eight.vercel.app';
+      return 'https://esyustechnology-byj7.vercel.app';
     }
     return window.location.origin;
   }

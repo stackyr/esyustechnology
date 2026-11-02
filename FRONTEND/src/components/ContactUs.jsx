@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { COMPANY_INFO, SERVICES, PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 import api from '../utils/api';
 
 export default function ContactUs({ preselectedSubject, dataVersion = 0 }) {
-  const contactSec = LANDING_PAGE_SECTIONS?.contact || {};
+  const { brand, services: liveServices, products: liveProducts, landingPage } = useData();
+  const COMPANY_INFO = brand || {};
+  const SERVICES = Array.isArray(liveServices) ? liveServices : [];
+  const PRODUCTS = Array.isArray(liveProducts) ? liveProducts : [];
+  const contactSec = landingPage?.contact || {};
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',

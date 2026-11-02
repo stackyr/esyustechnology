@@ -1,7 +1,10 @@
 import React from 'react';
-import { TEAM_MEMBERS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import { TEAM_MEMBERS } from '../data/companyData';
+import { useData } from '../context/DataContext';
 
 export default function Team({ onContactClick, dataVersion = 0 }) {
+  const { brand, landingPage } = useData();
+  const COMPANY_INFO = brand || {};
   const tones = ['tone-3', 'tone-2', 'tone-4', 'tone-1'];
   const arts = ['g-sage', 'g-sky', 'g-amber', 'g-ember'];
 
@@ -34,8 +37,8 @@ export default function Team({ onContactClick, dataVersion = 0 }) {
               <figure className="person__photo tab-l">
                 <div className={`art ${art}`} role="img" aria-label={`Portrait of ${displayName}`}>
                   {(() => {
-                    const hero = LANDING_PAGE_SECTIONS?.hero || {};
-                    const about = LANDING_PAGE_SECTIONS?.about || {};
+                    const hero = landingPage?.hero || {};
+                    const about = landingPage?.about || {};
                     const avatarSrc = idx === 0
                       ? (hero.founderPhoto || about.founderPhoto || member.avatar)
                       : idx === 1

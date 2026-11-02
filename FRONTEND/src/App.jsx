@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { AlertCircle, RefreshCw, Database, Radio, CheckCircle2 } from 'lucide-react';
 import SvgSprite from './components/SvgSprite';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -26,12 +26,26 @@ import LegalModal from './components/LegalModal';
 // Admin Panel & API Integration
 import AdminPanel from './admin/AdminPanel';
 import AdminLogin from './admin/AdminLogin';
-import api from './utils/api';
-import liveSync from './utils/liveSync';
-import { PRODUCTS, applyDynamicData } from './data/companyData';
+import { useData } from './context/DataContext';
 import { initHearthlyAnimations, lenisScrollTo } from './utils/hearthlyAnimations';
 
 export default function App() {
+  const {
+    brand,
+    landingPage,
+    services,
+    products,
+    faqs,
+    isDatabaseConnected,
+    isSocketConnected,
+    isLoading,
+    loadingStage,
+    loadingStatusText,
+    connectionError,
+    dataVersion,
+    reloadAll
+  } = useData();
+
   // Admin View & Authentication State
   const [isAdmin, setIsAdmin] = useState(() => {
     return typeof window !== 'undefined' && window.location.hash.toLowerCase().includes('admin');
@@ -42,11 +56,7 @@ export default function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
     return typeof window !== 'undefined' && !!localStorage.getItem('esyus_admin_token');
   });
-  const [dataVersion, setDataVersion] = useState(0);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [loadingStage, setLoadingStage] = useState('connecting'); // 'connecting' | 'fetching' | 'ready' | 'dismissing'
-  const [loadingStatusText, setLoadingStatusText] = useState('Connecting to Esyus Production Database...');
-  const [isRefreshing, setIsRefreshing] = useState(false);
+
   // Modal states
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
@@ -97,88 +107,11 @@ export default function App() {
   // Preselected subject in Contact Us form
   const [contactSubject, setContactSubject] = useState('Finance Flow Desktop Billing');
 
-  // Load Dynamic Data from Backend API
-  const loadDynamicData = useCallback(async (showRefreshingState = false) => {
-    if (showRefreshingState) setIsRefreshing(true);
-    setLoadingStage('fetching');
-    setLoadingStatusText('Synchronizing MongoDB catalog & customizations...');
-    try {
-      const [brandRes, srvRes, prodRes, faqRes, landingRes] = await Promise.allSettled([
-        api.getBrand(),
-        api.getServices(),
-        api.getProducts(),
-        api.getFaqs(),
-        api.getLandingPage(),
-      ]);
-
-      const brand = brandRes.status === 'fulfilled' ? brandRes.value?.data : null;
-      const services = srvRes.status === 'fulfilled' ? srvRes.value?.data : null;
-      const products = prodRes.status === 'fulfilled' ? prodRes.value?.data : null;
-      const faqs = faqRes.status === 'fulfilled' ? faqRes.value?.data : null;
-      const landingPage = landingRes.status === 'fulfilled' ? landingRes.value?.data : null;
-
-      if (brand || services || products || faqs || landingPage) {
-        applyDynamicData({ brand, services, products, faqs, landingPage });
-        setDataVersion((v) => v + 1);
-        setLoadingStage('ready');
-        setLoadingStatusText('All records live from MongoDB Atlas');
-        setTimeout(() => {
-          if (typeof window !== 'undefined' && window.ScrollTrigger) {
-            window.ScrollTrigger.refresh();
-          }
-        }, 120);
-      }
-    } catch (err) {
-      console.warn('[App] Backend load warning:', err.message);
-    } finally {
-      setIsRefreshing(false);
-    }
-  }, []);
-
-  // Real-time live synchronization via WebSockets & Cross-Tab Broadcast
-  useEffect(() => {
-    liveSync.initSocket();
-
-    const unsub = liveSync.subscribe(({ event, payload, source }) => {
-      console.log(`[App] Live sync received: ${event} from ${source}`);
-      setDataVersion((v) => v + 1);
-
-      // Smoothly refresh ScrollTrigger if structural cards or section heights changed
-      setTimeout(() => {
-        if (typeof window !== 'undefined' && window.ScrollTrigger) {
-          window.ScrollTrigger.refresh();
-        }
-      }, 150);
-    });
-
-    return () => unsub();
-  }, []);
-
-  // First fetch data from backend before showing the page (avoids stale/default data)
-  useEffect(() => {
-    let isMounted = true;
-    setLoadingStage('connecting');
-    setLoadingStatusText('Connecting to MongoDB Atlas...');
-
-    loadDynamicData().finally(() => {
-      if (isMounted) {
-        setTimeout(() => {
-          if (isMounted) setIsInitialLoading(false);
-        }, 300);
-      }
-    });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [loadDynamicData]);
-
   // Listen to hash changes (#admin, #downloads) and keyboard shortcut (Ctrl+Shift+A)
   useEffect(() => {
     const handleHashChange = () => {
       setIsAdmin(window.location.hash.toLowerCase().includes('admin'));
       setIsDownloadsPage(window.location.hash.toLowerCase().includes('downloads'));
-      loadDynamicData(true);
     };
 
     const handleKeyDown = (e) => {
@@ -203,7 +136,7 @@ export default function App() {
 
   // Initialize Hearthly GSAP & Lenis smooth scroll engine (only on landing page)
   useEffect(() => {
-    if (isAdmin || isDownloadsPage || isInitialLoading) return;
+    if (isAdmin || isDownloadsPage || isLoading || !isDatabaseConnected) return;
     let cleanup = null;
     const timeout = setTimeout(() => {
       cleanup = initHearthlyAnimations();
@@ -213,7 +146,7 @@ export default function App() {
       clearTimeout(timeout);
       if (typeof cleanup === 'function') cleanup();
     };
-  }, [isAdmin, isDownloadsPage, isInitialLoading]);
+  }, [isAdmin, isDownloadsPage, isLoading, isDatabaseConnected]);
 
   // Refresh ScrollTrigger whenever live data changes so triggers adjust to content heights
   useEffect(() => {
@@ -235,7 +168,6 @@ export default function App() {
     setIsDownloadsPage(true);
     window.location.hash = '#downloads';
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    loadDynamicData(true);
   };
 
   const handleBackToHome = () => {
@@ -244,7 +176,6 @@ export default function App() {
       history.pushState(null, '', window.location.pathname);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    loadDynamicData();
   };
 
   const handleEnquireService = (serviceTitle) => {
@@ -265,7 +196,7 @@ export default function App() {
   };
 
   const handleDownloadFinanceFlow = () => {
-    const ff = PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0];
+    const ff = products.find((p) => p.id === 'finance-flow') || products[0];
     setDownloadingProduct(ff);
   };
 
@@ -273,7 +204,7 @@ export default function App() {
   const handleAdminLoginSuccess = () => {
     setIsAdminAuthenticated(true);
     setIsAdmin(true);
-    loadDynamicData();
+    reloadAll();
   };
 
   const handleAdminLogout = () => {
@@ -282,24 +213,27 @@ export default function App() {
     setIsAdminAuthenticated(false);
     setIsAdmin(false);
     window.location.hash = '';
-    loadDynamicData();
+    reloadAll();
   };
 
-  // Initial luxury preloader: First load live data from backend before showing the site
-  if (isInitialLoading && !isAdmin) {
+  // =========================================================================
+  // STRICT LOADING GATE: Website will NEVER open until MongoDB Atlas & Sockets connect!
+  // =========================================================================
+  if (!isAdmin && (isLoading || (!isDatabaseConnected && !connectionError))) {
     return (
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg)] text-[var(--ink)] select-none">
         {/* SVG Grain Overlay */}
         <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay bg-[var(--grain)]" />
         
         <div className="relative flex flex-col items-center space-y-5 text-center p-6 max-w-sm">
-          <div className="w-16 h-16 rounded-3xl bg-[var(--dark)] flex items-center justify-center shadow-xl shadow-[var(--c1)]/20 animate-pulse">
+          <div className="w-16 h-16 rounded-3xl bg-[var(--dark)] flex items-center justify-center shadow-xl shadow-[var(--c1)]/20 animate-pulse relative">
             <span className="font-serif italic text-3xl font-bold text-[var(--c1)]">E</span>
+            <div className="absolute -inset-1 rounded-3xl border border-[var(--c1)]/40 animate-ping pointer-events-none" />
           </div>
 
           <div className="space-y-1.5">
             <h1 className="text-xl font-bold tracking-tight text-[var(--ink)]">
-              Esyus <em className="s font-normal">Technology</em>
+              {brand?.name || 'Esyus Technology'}
             </h1>
             <p className="text-xs text-[var(--muted)] font-mono flex items-center justify-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[var(--c1)] animate-ping" />
@@ -307,14 +241,75 @@ export default function App() {
             </p>
           </div>
 
-          <div className="w-48 h-1.5 bg-[var(--line)] rounded-full overflow-hidden relative shadow-inner">
+          <div className="w-52 h-1.5 bg-[var(--line)] rounded-full overflow-hidden relative shadow-inner">
             <div className="h-full bg-gradient-to-r from-[var(--c1)] via-[var(--c3)] to-[var(--c1)] w-1/2 rounded-full animate-marquee" />
           </div>
 
-          <div className="text-[10px] font-mono text-[var(--muted)] uppercase tracking-widest">
-            {loadingStage === 'connecting' && 'Step 1/3: Establishing Socket Link'}
-            {loadingStage === 'fetching' && 'Step 2/3: Live MongoDB Atlas Sync'}
-            {loadingStage === 'ready' && 'Step 3/3: Database Verified'}
+          <div className="flex flex-col items-center gap-1 pt-1">
+            <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--muted)] uppercase tracking-wider">
+              <Database className="w-3 h-3 text-[var(--c1)]" />
+              <span>MongoDB Atlas Cloud Live Link</span>
+            </div>
+            <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--muted)] uppercase tracking-wider">
+              <Radio className="w-3 h-3 text-emerald-600 animate-pulse" />
+              <span>Real-Time WebSocket Engine Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // CONNECTION ERROR GATE: If MongoDB fails, display dedicated reconnection screen
+  // =========================================================================
+  if (!isAdmin && connectionError && !isDatabaseConnected) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg)] text-[var(--ink)] p-6 select-none">
+        <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay bg-[var(--grain)]" />
+        
+        <div className="relative max-w-md w-full p-8 rounded-3xl bg-white border border-red-200 shadow-2xl space-y-5 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-600 shadow-sm">
+            <AlertCircle className="w-7 h-7" />
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-red-100 text-red-800 border border-red-200 uppercase tracking-wider">
+              Database Connection Offline
+            </span>
+            <h2 className="text-xl font-bold text-[var(--ink)]">
+              Connecting to MongoDB Atlas...
+            </h2>
+            <p className="text-xs text-[var(--muted)] leading-relaxed">
+              The website requires an active cloud connection to MongoDB Atlas to stream live services, release packages, and customizations. Stale local fallbacks are strictly disabled.
+            </p>
+          </div>
+
+          {connectionError && (
+            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-[11px] font-mono text-stone-600 text-left overflow-x-auto">
+              <code>{connectionError}</code>
+            </div>
+          )}
+
+          <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              type="button"
+              onClick={() => reloadAll(true)}
+              className="px-6 py-2.5 rounded-xl bg-[var(--c1)] hover:bg-[#d64b22] text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <RefreshCw className="w-4 h-4 animate-spin" />
+              <span>Retry Connection Now</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                window.location.hash = '#admin';
+                setIsAdmin(true);
+              }}
+              className="px-4 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] hover:bg-stone-100 text-xs font-semibold text-[var(--ink)] cursor-pointer"
+            >
+              Open Admin Suite
+            </button>
           </div>
         </div>
       </div>
@@ -328,70 +323,17 @@ export default function App() {
         onBackToSite={() => {
           window.location.hash = '';
           setIsAdmin(false);
-          loadDynamicData();
+          reloadAll();
         }}
         onLogout={handleAdminLogout}
-        onDataChanged={loadDynamicData}
+        onDataChanged={reloadAll}
       />
     );
   }
 
   return (
     <div className="min-h-screen selection:bg-[var(--c1)] selection:text-white relative">
-            {/* Full-Screen Live Database Preloader Overlay */}
-      {isInitialLoading && !isAdmin && (
-        <div
-          className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg)] text-[var(--ink)] select-none transition-opacity duration-500 ${
-            loadingStage === 'dismissing' ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`}
-        >
-          <div className="relative flex flex-col items-center space-y-6 text-center p-8 max-w-md w-full">
-            <div className="w-20 h-20 rounded-3xl bg-[var(--dark)] flex items-center justify-center shadow-2xl shadow-[var(--c1)]/20 border border-white/10 relative">
-              <span className="font-serif italic text-4xl font-bold text-[var(--c1)]">E</span>
-              <div className="absolute -inset-1 rounded-3xl border border-[var(--c1)]/30 animate-pulse pointer-events-none" />
-            </div>
-
-            <div className="space-y-1.5">
-              <h1 className="text-2xl font-bold tracking-tight text-[var(--ink)]">
-                Esyus <em className="s font-normal">Technology</em>
-              </h1>
-              <p className="text-xs text-[var(--muted)] font-mono">
-                Smart Software Solutions &bull; Enterprise Architecture
-              </p>
-            </div>
-
-            <div className="w-full flex flex-col items-center gap-3">
-              <div
-                className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono font-medium border transition-all duration-300 ${
-                  loadingStage === 'ready'
-                    ? 'bg-emerald-500/15 text-emerald-800 border-emerald-500/30'
-                    : 'bg-[var(--soft)] text-[var(--ink)]/80 border-[var(--line)]'
-                }`}
-              >
-                {loadingStage === 'ready' ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 animate-bounce" />
-                ) : (
-                  <span className="w-2 h-2 rounded-full bg-[var(--c1)] animate-ping" />
-                )}
-                <span>{loadingStatusText}</span>
-              </div>
-
-              <div className="w-56 h-1.5 bg-[var(--line)]/60 rounded-full overflow-hidden relative">
-                <div
-                  className={`h-full bg-gradient-to-r from-[var(--c1)] via-[var(--c3)] to-[var(--c1)] rounded-full transition-all duration-500 ${
-                    loadingStage === 'ready'
-                      ? 'w-full'
-                      : loadingStage === 'fetching'
-                      ? 'w-4/5 animate-pulse'
-                      : 'w-2/5 animate-pulse'
-                  }`}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
+      
       {/* SVG Sprite Definitions for Code Art & Symbols */}
       <SvgSprite />
       
@@ -419,8 +361,6 @@ export default function App() {
         {isDownloadsPage ? (
           <DownloadsPage
             dataVersion={dataVersion}
-            isRefreshing={isRefreshing}
-            onRefresh={() => loadDynamicData(true)}
             onBackToHome={handleBackToHome}
             onSelectProduct={(product) => setSelectedProduct(product)}
             onDownloadApp={handleDownloadAppDirectly}
@@ -460,11 +400,11 @@ export default function App() {
               onDownloadClick={handleOpenDownloadsPage}
             />
 
-            {/* 06. Featured Product — Finance Flow (Desktop Billing, GST Invoices, 100% Offline) */}
+            {/* 06. Featured Product — Finance Flow */}
             <FeaturedProduct
               dataVersion={dataVersion}
-              onDownloadFinanceFlow={() => handleOpenDownloadsPage(PRODUCTS[0])}
-              onDownloadClick={(prod) => handleOpenDownloadsPage(prod || PRODUCTS[0])}
+              onDownloadFinanceFlow={handleDownloadFinanceFlow}
+              onDownloadClick={(prod) => handleOpenDownloadsPage(prod || products[0])}
             />
 
             {/* 07. Why Choose Us */}
@@ -473,7 +413,7 @@ export default function App() {
               onContactClick={handleContactClick}
             />
 
-            {/* 08. Our Team (Founder Milan Mandal & Co-founder Suman Raptan) */}
+            {/* 08. Our Team */}
             <Team
               dataVersion={dataVersion}
               onContactClick={handleContactClick}
@@ -562,7 +502,7 @@ export default function App() {
         />
       )}
 
-      {/* Admin Authentication Modal: mounts seamlessly on top of landing page with silky entry & exit transition */}
+      {/* Admin Authentication Modal */}
       {isAdmin && !isAdminAuthenticated && (
         <AdminLogin
           onLoginSuccess={handleAdminLoginSuccess}
