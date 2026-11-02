@@ -1280,17 +1280,17 @@ export default function CustomizationTab({
       )}
 
       {/* Sticky Bottom Save Bar */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-[var(--line)] shadow-xl flex items-center justify-between z-30 max-w-7xl mx-auto rounded-t-2xl">
+      <div className="sticky bottom-4 z-20 mt-8 p-3.5 sm:p-4 bg-white/95 backdrop-blur-md border border-[var(--line)] shadow-xl rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>All modifications save directly to the MongoDB backend and reflect live across the site.</span>
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+          <span className="text-[11px] sm:text-xs">All modifications save directly to the MongoDB backend and reflect live across the site.</span>
         </div>
 
         <button
           type="button"
           onClick={handleSaveAll}
           disabled={isSaving}
-          className={`px-6 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer ${
+          className={`w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 ${
             saveSuccess
               ? 'bg-emerald-600 text-white'
               : 'bg-[var(--c1)] hover:bg-[#d64b22] text-white'
