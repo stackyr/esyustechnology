@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, HelpCircle, X, Check } from 'lucide-react';
+import { Plus, Edit2, Trash2, RefreshCw, HelpCircle, X, Check } from 'lucide-react';
 
-export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq }) {
+export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq, onRefresh, isRefreshing }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingFaq, setEditingFaq] = useState(null);
 
@@ -30,7 +30,8 @@ export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq 
     if (!form.q.trim() || !form.a.trim()) return;
 
     if (editingFaq) {
-      onUpdateFaq(editingFaq.id || editingFaq._index, { q: form.q, a: form.a });
+      const targetId = editingFaq._id || editingFaq.id || editingFaq._index;
+      onUpdateFaq(targetId, { q: form.q, a: form.a });
     } else {
       onAddFaq({ q: form.q, a: form.a });
     }
@@ -54,7 +55,21 @@ export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq 
           </p>
         </div>
 
-        <button
+        <div className="flex items-center gap-2.5 flex-wrap">
+          {onRefresh && (
+            <button
+              type="button"
+              onClick={onRefresh}
+              disabled={isRefreshing}
+              className="px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] hover:bg-stone-100 text-xs font-semibold text-[var(--ink)] transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              title="Reload FAQ knowledge base live from MongoDB Atlas"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-[var(--c1)]' : 'text-stone-500'}`} />
+              <span>{isRefreshing ? 'Syncing...' : 'Refresh'}</span>
+            </button>
+          )}
+
+          <button
           type="button"
           onClick={openAddModal}
           className="px-4 py-2 rounded-xl bg-[var(--c1)] hover:bg-[#d65a2f] text-white text-xs font-bold transition-all shadow-sm cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap"
@@ -62,6 +77,7 @@ export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq 
           <Plus className="w-4 h-4" />
           <span>Add New FAQ</span>
         </button>
+        </div>
       </div>
 
       {/* FAQ Items List */}

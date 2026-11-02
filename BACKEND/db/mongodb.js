@@ -481,16 +481,20 @@ export async function createServiceData(srv) {
 export async function updateServiceData(id, updates) {
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    const updated = await Service.findOneAndUpdate({ id }, updates, { new: true }).lean();
+    let query = { id };
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      query = { $or: [{ id }, { _id: id }] };
+    }
+    const updated = await Service.findOneAndUpdate(query, updates, { new: true }).lean();
     if (updated) {
       const db = getDB();
-      db.services = (db.services || []).map(s => s.id === id ? { ...s, ...updates } : s);
+      db.services = (db.services || []).map(s => (s.id === id || s._id === id || String(s._id) === String(id)) ? { ...s, ...updates } : s);
       saveDB(db);
       return updated;
     }
   }
   const db = getDB();
-  const idx = (db.services || []).findIndex(s => s.id === id);
+  const idx = (db.services || []).findIndex(s => s.id === id || s._id === id || String(s._id) === String(id));
   if (idx === -1) return null;
   db.services[idx] = { ...db.services[idx], ...updates };
   saveDB(db);
@@ -500,10 +504,14 @@ export async function updateServiceData(id, updates) {
 export async function deleteServiceData(id) {
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    await Service.deleteOne({ id });
+    let query = { id };
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      query = { $or: [{ id }, { _id: id }] };
+    }
+    await Service.deleteOne(query);
   }
   const db = getDB();
-  db.services = (db.services || []).filter(s => s.id !== id);
+  db.services = (db.services || []).filter(s => s.id !== id && s._id !== id && String(s._id) !== String(id));
   saveDB(db);
   return true;
 }
@@ -535,16 +543,20 @@ export async function createProductData(prod) {
 export async function updateProductData(id, updates) {
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    const updated = await Product.findOneAndUpdate({ id }, updates, { new: true }).lean();
+    let query = { id };
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      query = { $or: [{ id }, { _id: id }] };
+    }
+    const updated = await Product.findOneAndUpdate(query, updates, { new: true }).lean();
     if (updated) {
       const db = getDB();
-      db.products = (db.products || []).map(p => p.id === id ? { ...p, ...updates } : p);
+      db.products = (db.products || []).map(p => (p.id === id || p._id === id || String(p._id) === String(id)) ? { ...p, ...updates } : p);
       saveDB(db);
       return updated;
     }
   }
   const db = getDB();
-  const idx = (db.products || []).findIndex(p => p.id === id);
+  const idx = (db.products || []).findIndex(p => p.id === id || p._id === id || String(p._id) === String(id));
   if (idx === -1) return null;
   db.products[idx] = { ...db.products[idx], ...updates };
   saveDB(db);
@@ -554,10 +566,14 @@ export async function updateProductData(id, updates) {
 export async function deleteProductData(id) {
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    await Product.deleteOne({ id });
+    let query = { id };
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      query = { $or: [{ id }, { _id: id }] };
+    }
+    await Product.deleteOne(query);
   }
   const db = getDB();
-  db.products = (db.products || []).filter(p => p.id !== id);
+  db.products = (db.products || []).filter(p => p.id !== id && p._id !== id && String(p._id) !== String(id));
   saveDB(db);
   return true;
 }
@@ -589,16 +605,20 @@ export async function createFaqData(faq) {
 export async function updateFaqData(id, updates) {
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    const updated = await Faq.findOneAndUpdate({ id }, updates, { new: true }).lean();
+    let query = { id };
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      query = { $or: [{ id }, { _id: id }] };
+    }
+    const updated = await Faq.findOneAndUpdate(query, updates, { new: true }).lean();
     if (updated) {
       const db = getDB();
-      db.faqs = (db.faqs || []).map(f => (f.id === id || f.id === `faq-${id}`) ? { ...f, ...updates } : f);
+      db.faqs = (db.faqs || []).map(f => (f.id === id || f._id === id || String(f._id) === String(id) || f.id === `faq-${id}`) ? { ...f, ...updates } : f);
       saveDB(db);
       return updated;
     }
   }
   const db = getDB();
-  const idx = (db.faqs || []).findIndex(f => f.id === id || f.id === `faq-${id}`);
+  const idx = (db.faqs || []).findIndex(f => f.id === id || f._id === id || String(f._id) === String(id) || f.id === `faq-${id}`);
   if (idx === -1) return null;
   db.faqs[idx] = { ...db.faqs[idx], ...updates };
   saveDB(db);
@@ -608,10 +628,14 @@ export async function updateFaqData(id, updates) {
 export async function deleteFaqData(id) {
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    await Faq.deleteOne({ id });
+    let query = { id };
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      query = { $or: [{ id }, { _id: id }] };
+    }
+    await Faq.deleteOne(query);
   }
   const db = getDB();
-  db.faqs = (db.faqs || []).filter(f => f.id !== id && f.id !== `faq-${id}`);
+  db.faqs = (db.faqs || []).filter(f => f.id !== id && f._id !== id && String(f._id) !== String(id) && f.id !== `faq-${id}`);
   saveDB(db);
   return true;
 }

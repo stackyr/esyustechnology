@@ -323,7 +323,10 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleUpdateService = async (id, serviceData) => {
     setRefreshingSection('services');
     try {
-      await api.updateService(id, serviceData);
+      const res = await api.updateService(id, serviceData);
+      if (res && res.data) {
+        setServices((prev) => prev.map((s) => (s.id === id || s._id === id || String(s._id) === String(id) ? { ...s, ...res.data } : s)));
+      }
       const srvRes = await api.getServices();
       if (srvRes && srvRes.data) {
         setServices(srvRes.data);
@@ -341,6 +344,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleDeleteService = async (id) => {
     setRefreshingSection('services');
     try {
+      setServices((prev) => prev.filter((s) => s.id !== id && s._id !== id && String(s._id) !== String(id)));
       await api.deleteService(id);
       const srvRes = await api.getServices();
       if (srvRes && srvRes.data) {
@@ -380,7 +384,10 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleUpdateProduct = async (id, productData) => {
     setRefreshingSection('products');
     try {
-      await api.updateProduct(id, productData);
+      const res = await api.updateProduct(id, productData);
+      if (res && res.data) {
+        setProducts((prev) => prev.map((p) => (p.id === id || p._id === id || String(p._id) === String(id) ? { ...p, ...res.data } : p)));
+      }
       const prodRes = await api.getProducts();
       if (prodRes && prodRes.data) {
         setProducts(prodRes.data);
@@ -398,6 +405,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleDeleteProduct = async (id) => {
     setRefreshingSection('products');
     try {
+      setProducts((prev) => prev.filter((p) => p.id !== id && p._id !== id && String(p._id) !== String(id)));
       await api.deleteProduct(id);
       const prodRes = await api.getProducts();
       if (prodRes && prodRes.data) {
@@ -437,7 +445,10 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleUpdateFaq = async (id, faqData) => {
     setRefreshingSection('faqs');
     try {
-      await api.updateFaq(id, faqData);
+      const res = await api.updateFaq(id, faqData);
+      if (res && res.data) {
+        setFaqs((prev) => prev.map((f, idx) => (f.id === id || f._id === id || String(f._id) === String(id) || idx === id ? { ...f, ...res.data } : f)));
+      }
       const faqsRes = await api.getFaqs();
       if (faqsRes && faqsRes.data) {
         setFaqs(faqsRes.data);
@@ -455,6 +466,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleDeleteFaq = async (id) => {
     setRefreshingSection('faqs');
     try {
+      setFaqs((prev) => prev.filter((f, idx) => f.id !== id && f._id !== id && String(f._id) !== String(id) && idx !== id));
       await api.deleteFaq(id);
       const faqsRes = await api.getFaqs();
       if (faqsRes && faqsRes.data) {
@@ -580,6 +592,8 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onSaveLandingPage={handleSaveLandingPage}
                     onResetDefaults={handleResetDefaults}
                     isSaving={isSaving || refreshingSection === 'customization'}
+                    onRefresh={() => loadAllData()}
+                    isRefreshing={isRefreshing || refreshingSection === 'customization'}
                   />
                 )}
 
@@ -589,6 +603,8 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onAddService={handleAddService}
                     onUpdateService={handleUpdateService}
                     onDeleteService={handleDeleteService}
+                    onRefresh={() => loadAllData()}
+                    isRefreshing={isRefreshing || refreshingSection === 'services'}
                   />
                 )}
 
@@ -598,6 +614,8 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onAddProduct={handleAddProduct}
                     onUpdateProduct={handleUpdateProduct}
                     onDeleteProduct={handleDeleteProduct}
+                    onRefresh={() => loadAllData()}
+                    isRefreshing={isRefreshing || refreshingSection === 'products'}
                   />
                 )}
 
@@ -607,6 +625,8 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onAddFaq={handleAddFaq}
                     onUpdateFaq={handleUpdateFaq}
                     onDeleteFaq={handleDeleteFaq}
+                    onRefresh={() => loadAllData()}
+                    isRefreshing={isRefreshing || refreshingSection === 'faqs'}
                   />
                 )}
               </AdminErrorBoundary>

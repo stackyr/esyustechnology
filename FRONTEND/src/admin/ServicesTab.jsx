@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, CheckCircle2, Wrench, X, Layers, Code, Clock, Link as LinkIcon } from 'lucide-react';
+import { Plus, Edit2, Trash2, RefreshCw, CheckCircle2, Wrench, X, Layers, Code, Clock, Link as LinkIcon } from 'lucide-react';
 
-export default function ServicesTab({ services = [], onAddService, onUpdateService, onDeleteService }) {
+export default function ServicesTab({ services = [], onAddService, onUpdateService, onDeleteService, onRefresh, isRefreshing }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingService, setEditingService] = useState(null);
 
@@ -64,7 +64,8 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
     };
 
     if (editingService) {
-      onUpdateService(editingService.id, serviceData);
+      const targetId = editingService._id || editingService.id;
+      onUpdateService(targetId, serviceData);
     } else {
       onAddService(serviceData);
     }
@@ -88,7 +89,21 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
           </p>
         </div>
 
-        <button
+        <div className="flex items-center gap-2.5 flex-wrap">
+          {onRefresh && (
+            <button
+              type="button"
+              onClick={onRefresh}
+              disabled={isRefreshing}
+              className="px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] hover:bg-stone-100 text-xs font-semibold text-[var(--ink)] transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              title="Reload services live from MongoDB Atlas"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-[var(--c1)]' : 'text-stone-500'}`} />
+              <span>{isRefreshing ? 'Syncing...' : 'Refresh'}</span>
+            </button>
+          )}
+
+          <button
           type="button"
           onClick={openAddModal}
           className="px-4 py-2.5 rounded-xl bg-[var(--c1)] hover:bg-[#d65a2f] text-white text-xs font-bold transition-all shadow-sm cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap"
@@ -96,6 +111,7 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
           <Plus className="w-4 h-4" />
           <span>Add New Service</span>
         </button>
+        </div>
       </div>
 
       {/* Services Grid */}
