@@ -347,6 +347,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
         isRefreshing={isRefreshing}
         isOpenMobile={isOpenMobile}
         onCloseMobile={() => setIsOpenMobile(false)}
+        onOpenSecurity={() => setIsSecurityOpen(true)}
       />
 
       {/* 2. Main Content Viewport */}
@@ -361,6 +362,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
           onLogout={onLogout}
           onRefresh={() => loadAllData()}
           isRefreshing={isRefreshing}
+          onOpenSecurity={() => setIsSecurityOpen(true)}
         />
 
         {/* Tab Content Body */}

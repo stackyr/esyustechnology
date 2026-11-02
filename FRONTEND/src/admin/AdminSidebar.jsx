@@ -16,7 +16,8 @@ export default function AdminSidebar({
   onRefresh,
   isRefreshing = false,
   isOpenMobile = false,
-  onCloseMobile
+  onCloseMobile,
+  onOpenSecurity
 }) {
   const navItems = [
     {
