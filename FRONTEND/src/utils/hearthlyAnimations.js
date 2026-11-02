@@ -324,8 +324,8 @@ export function initHearthlyAnimations() {
     tl.to({}, { duration: 0.2 });
   }));
 
-  // 2. FOLDERS STACKING SCALE & DIMMING (Exact Hearthly Engine - Universal Desktop & Mobile)
-  later(() => init('[data-folders]', (box) => {
+  // 2. FOLDERS STACKING SCALE & DIMMING (Exact 1:1 Hearthly Engine)
+  near('[data-folders]', (box) => {
     const items = [...box.querySelectorAll('.folder')];
     if (!items.length) return;
 
@@ -335,28 +335,21 @@ export function initHearthlyAnimations() {
       const body = f.querySelector('.folder__body');
       if (!next || !inner) return;
       if (body) body.style.setProperty('--dim', '0');
-      const getTopPx = () => {
-        const topStr = getComputedStyle(next).top;
-        const parsed = parseFloat(topStr);
-        if (!isNaN(parsed) && parsed > 0) return parsed;
-        const rect = next.getBoundingClientRect();
-        return rect.top > 0 ? rect.top : 80;
-      };
 
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
         scrollTrigger: {
           trigger: next,
           start: 'top bottom',
-          end: () => 'top ' + getTopPx() + 'px',
+          end: () => 'top ' + (parseFloat(getComputedStyle(next).top) || 0) + 'px',
           scrub: true,
           invalidateOnRefresh: true,
         },
       });
-      tl.to(inner, { scale: 0.955, transformOrigin: '50% 0%' }, 0);
-      if (body) tl.to(body, { '--dim': 0.35 }, 0);
+      tl.to(inner, { scale: 0.955 }, 0);
+      if (body) tl.to(body, { '--dim': 0.3 }, 0);
     });
-  }));
+  });
 
   // 3. ARCHED PLATES WASH OPENING & BOUNCE
   near('[data-plates]', (list) => {

@@ -1,7 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import http from 'node:http';
 import { randomUUID } from 'node:crypto';
+import { Server as SocketIOServer } from 'socket.io';
 import {
   connectMongoDB,
   isMongoConnected,
@@ -33,6 +35,7 @@ import {
 dotenv.config();
 
 const app = express();
+const server = http.createServer(app);
 
 // Anti-Cache Headers for all API responses so clients immediately receive additions, edits & deletes
 app.use('/api', (req, res, next) => {
@@ -151,6 +154,89 @@ app.use((req, res, next) => {
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(express.json());
+
+// ==========================================
+// REAL-TIME WEBSOCKET & SSE LIVE SYNC ENGINE
+// ==========================================
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+  },
+  pingTimeout: 30000,
+  pingInterval: 15000,
+  transports: ['websocket', 'polling']
+});
+
+// Real-Time Server-Sent Events (SSE) Client Pool
+const sseClients = new Set();
+
+app.get('/api/live-stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.flushHeaders();
+
+  sseClients.add(res);
+  res.write(`data: ${JSON.stringify({ event: 'connected', time: Date.now() })}\n\n`);
+
+  req.on('close', () => {
+    sseClients.delete(res);
+  });
+});
+
+function broadcastLiveSync(event, payload) {
+  try {
+    // 1. WebSocket emit to all connected clients
+    io.emit(event, payload);
+    io.emit('live_sync_update', { event, payload, timestamp: Date.now() });
+
+    // 2. Server-Sent Events broadcast
+    const sseMsg = `data: ${JSON.stringify({ event, payload, timestamp: Date.now() })}\n\n`;
+    for (const client of sseClients) {
+      try {
+        client.write(sseMsg);
+      } catch (e) {
+        sseClients.delete(client);
+      }
+    }
+  } catch (err) {
+    console.error('[LIVE SYNC ERROR] Broadcast failed:', err);
+  }
+}
+
+io.on('connection', (socket) => {
+  console.log(`[SOCKET CONNECTED] Client: ${socket.id}`);
+
+  socket.on('disconnect', () => {
+    console.log(`[SOCKET DISCONNECTED] Client: ${socket.id}`);
+  });
+
+  // Client requests immediate full catalog synchronization
+  socket.on('request_sync', async () => {
+    try {
+      const [brand, landingPage, services, products, faqs] = await Promise.all([
+        getBrandData(),
+        getLandingPageData(),
+        getServicesData(),
+        getProductsData(),
+        getFaqsData()
+      ]);
+      socket.emit('sync_all', { brand, landingPage, services, products, faqs });
+    } catch (err) {
+      console.error('Socket request_sync error:', err);
+    }
+  });
+
+  // Direct admin broadcast relay
+  socket.on('admin_broadcast', (msg) => {
+    socket.broadcast.emit('live_sync_update', msg);
+    if (msg && msg.event && msg.payload) {
+      socket.broadcast.emit(msg.event, msg.payload);
+    }
+  });
+});
 
 // Initialize MongoDB Connection (MERN Stack)
 connectMongoDB();
@@ -337,6 +423,7 @@ app.get('/api/brand', async (req, res) => {
 app.put('/api/brand', requireAdminAuth, async (req, res) => {
   try {
     const updated = await updateBrandData(req.body);
+    broadcastLiveSync('brand_updated', updated);
     res.json({ success: true, message: 'Brand details updated successfully in MongoDB', data: updated });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -358,6 +445,7 @@ app.get('/api/landing-page', async (req, res) => {
 app.put('/api/landing-page', requireAdminAuth, async (req, res) => {
   try {
     const updated = await updateLandingPageData(req.body);
+    broadcastLiveSync('landing_page_updated', updated);
     res.json({ success: true, message: 'Landing page copy & image links updated successfully', data: updated });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -408,6 +496,7 @@ app.post('/api/inquiries', async (req, res) => {
 
     const saved = await createInquiryData(newInquiry);
     console.log(`[INQUIRY REGISTERED] From: ${saved.name} | Subject: ${saved.subject}`);
+    broadcastLiveSync('inquiry_received', saved);
 
     res.status(201).json({
       success: true,
@@ -429,6 +518,8 @@ app.patch('/api/inquiries/:id', requireAdminAuth, async (req, res) => {
       return res.status(404).json({ success: false, error: 'Inquiry not found' });
     }
 
+    broadcastLiveSync('inquiries_updated', updated);
+
     res.json({
       success: true,
       message: 'Inquiry updated successfully',
@@ -443,6 +534,7 @@ app.delete('/api/inquiries/:id', requireAdminAuth, async (req, res) => {
   try {
     const { id } = req.params;
     await deleteInquiryData(id);
+    broadcastLiveSync('inquiries_updated', { id, deleted: true });
     res.json({ success: true, message: 'Inquiry deleted successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -484,6 +576,8 @@ app.post('/api/services', requireAdminAuth, async (req, res) => {
     };
 
     const saved = await createServiceData(newService);
+    const allServices = await getServicesData();
+    broadcastLiveSync('services_updated', allServices);
     res.status(201).json({ success: true, message: 'Service added successfully', data: saved });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -502,6 +596,8 @@ app.put('/api/services/:id', requireAdminAuth, async (req, res) => {
     if (updates.isComingSoon === undefined) delete updates.isComingSoon;
     const updated = await updateServiceData(id, updates);
     if (!updated) return res.status(404).json({ success: false, error: 'Service not found' });
+    const allServices = await getServicesData();
+    broadcastLiveSync('services_updated', allServices);
     res.json({ success: true, message: 'Service updated successfully', data: updated });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -512,6 +608,8 @@ app.delete('/api/services/:id', requireAdminAuth, async (req, res) => {
   try {
     const { id } = req.params;
     await deleteServiceData(id);
+    const allServices = await getServicesData();
+    broadcastLiveSync('services_updated', allServices);
     res.json({ success: true, message: 'Service deleted successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -564,6 +662,8 @@ app.post('/api/products', requireAdminAuth, async (req, res) => {
     };
 
     const saved = await createProductData(newProduct);
+    const allProducts = await getProductsData();
+    broadcastLiveSync('products_updated', allProducts);
     res.status(201).json({ success: true, message: 'Product added successfully', data: saved });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -582,6 +682,8 @@ app.put('/api/products/:id', requireAdminAuth, async (req, res) => {
     if (updates.isComingSoon === undefined) delete updates.isComingSoon;
     const updated = await updateProductData(id, updates);
     if (!updated) return res.status(404).json({ success: false, error: 'Product not found' });
+    const allProducts = await getProductsData();
+    broadcastLiveSync('products_updated', allProducts);
     res.json({ success: true, message: 'Product updated successfully', data: updated });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -592,6 +694,8 @@ app.delete('/api/products/:id', requireAdminAuth, async (req, res) => {
   try {
     const { id } = req.params;
     await deleteProductData(id);
+    const allProducts = await getProductsData();
+    broadcastLiveSync('products_updated', allProducts);
     res.json({ success: true, message: 'Product deleted successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -624,6 +728,8 @@ app.post('/api/faqs', requireAdminAuth, async (req, res) => {
     };
 
     const saved = await createFaqData(newFaq);
+    const allFaqs = await getFaqsData();
+    broadcastLiveSync('faqs_updated', allFaqs);
     res.status(201).json({ success: true, message: 'FAQ added successfully', data: saved });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -636,6 +742,8 @@ app.put('/api/faqs/:id', requireAdminAuth, async (req, res) => {
     const { q, a } = req.body;
     const updated = await updateFaqData(id, { q, a });
     if (!updated) return res.status(404).json({ success: false, error: 'FAQ not found' });
+    const allFaqs = await getFaqsData();
+    broadcastLiveSync('faqs_updated', allFaqs);
     res.json({ success: true, message: 'FAQ updated successfully', data: updated });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -646,6 +754,8 @@ app.delete('/api/faqs/:id', requireAdminAuth, async (req, res) => {
   try {
     const { id } = req.params;
     await deleteFaqData(id);
+    const allFaqs = await getFaqsData();
+    broadcastLiveSync('faqs_updated', allFaqs);
     res.json({ success: true, message: 'FAQ deleted successfully' });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -658,6 +768,7 @@ app.delete('/api/faqs/:id', requireAdminAuth, async (req, res) => {
 app.post('/api/reset', requireAdminAuth, async (req, res) => {
   try {
     const defaultData = await resetAllData();
+    broadcastLiveSync('sync_all', defaultData);
     res.json({ success: true, message: 'Database reset to default template data in MERN stack', data: defaultData });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -670,15 +781,16 @@ const isDirectRun = process.argv[1] && (
 );
 
 if (!process.env.VERCEL && isDirectRun) {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`=======================================================`);
-    console.log(` Esyus MERN Stack API Server running at http://localhost:${PORT}`);
+    console.log(` Esyus MERN Stack Real-Time API Server running at http://localhost:${PORT}`);
     console.log(` Database: MongoDB Mongoose (/models) + Express + Node.js`);
+    console.log(` WebSockets: Socket.io Real-Time Engine Active`);
     console.log(` REST API Base: http://localhost:${PORT}/api`);
     console.log(` Health Check: http://localhost:${PORT}/api/health`);
     console.log(`=======================================================`);
   });
 }
 
-export { app };
+export { app, server, io, broadcastLiveSync };
 export default app;

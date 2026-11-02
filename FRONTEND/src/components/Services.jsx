@@ -86,10 +86,22 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
         ? `${srv.badge} · ${(srv.techStack || []).slice(0, 3).join(', ') || matchedPreset.meta}`
         : matchedPreset.meta;
 
-      const shortTab = srv.shortTitle || srv.title
-        .replace(/ Application Development/i, ' App')
-        .replace(/ Software Development/i, '')
-        .replace(/ Development/i, '');
+      // Clean, punchy short tab title engineered so all 6 tabs fit seamlessly without overlap
+      let shortTab = srv.shortTitle;
+      if (!shortTab) {
+        if (/website/i.test(srv.title)) shortTab = 'Website Dev';
+        else if (/web application|web app/i.test(srv.title)) shortTab = 'Web Apps';
+        else if (/mobile/i.test(srv.title)) shortTab = 'Mobile Apps';
+        else if (/android/i.test(srv.title)) shortTab = 'Android Dev';
+        else if (/desktop/i.test(srv.title)) shortTab = 'Desktop Apps';
+        else if (/custom/i.test(srv.title)) shortTab = 'Custom Software';
+        else {
+          shortTab = srv.title
+            .replace(/ Application Development/i, ' Apps')
+            .replace(/ Software Development/i, ' Software')
+            .replace(/ Development/i, ' Dev');
+        }
+      }
 
       const uiTitle = matchedPreset.uiTitle || (srv.badge ? `${srv.badge} Architecture` : 'Core Architecture');
 
@@ -148,10 +160,7 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
               <div className="folder__in">
                 <div className="folder__tab">
                   <span className="folder__tab-num">{item.num}</span>
-                  <span className="folder__tab-title">
-                    <span className="inline md:hidden">{item.shortTab}</span>
-                    <span className="hidden md:inline">{item.tab}</span>
-                  </span>
+                  <span className="folder__tab-title">{item.shortTab}</span>
                   {item.isComingSoon && (
                     <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 border border-amber-500/30 ml-2">
                       Coming Soon

@@ -1542,7 +1542,7 @@ em.s {
 
 .folder {
   position: sticky;
-  top: calc(clamp(76px, 6.5vw + 12px, 94px) + var(--i, 0) * var(--tab-h));
+  top: calc(clamp(14px, 2vw, 24px) + var(--i, 0) * var(--tab-h));
   z-index: calc(var(--i, 0) + 1);
   --plate: var(--c1);
   --on: var(--ink);
@@ -1814,7 +1814,7 @@ em.s {
 
   .folder {
     position: sticky;
-    top: calc(clamp(50px, 6.5vh, 62px) + var(--i, 0) * var(--tab-h));
+    top: calc(clamp(14px, 2vh, 24px) + var(--i, 0) * var(--tab-h));
   }
 
   .folder__tab {
@@ -1838,7 +1838,7 @@ em.s {
   .folder__body {
     grid-template-columns: minmax(0, 1fr) !important;
     min-height: 0 !important;
-    max-height: calc(100svh - clamp(50px, 6.5vh, 62px) - (var(--i, 0) * var(--tab-h)) - 14px) !important;
+    max-height: calc(100svh - clamp(14px, 2vh, 24px) - (var(--i, 0) * var(--tab-h)) - 10px) !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
     padding: clamp(14px, 3.2vw, 18px) !important;
@@ -3711,7 +3711,7 @@ em.s {
 
   .folder {
     position: sticky !important;
-    top: calc(clamp(64px, 8vh, 84px) + var(--i, 0) * var(--tab-h)) !important;
+    top: calc(clamp(14px, 2vh, 24px) + var(--i, 0) * var(--tab-h)) !important;
   }
 
   .folder__tab {

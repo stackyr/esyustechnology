@@ -27,6 +27,7 @@ import LegalModal from './components/LegalModal';
 import AdminPanel from './admin/AdminPanel';
 import AdminLogin from './admin/AdminLogin';
 import api from './utils/api';
+import liveSync from './utils/liveSync';
 import { PRODUCTS, applyDynamicData } from './data/companyData';
 import { initHearthlyAnimations, lenisScrollTo } from './utils/hearthlyAnimations';
 
@@ -99,6 +100,8 @@ export default function App() {
   // Load Dynamic Data from Backend API
   const loadDynamicData = useCallback(async (showRefreshingState = false) => {
     if (showRefreshingState) setIsRefreshing(true);
+    setLoadingStage('fetching');
+    setLoadingStatusText('Synchronizing MongoDB catalog & customizations...');
     try {
       const [brandRes, srvRes, prodRes, faqRes, landingRes] = await Promise.allSettled([
         api.getBrand(),
@@ -117,9 +120,13 @@ export default function App() {
       if (brand || services || products || faqs || landingPage) {
         applyDynamicData({ brand, services, products, faqs, landingPage });
         setDataVersion((v) => v + 1);
+        setLoadingStage('ready');
+        setLoadingStatusText('All records live from MongoDB Atlas');
         setTimeout(() => {
-          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
-        }, 100);
+          if (typeof window !== 'undefined' && window.ScrollTrigger) {
+            window.ScrollTrigger.refresh();
+          }
+        }, 120);
       }
     } catch (err) {
       console.warn('[App] Backend load warning:', err.message);
@@ -128,23 +135,41 @@ export default function App() {
     }
   }, []);
 
+  // Real-time live synchronization via WebSockets & Cross-Tab Broadcast
+  useEffect(() => {
+    liveSync.initSocket();
+
+    const unsub = liveSync.subscribe(({ event, payload, source }) => {
+      console.log(`[App] Live sync received: ${event} from ${source}`);
+      setDataVersion((v) => v + 1);
+
+      // Smoothly refresh ScrollTrigger if structural cards or section heights changed
+      setTimeout(() => {
+        if (typeof window !== 'undefined' && window.ScrollTrigger) {
+          window.ScrollTrigger.refresh();
+        }
+      }, 150);
+    });
+
+    return () => unsub();
+  }, []);
+
   // First fetch data from backend before showing the page (avoids stale/default data)
   useEffect(() => {
     let isMounted = true;
-    const safetyTimer = setTimeout(() => {
-      if (isMounted) setIsInitialLoading(false);
-    }, 2000);
+    setLoadingStage('connecting');
+    setLoadingStatusText('Connecting to MongoDB Atlas...');
 
     loadDynamicData().finally(() => {
       if (isMounted) {
-        clearTimeout(safetyTimer);
-        setTimeout(() => setIsInitialLoading(false), 80);
+        setTimeout(() => {
+          if (isMounted) setIsInitialLoading(false);
+        }, 300);
       }
     });
 
     return () => {
       isMounted = false;
-      clearTimeout(safetyTimer);
     };
   }, [loadDynamicData]);
 
@@ -263,24 +288,33 @@ export default function App() {
   // Initial luxury preloader: First load live data from backend before showing the site
   if (isInitialLoading && !isAdmin) {
     return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#fbf9f4] text-[var(--ink)] select-none">
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg)] text-[var(--ink)] select-none">
+        {/* SVG Grain Overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay bg-[var(--grain)]" />
+        
         <div className="relative flex flex-col items-center space-y-5 text-center p-6 max-w-sm">
           <div className="w-16 h-16 rounded-3xl bg-[var(--dark)] flex items-center justify-center shadow-xl shadow-[var(--c1)]/20 animate-pulse">
             <span className="font-serif italic text-3xl font-bold text-[var(--c1)]">E</span>
           </div>
 
-          <div className="space-y-1">
-            <h1 className="text-lg font-bold tracking-tight text-[var(--ink)]">
+          <div className="space-y-1.5">
+            <h1 className="text-xl font-bold tracking-tight text-[var(--ink)]">
               Esyus <em className="s font-normal">Technology</em>
             </h1>
-            <p className="text-xs text-[var(--muted)] font-mono flex items-center justify-center gap-1.5">
+            <p className="text-xs text-[var(--muted)] font-mono flex items-center justify-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[var(--c1)] animate-ping" />
-              <span>Fetching live catalog &amp; system data...</span>
+              <span>{loadingStatusText}</span>
             </p>
           </div>
 
-          <div className="w-44 h-1 bg-[var(--line)] rounded-full overflow-hidden relative">
+          <div className="w-48 h-1.5 bg-[var(--line)] rounded-full overflow-hidden relative shadow-inner">
             <div className="h-full bg-gradient-to-r from-[var(--c1)] via-[var(--c3)] to-[var(--c1)] w-1/2 rounded-full animate-marquee" />
+          </div>
+
+          <div className="text-[10px] font-mono text-[var(--muted)] uppercase tracking-widest">
+            {loadingStage === 'connecting' && 'Step 1/3: Establishing Socket Link'}
+            {loadingStage === 'fetching' && 'Step 2/3: Live MongoDB Atlas Sync'}
+            {loadingStage === 'ready' && 'Step 3/3: Database Verified'}
           </div>
         </div>
       </div>

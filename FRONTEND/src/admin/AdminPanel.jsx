@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '../utils/api';
+import liveSync from '../utils/liveSync';
 import AdminSidebar from './AdminSidebar';
 import AdminTopBar from './AdminTopBar';
 import InquiriesTab from './InquiriesTab';
@@ -144,6 +145,35 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     loadAllData(true);
   }, [loadAllData]);
 
+  // Real-time live synchronization via WebSockets & Cross-Tab Broadcast
+  useEffect(() => {
+    liveSync.initSocket();
+    const unsub = liveSync.subscribe(({ event, payload }) => {
+      if (event === 'inquiry_received') {
+        setInquiries((prev) => [payload, ...prev.filter(i => i.id !== payload.id)]);
+        showToast(`🔔 New inquiry received from ${payload.name || 'Visitor'}!`);
+      } else if (event === 'inquiries_updated') {
+        if (payload?.deleted) {
+          setInquiries((prev) => prev.filter(i => i.id !== payload.id));
+        } else if (payload?.id) {
+          setInquiries((prev) => prev.map(i => i.id === payload.id ? { ...i, ...payload } : i));
+        }
+      } else if (event === 'services_updated') {
+        if (Array.isArray(payload)) setServices(payload);
+      } else if (event === 'products_updated') {
+        if (Array.isArray(payload)) setProducts(payload);
+      } else if (event === 'brand_updated') {
+        if (payload) setBrand(payload);
+      } else if (event === 'landing_page_updated') {
+        if (payload) setLandingPage(payload);
+      } else if (event === 'faqs_updated') {
+        if (Array.isArray(payload)) setFaqs(payload);
+      }
+    });
+
+    return () => unsub();
+  }, []);
+
   // Periodic polling every 5 seconds so incoming inquiries show up in real time!
   useEffect(() => {
     const interval = setInterval(() => {
@@ -195,6 +225,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     try {
       const res = await api.updateBrand(brandData);
       setBrand(res.data);
+      liveSync.emitAdminChange('brand_updated', res.data);
       if (onDataChanged) onDataChanged();
       showToast('Brand details and contact settings saved!');
     } catch (err) {
@@ -209,6 +240,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     try {
       const res = await api.updateLandingPage(pageData);
       setLandingPage(res.data);
+      liveSync.emitAdminChange('landing_page_updated', res.data);
       if (onDataChanged) onDataChanged();
       showToast('Landing page sections and image links updated successfully!');
     } catch (err) {
@@ -220,8 +252,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
 
   const handleResetDefaults = async () => {
     try {
-      await api.resetDefaults();
+      const res = await api.resetDefaults();
       await loadAllData();
+      liveSync.emitAdminChange('sync_all', res.data);
       if (onDataChanged) onDataChanged();
       showToast('Database reset to original default template.');
     } catch (err) {
@@ -235,7 +268,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleAddService = async (serviceData) => {
     try {
       const res = await api.createService(serviceData);
-      setServices((prev) => [...prev, res.data]);
+      const updatedList = [...services, res.data];
+      setServices(updatedList);
+      liveSync.emitAdminChange('services_updated', updatedList);
       if (onDataChanged) onDataChanged();
       showToast('New service added successfully!');
     } catch (err) {
@@ -246,7 +281,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleUpdateService = async (id, serviceData) => {
     try {
       const res = await api.updateService(id, serviceData);
-      setServices((prev) => prev.map((s) => (s.id === id ? res.data : s)));
+      const updatedList = services.map((s) => (s.id === id ? res.data : s));
+      setServices(updatedList);
+      liveSync.emitAdminChange('services_updated', updatedList);
       if (onDataChanged) onDataChanged();
       showToast('Service updated successfully!');
     } catch (err) {
@@ -257,7 +294,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleDeleteService = async (id) => {
     try {
       await api.deleteService(id);
-      setServices((prev) => prev.filter((s) => s.id !== id));
+      const updatedList = services.filter((s) => s.id !== id);
+      setServices(updatedList);
+      liveSync.emitAdminChange('services_updated', updatedList);
       if (onDataChanged) onDataChanged();
       showToast('Service deleted successfully!');
     } catch (err) {
@@ -271,7 +310,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleAddProduct = async (productData) => {
     try {
       const res = await api.createProduct(productData);
-      setProducts((prev) => [...prev, res.data]);
+      const updatedList = [...products, res.data];
+      setProducts(updatedList);
+      liveSync.emitAdminChange('products_updated', updatedList);
       if (onDataChanged) onDataChanged();
       showToast('New application added successfully!');
     } catch (err) {
@@ -282,7 +323,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleUpdateProduct = async (id, productData) => {
     try {
       const res = await api.updateProduct(id, productData);
-      setProducts((prev) => prev.map((p) => (p.id === id ? res.data : p)));
+      const updatedList = products.map((p) => (p.id === id ? res.data : p));
+      setProducts(updatedList);
+      liveSync.emitAdminChange('products_updated', updatedList);
       if (onDataChanged) onDataChanged();
       showToast('Application & specs updated successfully!');
     } catch (err) {
@@ -293,7 +336,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleDeleteProduct = async (id) => {
     try {
       await api.deleteProduct(id);
-      setProducts((prev) => prev.filter((p) => p.id !== id));
+      const updatedList = products.filter((p) => p.id !== id);
+      setProducts(updatedList);
+      liveSync.emitAdminChange('products_updated', updatedList);
       if (onDataChanged) onDataChanged();
       showToast('Application deleted successfully!');
     } catch (err) {
@@ -307,7 +352,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleAddFaq = async (faqData) => {
     try {
       const res = await api.createFaq(faqData);
-      setFaqs((prev) => [...prev, res.data]);
+      const updatedList = [...faqs, res.data];
+      setFaqs(updatedList);
+      liveSync.emitAdminChange('faqs_updated', updatedList);
       if (onDataChanged) onDataChanged();
       showToast('New FAQ added successfully!');
     } catch (err) {
@@ -318,7 +365,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleUpdateFaq = async (id, faqData) => {
     try {
       const res = await api.updateFaq(id, faqData);
-      setFaqs((prev) => prev.map((f, idx) => (f.id === id || idx === id ? res.data : f)));
+      const updatedList = faqs.map((f, idx) => (f.id === id || idx === id ? res.data : f));
+      setFaqs(updatedList);
+      liveSync.emitAdminChange('faqs_updated', updatedList);
       if (onDataChanged) onDataChanged();
       showToast('FAQ updated successfully!');
     } catch (err) {
@@ -329,7 +378,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleDeleteFaq = async (id) => {
     try {
       await api.deleteFaq(id);
-      setFaqs((prev) => prev.filter((f, idx) => f.id !== id && idx !== id));
+      const updatedList = faqs.filter((f, idx) => f.id !== id && idx !== id);
+      setFaqs(updatedList);
+      liveSync.emitAdminChange('faqs_updated', updatedList);
       if (onDataChanged) onDataChanged();
       showToast('FAQ deleted successfully!');
     } catch (err) {
