@@ -8,13 +8,14 @@
     "dev": "node BACKEND/dev.js",
     "dev:backend": "cd BACKEND && npm start",
     "dev:frontend": "cd FRONTEND && npm run dev",
-    "build": "cd FRONTEND && npm install && npm run build",
+    "build": "npm --prefix FRONTEND install && npm --prefix FRONTEND run build",
     "test": "node BACKEND/test-api.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^18.0.9",
     "express": "^4.21.2",
-    "mongoose": "^9.11.4"
+    "mongoose": "^9.11.4",
+    "socket.io": "^4.8.4"
   }
 }

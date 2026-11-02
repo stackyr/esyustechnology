@@ -31,10 +31,6 @@ export function getSocketUrl() {
   }
 
   if (typeof window !== 'undefined') {
-    const host = window.location.hostname;
-    if (host.includes('esyustechnology.com')) {
-      return 'https://esyustechnology-byj7.vercel.app';
-    }
     return window.location.origin;
   }
 
