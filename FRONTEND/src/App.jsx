@@ -16,6 +16,7 @@ import FAQSection from './components/FAQSection';
 import ContactUs from './components/ContactUs';
 import Footer from './components/Footer';
 import DownloadsPage from './components/DownloadsPage';
+import ServicesPage from './components/ServicesPage';
 
 // Modals
 import ProductModal from './components/ProductModal';
@@ -52,6 +53,13 @@ export default function App() {
   });
   const [isDownloadsPage, setIsDownloadsPage] = useState(() => {
     return typeof window !== 'undefined' && window.location.hash.toLowerCase().includes('downloads');
+  });
+  const [isServicesPage, setIsServicesPage] = useState(() => {
+    return typeof window !== 'undefined' && (
+      window.location.hash.toLowerCase().includes('services-catalog') ||
+      window.location.hash.toLowerCase() === '#services-all' ||
+      window.location.hash.toLowerCase() === '#all-services'
+    );
   });
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(() => {
     return typeof window !== 'undefined' && !!localStorage.getItem('esyus_admin_token');
@@ -110,8 +118,10 @@ export default function App() {
   // Listen to hash changes (#admin, #downloads) and keyboard shortcut (Ctrl+Shift+A)
   useEffect(() => {
     const handleHashChange = () => {
-      setIsAdmin(window.location.hash.toLowerCase().includes('admin'));
-      setIsDownloadsPage(window.location.hash.toLowerCase().includes('downloads'));
+      const hash = window.location.hash.toLowerCase();
+      setIsAdmin(hash.includes('admin'));
+      setIsDownloadsPage(hash.includes('downloads'));
+      setIsServicesPage(hash.includes('services-catalog') || hash === '#services-all' || hash === '#all-services');
     };
 
     const handleKeyDown = (e) => {
@@ -136,7 +146,7 @@ export default function App() {
 
   // Initialize Hearthly GSAP & Lenis smooth scroll engine (only on landing page)
   useEffect(() => {
-    if (isAdmin || isDownloadsPage || isLoading || !isDatabaseConnected) return;
+    if (isAdmin || isDownloadsPage || isServicesPage || isLoading || !isDatabaseConnected) return;
     let cleanup = null;
     const timeout = setTimeout(() => {
       cleanup = initHearthlyAnimations();
@@ -146,7 +156,7 @@ export default function App() {
       clearTimeout(timeout);
       if (typeof cleanup === 'function') cleanup();
     };
-  }, [isAdmin, isDownloadsPage, isLoading, isDatabaseConnected]);
+  }, [isAdmin, isDownloadsPage, isServicesPage, isLoading, isDatabaseConnected]);
 
   // Refresh ScrollTrigger whenever live data changes so triggers adjust to content heights
   useEffect(() => {
@@ -164,18 +174,94 @@ export default function App() {
     lenisScrollTo(target, { offset: -80 });
   };
 
-  const handleOpenDownloadsPage = () => {
+  const handleOpenServicesPage = () => {
+    setIsServicesPage(true);
+    setIsDownloadsPage(false);
+    window.location.hash = '#services-catalog';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenDownloadsPage = (product = null) => {
     setIsDownloadsPage(true);
+    setIsServicesPage(false);
     window.location.hash = '#downloads';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (product) setSelectedProduct(product);
   };
 
   const handleBackToHome = () => {
     setIsDownloadsPage(false);
-    if (window.location.hash.toLowerCase().includes('downloads')) {
+    setIsServicesPage(false);
+    if (
+      window.location.hash.toLowerCase().includes('downloads') ||
+      window.location.hash.toLowerCase().includes('services')
+    ) {
       history.pushState(null, '', window.location.pathname);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Robust Cross-Page Navigation Engine: Switches back to landing page and polls until DOM element exists
+  const navigateToSection = (sectionId) => {
+    const rawId = (sectionId || '').startsWith('#') ? sectionId.slice(1) : (sectionId || '');
+    
+    const idMap = {
+      'home': 'home',
+      'about': 'about',
+      'services': 'services',
+      'applications': 'applications',
+      'products': 'applications',
+      'featured-product': 'featured-product',
+      'finance-flow': 'featured-product',
+      'why-choose-us': 'why-choose-us',
+      'why-us': 'why-choose-us',
+      'team': 'team',
+      'reviews': 'reviews',
+      'download': 'download',
+      'downloads': 'download',
+      'faq': 'faq',
+      'faqs': 'faq',
+      'contact': 'contact'
+    };
+
+    const targetId = idMap[rawId] || rawId || 'home';
+
+    // If target is download, open downloads page directly
+    if (targetId === 'download') {
+      handleOpenDownloadsPage();
+      return;
+    }
+
+    // If user is already on the landing page:
+    if (!isDownloadsPage && !isServicesPage && !isAdmin) {
+      scrollToSection(targetId);
+      return;
+    }
+
+    // Leaving sub-page back to landing page:
+    setIsDownloadsPage(false);
+    setIsServicesPage(false);
+    if (isAdmin) {
+      setIsAdmin(false);
+    }
+    window.location.hash = targetId === 'home' ? '' : `#${targetId}`;
+
+    // Poll until target element exists in DOM, then smooth scroll to it
+    let attempts = 0;
+    const maxAttempts = 35;
+    const pollTimer = setInterval(() => {
+      attempts++;
+      const el = targetId === 'home' ? document.body : document.getElementById(targetId);
+      if (el) {
+        clearInterval(pollTimer);
+        setTimeout(() => {
+          scrollToSection(targetId);
+        }, 50);
+      } else if (attempts >= maxAttempts) {
+        clearInterval(pollTimer);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 40);
   };
 
   const handleEnquireService = (serviceTitle) => {
@@ -341,16 +427,14 @@ export default function App() {
       <Navbar
         dataVersion={dataVersion}
         isDownloadsPage={isDownloadsPage}
+        isServicesPage={isServicesPage}
         onBackToHome={handleBackToHome}
-        onNavigateSection={(id) => {
-          handleBackToHome();
-          setTimeout(() => scrollToSection(id), 80);
-        }}
+        onNavigateSection={navigateToSection}
         onDownloadClick={handleOpenDownloadsPage}
+        onOpenServicesPage={handleOpenServicesPage}
         onContactClick={() => {
-          if (isDownloadsPage) {
-            handleBackToHome();
-            setTimeout(() => scrollToSection('contact'), 80);
+          if (isDownloadsPage || isServicesPage) {
+            navigateToSection('contact');
           } else {
             handleContactClick();
           }
@@ -364,6 +448,15 @@ export default function App() {
             onBackToHome={handleBackToHome}
             onSelectProduct={(product) => setSelectedProduct(product)}
             onDownloadApp={handleDownloadAppDirectly}
+            onRefresh={reloadAll}
+          />
+        ) : isServicesPage ? (
+          <ServicesPage
+            dataVersion={dataVersion}
+            onBackToHome={handleBackToHome}
+            onSelectService={(service) => setSelectedService(service)}
+            onEnquireService={handleEnquireService}
+            onRefresh={reloadAll}
           />
         ) : (
           <>
@@ -389,6 +482,7 @@ export default function App() {
               dataVersion={dataVersion}
               onSelectService={(service) => setSelectedService(service)}
               onEnquireService={handleEnquireService}
+              onViewAllServices={handleOpenServicesPage}
             />
 
             {/* 05. Our Applications / Products */}
@@ -453,7 +547,7 @@ export default function App() {
         onOpenPrivacy={() => setLegalModalType('privacy')}
         onOpenTerms={() => setLegalModalType('terms')}
         onSelectService={(srv) => {
-          if (isDownloadsPage) {
+          if (isDownloadsPage || isServicesPage) {
             handleBackToHome();
             setTimeout(() => setSelectedService(srv), 80);
           } else {
@@ -462,6 +556,7 @@ export default function App() {
         }}
         onSelectProduct={(prod) => setSelectedProduct(prod)}
         onOpenDownloadsPage={handleOpenDownloadsPage}
+        onOpenServicesPage={handleOpenServicesPage}
         onOpenAdmin={() => {
           window.location.hash = '#admin';
           setIsAdmin(true);

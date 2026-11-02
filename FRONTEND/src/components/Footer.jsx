@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import api from '../utils/api';
 
-export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin, onOpenDownloadsPage, dataVersion = 0 }) {
+export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin, onOpenDownloadsPage, dataVersion = 0 , onOpenServicesPage}) {
   const [subscribed, setSubscribed] = useState(false);
   const [emailInput, setEmailInput] = useState('');
 
@@ -169,6 +169,20 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
                   </button>
                 </li>
               ))}
+              <li className="pt-2">
+                <a
+                  href="#services-catalog"
+                  onClick={(e) => {
+                    if (onOpenServicesPage) {
+                      e.preventDefault();
+                      onOpenServicesPage();
+                    }
+                  }}
+                  className="link text-[var(--c3)] font-semibold block cursor-pointer"
+                >
+                  View All Services (Catalog) →
+                </a>
+              </li>
             </ul>
           </nav>
 

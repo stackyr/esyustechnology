@@ -6,6 +6,8 @@ export default function Navbar({
   onDownloadClick,
   onContactClick,
   isDownloadsPage = false,
+  isServicesPage = false,
+  onOpenServicesPage,
   onBackToHome,
   onNavigateSection,
   dataVersion = 0
@@ -65,18 +67,29 @@ export default function Navbar({
 
   const handleNavClick = (id) => {
     setMobileMenuOpen(false);
-    if (isDownloadsPage) {
+    if (isDownloadsPage || isServicesPage) {
       if (id === 'download') {
-        lenisScrollTo(0);
+        if (isDownloadsPage) {
+          lenisScrollTo(0);
+        } else if (onDownloadClick) {
+          onDownloadClick();
+        }
         return;
+      }
+      if (id === 'services') {
+        if (isServicesPage) {
+          lenisScrollTo(0);
+          return;
+        }
+        if (onOpenServicesPage) {
+          onOpenServicesPage();
+          return;
+        }
       }
       if (onNavigateSection) {
         onNavigateSection(id);
       } else if (onBackToHome) {
         onBackToHome();
-        setTimeout(() => {
-          lenisScrollTo(id, { offset: -80 });
-        }, 150);
       }
     } else {
       if (id === 'download' && onDownloadClick) {
@@ -113,7 +126,7 @@ export default function Navbar({
             href="#home"
             onClick={(e) => {
               e.preventDefault();
-              if (isDownloadsPage && onBackToHome) {
+              if ((isDownloadsPage || isServicesPage) && onBackToHome) {
                 onBackToHome();
               } else {
                 scrollTo('home');
@@ -129,17 +142,17 @@ export default function Navbar({
             {/* Mobile / Tablet Status Pill */}
             <span className="inline-flex xl:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9.5px] font-mono font-bold text-emerald-800 tracking-tight shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              {isDownloadsPage ? 'Apps' : 'Offline'}
+              {isDownloadsPage ? 'Apps' : isServicesPage ? 'Services' : 'Offline'}
             </span>
             <span className="hidden xl:inline-flex items-center text-[9.5px] tracking-widest uppercase text-[var(--muted)] font-mono border-l border-[var(--line)] pl-2.5 ml-0.5 whitespace-nowrap">
-              {isDownloadsPage ? 'Software Center' : 'Offline First'}
+              {isDownloadsPage ? 'Software Center' : isServicesPage ? 'Engineering Catalog' : 'Offline First'}
             </span>
           </a>
 
           {/* Desktop Navigation Links */}
           <nav className="nav desktop-nav" aria-label="Main Navigation">
             <button className="link" onClick={() => handleNavClick('about')}>About</button>
-            <button className="link" onClick={() => handleNavClick('services')}>Services</button>
+            <button className={`link ${isServicesPage ? 'text-[var(--c1)] font-bold bg-[var(--c1)]/10 px-2.5 py-1 rounded-lg' : ''}`} onClick={() => handleNavClick('services')}>Services</button>
             <button className="link" onClick={() => handleNavClick('applications')}>Applications</button>
             <button className="link font-semibold text-[var(--c1)]" onClick={() => handleNavClick('featured-product')}>
               Finance Flow
@@ -189,7 +202,7 @@ export default function Navbar({
             </button>
 
             {/* Primary Action CTA Button */}
-            {isDownloadsPage ? (
+            {(isDownloadsPage || isServicesPage) ? (
               <button
                 className="btn btn--line btn--sm hidden lg:inline-flex shrink-0 whitespace-nowrap shadow-sm group"
                 onClick={onBackToHome}
@@ -338,7 +351,7 @@ export default function Navbar({
                 className="btn btn--sm flex-1 sm:flex-none justify-center"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  if (isDownloadsPage) {
+                  if (isDownloadsPage || isServicesPage) {
                     if (onBackToHome) onBackToHome();
                   } else {
                     if (onDownloadClick) onDownloadClick();
@@ -346,7 +359,7 @@ export default function Navbar({
                   }
                 }}
               >
-                <span>{isDownloadsPage ? 'Back to Home' : 'Explore Packages'}</span>
+                <span>{(isDownloadsPage || isServicesPage) ? 'Back to Home' : 'Explore Packages'}</span>
               </button>
               <button
                 className="btn btn--line btn--sm flex-1 sm:flex-none justify-center"

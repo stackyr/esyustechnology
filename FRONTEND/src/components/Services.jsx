@@ -61,7 +61,7 @@ const FALLBACK_PRESETS = [
   }
 ];
 
-export default function Services({ onSelectService, onEnquireService, dataVersion = 0 }) {
+export default function Services({ onSelectService, onEnquireService, onViewAllServices, dataVersion = 0 }) {
   const { services: liveServices, landingPage } = useData();
   const srvSec = landingPage?.servicesSection || {};
   const currentServices = Array.isArray(liveServices) ? liveServices : [];
@@ -139,9 +139,24 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
           <p className="lead">
             {srvSec.lead || "From offline Windows billing software and thermal receipt printing to cloud enterprise applications, we build robust systems with zero downtime."}
           </p>
-          <a className="link" href="#applications">
-            Explore our ready-to-use software suite →
-          </a>
+          <div className="flex items-center gap-3.5 flex-wrap pt-1">
+            {onViewAllServices && (
+              <button
+                type="button"
+                onClick={onViewAllServices}
+                className="btn btn--sm inline-flex items-center gap-2 cursor-pointer shadow-sm group"
+                title="Open separate services catalog page"
+              >
+                <span>View All Services</span>
+                <svg className="btn__arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
+                  <path d="M2.5 9.5 9.5 2.5M9.5 2.5H4M9.5 2.5V8" />
+                </svg>
+              </button>
+            )}
+            <a className="link" href="#applications">
+              Explore software suite →
+            </a>
+          </div>
         </div>
       </div>
 
@@ -296,6 +311,36 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
           );
         }))}
       </div>
+
+      {/* Bottom View All Services Callout Strip */}
+      {onViewAllServices && (
+        <div className="wrap mt-10">
+          <div className="p-5 sm:p-7 rounded-3xl bg-[var(--soft)] border border-[var(--line)] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[var(--c1)] font-bold">
+                Complete Engineering Blueprint
+              </span>
+              <h3 className="text-base sm:text-lg font-bold text-[var(--ink)]">
+                Looking for our full catalog of software &amp; hardware capabilities?
+              </h3>
+              <p className="text-xs text-[var(--muted)]">
+                Explore in-depth tech stacks, specifications, SQLite offline architectures, and bespoke consulting.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={onViewAllServices}
+              className="btn btn--sm shrink-0 whitespace-nowrap shadow-sm group cursor-pointer inline-flex items-center justify-center gap-2"
+            >
+              <span>Explore All Services</span>
+              <svg className="btn__arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6">
+                <path d="M2.5 9.5 9.5 2.5M9.5 2.5H4M9.5 2.5V8" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
