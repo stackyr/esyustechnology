@@ -17,8 +17,13 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config();
 
+const ATLAS_FALLBACK_URI = 'mongodb+srv://milanmmandal123_db_user:rGC22L2SCje3Mtko@esyus.egjlhr5.mongodb.net/test?retryWrites=true&w=majority';
+
 const getMongoUri = () => {
-  let uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/test';
+  let uri = (process.env.MONGODB_URI || '').trim();
+  if (!uri || uri.includes('localhost') || uri.includes('127.0.0.1')) {
+    uri = ATLAS_FALLBACK_URI;
+  }
   if (uri.startsWith('mongodb+srv://') && !uri.includes('?')) {
     uri = uri.replace(/\/?$/, '/test?retryWrites=true&w=majority');
   }

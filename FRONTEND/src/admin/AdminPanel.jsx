@@ -581,6 +581,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onDeleteInquiry={handleDeleteInquiry}
                     onRefresh={() => loadAllData()}
                     isRefreshing={isRefreshing || refreshingSection === 'inquiries'}
+                    isInitialLoading={isInitialLoading}
                   />
                 )}
 
@@ -605,6 +606,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onDeleteService={handleDeleteService}
                     onRefresh={() => loadAllData()}
                     isRefreshing={isRefreshing || refreshingSection === 'services'}
+                    isInitialLoading={isInitialLoading}
                   />
                 )}
 
@@ -616,6 +618,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onDeleteProduct={handleDeleteProduct}
                     onRefresh={() => loadAllData()}
                     isRefreshing={isRefreshing || refreshingSection === 'products'}
+                    isInitialLoading={isInitialLoading}
                   />
                 )}
 
@@ -627,6 +630,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onDeleteFaq={handleDeleteFaq}
                     onRefresh={() => loadAllData()}
                     isRefreshing={isRefreshing || refreshingSection === 'faqs'}
+                    isInitialLoading={isInitialLoading}
                   />
                 )}
               </AdminErrorBoundary>

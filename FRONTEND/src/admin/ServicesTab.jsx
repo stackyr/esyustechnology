@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2, RefreshCw, CheckCircle2, Wrench, X, Layers, Code, Clock, Link as LinkIcon } from 'lucide-react';
 
-export default function ServicesTab({ services = [], onAddService, onUpdateService, onDeleteService, onRefresh, isRefreshing }) {
+export default function ServicesTab({ services = [], onAddService, onUpdateService, onDeleteService, onRefresh, isRefreshing, isInitialLoading = false }) {
+  const isLoading = isInitialLoading || (isRefreshing && services.length === 0);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingService, setEditingService] = useState(null);
 
@@ -115,6 +116,28 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
       </div>
 
       {/* Services Grid */}
+      {isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <div key={n} className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4 animate-pulse">
+              <div className="flex items-center justify-between">
+                <div className="w-24 h-5 rounded-full bg-stone-200" />
+                <div className="w-12 h-4 rounded bg-stone-100" />
+              </div>
+              <div className="w-48 h-6 rounded bg-stone-200" />
+              <div className="space-y-2">
+                <div className="w-full h-3.5 rounded bg-stone-100" />
+                <div className="w-5/6 h-3.5 rounded bg-stone-100" />
+              </div>
+              <div className="flex gap-2 pt-2">
+                <div className="w-16 h-6 rounded-md bg-stone-100" />
+                <div className="w-16 h-6 rounded-md bg-stone-100" />
+                <div className="w-16 h-6 rounded-md bg-stone-100" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {services.map((srv) => (
           <div

@@ -113,10 +113,10 @@ export default function AdminSidebar({
           <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isMongoConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500 animate-ping'}`} />
           <div className="flex-1 truncate">
             <span className="font-bold block truncate">
-              {isMongoConnected ? 'MongoDB Atlas Active' : 'MongoDB Atlas Syncing'}
+              {isMongoConnected ? 'MongoDB Atlas Active' : 'Connecting MongoDB Atlas...'}
             </span>
             <span className="text-[10px] text-[var(--muted)] block truncate">
-              {isMongoConnected ? 'Production Cloud Database' : 'Auto-Reconnecting Link...'}
+              {isMongoConnected ? 'Production Cloud Database' : 'Establishing Real-Time Link...'}
             </span>
           </div>
         </div>
@@ -156,8 +156,8 @@ export default function AdminSidebar({
                 </div>
 
                 {/* Badge / Count */}
-                {isInitialLoading ? (
-                  <span className="w-5 h-4 rounded-md bg-stone-200/70 animate-pulse shrink-0 inline-block" />
+                {isInitialLoading || (item.count === 0 && !isMongoConnected) ? (
+                  <span className="w-6 h-4 rounded-md bg-stone-200/80 animate-pulse shrink-0 inline-block" />
                 ) : item.badge ? (
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-bold animate-badge-glow shadow-[0_0_12px_rgba(232,105,60,0.45)] shrink-0 ${
                     isActive ? 'bg-[var(--c1)] text-white' : 'bg-[var(--c1)] text-white'

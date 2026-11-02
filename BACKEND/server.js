@@ -242,7 +242,8 @@ io.on('connection', (socket) => {
 connectMongoDB();
 
 // Health Check
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  await ensureMongoConnection();
   res.json({
     status: 'ok',
     service: 'Esyus MERN Stack Backend API Server',

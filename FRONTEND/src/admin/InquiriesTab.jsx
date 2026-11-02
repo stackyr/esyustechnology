@@ -6,12 +6,15 @@ export default function InquiriesTab({
   onUpdateStatus,
   onDeleteInquiry,
   onRefresh,
-  isRefreshing
+  isRefreshing,
+  isInitialLoading = false
 }) {
   const [filterStatus, setFilterStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [editingNotesId, setEditingNotesId] = useState(null);
   const [noteText, setNoteText] = useState('');
+
+  const isLoading = isInitialLoading || (isRefreshing && inquiries.length === 0);
 
   // Counts
   const totalCount = inquiries.length;
@@ -139,24 +142,33 @@ export default function InquiriesTab({
         
         {/* Status Filter Tabs */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          {[
-            { id: 'all', label: `All (${totalCount})` },
-            { id: 'new', label: `New (${newCount})` },
-            { id: 'in_progress', label: `In Progress (${inProgressCount})` },
-            { id: 'resolved', label: `Resolved (${resolvedCount})` }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setFilterStatus(tab.id)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                filterStatus === tab.id
-                  ? 'bg-[var(--ink)] text-white shadow-xs'
-                  : 'bg-[var(--soft)] text-[var(--ink)] hover:bg-[var(--line)]'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {isLoading ? (
+            <div className="flex items-center gap-2">
+              <div className="w-16 h-7 rounded-xl bg-stone-200/80 animate-pulse" />
+              <div className="w-16 h-7 rounded-xl bg-stone-200/80 animate-pulse" />
+              <div className="w-20 h-7 rounded-xl bg-stone-200/80 animate-pulse" />
+              <div className="w-20 h-7 rounded-xl bg-stone-200/80 animate-pulse" />
+            </div>
+          ) : (
+            [
+              { id: 'all', label: `All (${totalCount})` },
+              { id: 'new', label: `New (${newCount})` },
+              { id: 'in_progress', label: `In Progress (${inProgressCount})` },
+              { id: 'resolved', label: `Resolved (${resolvedCount})` }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setFilterStatus(tab.id)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  filterStatus === tab.id
+                    ? 'bg-[var(--ink)] text-white shadow-xs'
+                    : 'bg-[var(--soft)] text-[var(--ink)] hover:bg-[var(--line)]'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))
+          )}
         </div>
 
         {/* Search & Actions */}
@@ -188,7 +200,28 @@ export default function InquiriesTab({
 
       {/* Inquiries Cards List */}
       <div className="space-y-4">
-        {filteredInquiries.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-4">
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} className="p-5 sm:p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4 animate-pulse">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-stone-200" />
+                    <div className="space-y-1.5">
+                      <div className="w-36 h-4 rounded bg-stone-200" />
+                      <div className="w-24 h-3 rounded bg-stone-100" />
+                    </div>
+                  </div>
+                  <div className="w-24 h-6 rounded-full bg-stone-200" />
+                </div>
+                <div className="space-y-2 pt-2 border-t border-[var(--line)]">
+                  <div className="w-3/4 h-3.5 rounded bg-stone-200" />
+                  <div className="w-1/2 h-3 rounded bg-stone-100" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredInquiries.length === 0 ? (
           <div className="text-center py-16 px-4 rounded-3xl bg-white border border-[var(--line)] space-y-4">
             <div className="w-14 h-14 rounded-2xl bg-[var(--soft)] text-[var(--muted)] flex items-center justify-center mx-auto">
               <Mail className="w-7 h-7" />

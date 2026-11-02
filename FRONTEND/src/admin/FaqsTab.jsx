@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Plus, Edit2, Trash2, RefreshCw, HelpCircle, X, Check } from 'lucide-react';
 
-export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq, onRefresh, isRefreshing }) {
+export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq, onRefresh, isRefreshing, isInitialLoading = false }) {
+  const isLoading = isInitialLoading || (isRefreshing && faqs.length === 0);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingFaq, setEditingFaq] = useState(null);
 
@@ -81,6 +82,20 @@ export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq,
       </div>
 
       {/* FAQ Items List */}
+      {isLoading ? (
+        <div className="space-y-3">
+          {[1, 2, 3, 4, 5].map((n) => (
+            <div key={n} className="p-5 sm:p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-3 animate-pulse">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 rounded-lg bg-stone-200" />
+                <div className="w-3/4 h-5 rounded bg-stone-200" />
+              </div>
+              <div className="w-full h-3.5 rounded bg-stone-100" />
+              <div className="w-5/6 h-3.5 rounded bg-stone-100" />
+            </div>
+          ))}
+        </div>
+      ) : (
       <div className="space-y-3">
         {faqs.map((faq, idx) => (
           <div
