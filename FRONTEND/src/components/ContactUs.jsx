@@ -274,8 +274,8 @@ export default function ContactUs({ preselectedSubject }) {
         </div>
 
         {/* Right Column: Code Art & Phone Screen Mockup */}
-        <figure className="contact__photo tab-r overflow-hidden relative">
-          <div className="art g-pine relative">
+        <figure className="contact__photo tab-r" data-open>
+          <div className="art g-pine">
             <img
               src={contactSec.counterImage || "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900"}
               alt={`${COMPANY_INFO.shortName} Store Counter Billing Setup`}
