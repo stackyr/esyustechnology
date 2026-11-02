@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import { Clock, Download, Search, X, ExternalLink } from 'lucide-react';
 
-export default function DownloadSection({ _onDownloadApp, onOpenDownloadsPage }) {
+export default function DownloadSection({ onDownloadApp, onOpenDownloadsPage }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'windows' | 'android'
   const [searchQuery, setSearchQuery] = useState('');
   const sec = LANDING_PAGE_SECTIONS?.downloadSection || {};
@@ -197,44 +197,46 @@ export default function DownloadSection({ _onDownloadApp, onOpenDownloadsPage })
                   </li>
                 </ul>
 
-                {/* CTA Button: Coming Soon / Navigate to Release Center */}
+                {/* CTA Button: Active Download vs Coming Soon */}
                 <div className="w-full mt-auto pt-2 sm:pt-3">
-                  {isFeatured ? (
+                  {!app.isComingSoon && Boolean(app.downloadUrl) ? (
                     <>
                       <button
                         type="button"
                         onClick={() => {
-                          if (onOpenDownloadsPage) onOpenDownloadsPage(app);
+                          if (onDownloadApp) onDownloadApp(app);
                         }}
-                        className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-pointer hover:shadow-xl active:scale-95 group"
-                        title={`Click to view ${app.name} in Release Center`}
+                        className={`w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[14px] flex items-center justify-center gap-2 text-white shadow-lg transition-all duration-300 cursor-pointer hover:shadow-xl active:scale-95 ${
+                          isFeatured
+                            ? 'bg-gradient-to-r from-[var(--c1)] to-[#e86a48] shadow-[var(--c1)]/30'
+                            : 'bg-[var(--c1)] hover:bg-[#d65a2f]'
+                        }`}
+                        title={`Download official ${app.name} package`}
                       >
-                        <Clock className="w-4 h-4 mr-1 text-white shrink-0 animate-pulse" />
+                        <Download className="w-4 h-4 mr-1 text-white shrink-0" />
                         <span className="text-white font-bold tracking-wide">
-                          Coming Soon (Windows .EXE)
+                          Download ({isAndroid ? 'Android .APK' : 'Windows .EXE'})
                         </span>
-                        <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
                       </button>
-                      <div className="text-[11px] text-center font-mono mt-1.5 truncate text-amber-200/80 font-medium">
-                        Official release in preparation • {app.size}
+                      <div className="text-[11px] text-center font-mono mt-1.5 truncate text-[var(--muted)]">
+                        Official release • {app.size}
                       </div>
                     </>
                   ) : (
                     <>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (onOpenDownloadsPage) onOpenDownloadsPage(app);
-                        }}
-                        className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[13.5px] flex items-center justify-center gap-2 coming-soon-btn cursor-pointer shadow-xs active:scale-95 transition-all group"
-                        title={`Click to view ${app.name} in Release Center`}
+                      <div
+                        className={`w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[13.5px] flex items-center justify-center gap-2 cursor-default select-none ${
+                          isFeatured
+                            ? 'bg-white/10 text-amber-300 border border-amber-400/30'
+                            : 'coming-soon-btn opacity-85'
+                        }`}
+                        title={`Official ${app.name} release in preparation`}
                       >
                         <Clock className="w-4 h-4 mr-1 shrink-0" />
                         <span className="truncate font-bold text-[13px] sm:text-[13.5px]">
                           Coming Soon ({isAndroid ? 'Android .APK' : 'Windows .EXE'})
                         </span>
-                        <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
-                      </button>
+                      </div>
                       <div className="text-[11px] text-center font-mono mt-1.5 truncate text-[var(--muted)]">
                         Official release in preparation • {app.size}
                       </div>

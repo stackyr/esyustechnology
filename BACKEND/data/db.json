@@ -38,7 +38,18 @@
   "landingPage": {
     "hero": {
       "title": "Engineered for speed, built for reliability",
-      "collageA1": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=800"
+      "ringText": "Offline Billing Suite · Fast & Dependable ·",
+      "floodTitle": "Built for Indian business counters.",
+      "floodLead": "Local SQLite databases, instant 0.2s keystrokes, and plug-and-play thermal printer drivers. Total operational autonomy, no matter what happens to the internet.",
+      "videoUrl": "/demo-video.mp4?v=2",
+      "collageA1": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=800",
+      "collageA2": "https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=800",
+      "collageB": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=800",
+      "collageD": "https://images.unsplash.com/photo-1556742208-999815fca738?auto=format&fit=crop&q=80&w=800",
+      "collageE1": "https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?auto=format&fit=crop&q=80&w=800",
+      "collageE2": "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800",
+      "founderPhoto": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
+      "coFounderPhoto": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
     },
     "about": {
       "headline": "Building dependable software for real-world businesses",
@@ -255,7 +266,19 @@
       "accentColor": "from-blue-600 to-indigo-700",
       "badge": "Flagship Desktop",
       "logo": "/finance-flow-logo.png",
-      "image": "/card-finance-flow.png"
+      "image": "/card-finance-flow.png",
+      "chips": [
+        "⚡ 0.2s Keystrokes",
+        "🔒 Encrypted SQLite DB",
+        "🖨️ Thermal 2\"/3\" & A4"
+      ],
+      "highlights": [
+        "Works 100% offline with zero cloud dependency",
+        "Compliant with current GST tax slabs (CGST, SGST, IGST)",
+        "Thermal (2\" / 3\") and Laser A4/A5 invoice printing",
+        "Instant stock tracking & inventory ledger",
+        "Automated daily sales summary & tax reports"
+      ]
     },
     {
       "id": "finance-flow-lite",

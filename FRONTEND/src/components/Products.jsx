@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import { Clock, Download } from 'lucide-react';
 
-export default function Products({ onSelectProduct, _onDownloadProduct, onViewAllPackages, onDownloadClick }) {
+export default function Products({ onSelectProduct, onDownloadProduct, onViewAllPackages, onDownloadClick }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'desktop' | 'mobile'
   const sec = LANDING_PAGE_SECTIONS?.productsSection || {};
 
@@ -183,19 +183,28 @@ export default function Products({ onSelectProduct, _onDownloadProduct, onViewAl
                       <span className="spec-btn__arr" aria-hidden="true">→</span>
                     </button>
 
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (onViewAllPackages) onViewAllPackages(item.product);
-                        else if (onDownloadClick) onDownloadClick(item.product);
-                      }}
-                      className="coming-soon-btn flex-1"
-                      title={`Click to view ${item.name} in Release Center`}
-                    >
-                      <Clock className="w-3.5 h-3.5 shrink-0" />
-                      <span>Coming Soon</span>
-                      <span className="btn__arr ml-0.5">→</span>
-                    </button>
+                    {item.product && !item.product.isComingSoon && Boolean(item.product.downloadUrl) ? (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onDownloadProduct) onDownloadProduct(item.product);
+                          else if (onDownloadClick) onDownloadClick(item.product);
+                        }}
+                        className="btn btn--cta flex-1 justify-center !py-2.5 text-xs cursor-pointer shadow-md"
+                        title={`Download ${item.name}`}
+                      >
+                        <Download className="w-3.5 h-3.5 shrink-0 mr-1" />
+                        <span>Download {item.product.platform?.toLowerCase().includes('android') ? 'APK' : 'EXE'}</span>
+                      </button>
+                    ) : (
+                      <div
+                        className="coming-soon-btn flex-1 justify-center opacity-85 cursor-default select-none"
+                        title={`Official ${item.name} release in preparation`}
+                      >
+                        <Clock className="w-3.5 h-3.5 shrink-0" />
+                        <span>Coming Soon</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </article>

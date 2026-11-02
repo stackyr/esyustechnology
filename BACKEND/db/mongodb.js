@@ -143,7 +143,23 @@ export async function updateLandingPageData(updates) {
     if (!doc) {
       doc = await LandingPage.create(updates);
     } else {
-      Object.assign(doc, updates);
+      for (const section of Object.keys(updates)) {
+        if (updates[section] && typeof updates[section] === 'object' && !Array.isArray(updates[section])) {
+          const currentSec = doc[section] ? (doc[section].toObject ? doc[section].toObject() : doc[section]) : {};
+          doc[section] = { ...currentSec, ...updates[section] };
+        } else {
+          doc[section] = updates[section];
+        }
+      }
+      doc.markModified('hero');
+      doc.markModified('about');
+      doc.markModified('servicesSection');
+      doc.markModified('productsSection');
+      doc.markModified('featuredProduct');
+      doc.markModified('whyChooseUs');
+      doc.markModified('reviewsSection');
+      doc.markModified('downloadSection');
+      doc.markModified('contact');
       await doc.save();
     }
     const db = getDB();
@@ -153,7 +169,16 @@ export async function updateLandingPageData(updates) {
   }
 
   const db = getDB();
-  db.landingPage = { ...(db.landingPage || {}), ...updates };
+  const currentLP = db.landingPage || {};
+  const mergedLP = { ...currentLP };
+  for (const section of Object.keys(updates)) {
+    if (updates[section] && typeof updates[section] === 'object' && !Array.isArray(updates[section])) {
+      mergedLP[section] = { ...(currentLP[section] || {}), ...updates[section] };
+    } else {
+      mergedLP[section] = updates[section];
+    }
+  }
+  db.landingPage = mergedLP;
   saveDB(db);
   return db.landingPage;
 }
@@ -398,6 +423,7 @@ export async function resetAllData() {
   if (isMongoConnected()) {
     await Promise.all([
       Brand.deleteMany({}),
+      LandingPage.deleteMany({}),
       Service.deleteMany({}),
       Product.deleteMany({}),
       Faq.deleteMany({}),

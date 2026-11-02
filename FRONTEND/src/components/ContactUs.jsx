@@ -87,16 +87,14 @@ export default function ContactUs({ preselectedSubject }) {
           <div>
             <span className="eyebrow">Get In Touch</span>
             <h2 className="contact__title" style={{ marginTop: '16px' }}>
-              {contactSec.headline && contactSec.headline !== "Start a conversation." ? (
+              {contactSec.headline ? (
                 contactSec.headline
               ) : (
                 <>Start a conversation. For any <em className="s">service or software.</em></>
               )}
             </h2>
             <p className="lead" style={{ marginTop: '14px' }}>
-              {contactSec.lead && !contactSec.lead.includes("Finance Flow, customized desktop billing counters")
-                ? contactSec.lead
-                : "Looking for custom website development, Android mobile apps, or enterprise web portals? Inquiring about our ready-to-use software suite (Finance Flow, Bharat Yatra Sathi, and more)? Or facing a technical challenge needing bespoke engineering? Reach out to our team directly — we are ready to assist with every requirement."}
+              {contactSec.lead || "Looking for custom website development, Android mobile apps, or enterprise web portals? Inquiring about our ready-to-use software suite (Finance Flow, Bharat Yatra Sathi, and more)? Or facing a technical challenge needing bespoke engineering? Reach out to our team directly — we are ready to assist with every requirement."}
             </p>
           </div>
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Clock, ShieldCheck, Mail } from 'lucide-react';
+import { X, Clock, ShieldCheck, Mail, Download } from 'lucide-react';
 
 export default function DownloadModal({ product, onClose }) {
   if (!product) return null;
@@ -68,15 +68,35 @@ export default function DownloadModal({ product, onClose }) {
             </div>
           </div>
 
-          {/* Release in Preparation Status Badge (No Live Download Link) */}
+          {/* Release Download CTA */}
           <div className="space-y-2 pt-1">
-            <div className="w-full h-11 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 bg-[var(--soft)] border border-[var(--c1)]/30 text-[var(--c1)] shadow-xs">
-              <Clock className="w-4 h-4 text-[var(--c1)] animate-pulse" />
-              <span>Official Download Coming Soon ({product.version || 'v1.0.0'})</span>
-            </div>
-            <div className="text-[11px] text-center font-mono text-[var(--muted)]">
-              Official build undergoing final verification • Zero cloud lag
-            </div>
+            {!product.isComingSoon && Boolean(product.downloadUrl) ? (
+              <>
+                <a
+                  href={product.downloadUrl}
+                  download={product.downloadFile || true}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full h-12 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 bg-[var(--c1)] hover:bg-[#d65a2f] text-white shadow-lg shadow-[var(--c1)]/30 cursor-pointer transition-all active:scale-95"
+                >
+                  <Download className="w-4 h-4" />
+                  <span>Download Package ({product.downloadFile || product.size})</span>
+                </a>
+                <div className="text-[11px] text-center font-mono text-[var(--muted)]">
+                  Verified SHA-256 installer • Offline database runtime
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="w-full h-11 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 bg-[var(--soft)] border border-[var(--c1)]/30 text-[var(--c1)] shadow-xs select-none">
+                  <Clock className="w-4 h-4 text-[var(--c1)] animate-pulse" />
+                  <span>Official Download Coming Soon ({product.version || 'v1.0.0'})</span>
+                </div>
+                <div className="text-[11px] text-center font-mono text-[var(--muted)]">
+                  Official build undergoing final verification • Zero cloud lag
+                </div>
+              </>
+            )}
           </div>
 
           {/* Secondary Actions */}

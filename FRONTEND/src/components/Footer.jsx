@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { COMPANY_INFO, SERVICES, PRODUCTS } from '../data/companyData';
+import { COMPANY_INFO, SERVICES, PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import api from '../utils/api';
 
 export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin, onOpenDownloadsPage }) {
@@ -36,12 +36,17 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
             <use href="#s-orb" />
           </svg>
 
-          <div>
-            <span className="fcta__eyebrow">Enterprise Precision • Zero Cloud Latency</span>
-            <h3 className="fcta__title">
-              Bring calm, offline precision to your billing counter.
-            </h3>
-          </div>
+          {(() => {
+            const contact = LANDING_PAGE_SECTIONS?.contact || {};
+            return (
+              <div>
+                <span className="fcta__eyebrow">{contact.footerCtaEyebrow || 'Enterprise Precision • Zero Cloud Latency'}</span>
+                <h3 className="fcta__title">
+                  {contact.footerCtaTitle || 'Bring calm, offline precision to your billing counter.'}
+                </h3>
+              </div>
+            );
+          })()}
 
           <div className="stores">
             <a

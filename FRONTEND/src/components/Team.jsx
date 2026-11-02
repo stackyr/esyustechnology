@@ -1,5 +1,5 @@
 import React from 'react';
-import { TEAM_MEMBERS, COMPANY_INFO } from '../data/companyData';
+import { TEAM_MEMBERS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
 export default function Team({ onContactClick }) {
   const tones = ['tone-3', 'tone-2', 'tone-4', 'tone-1'];
@@ -33,14 +33,25 @@ export default function Team({ onContactClick }) {
             <li key={idx} className={`person ${tone}`}>
               <figure className="person__photo tab-l">
                 <div className={`art ${art}`} role="img" aria-label={`Portrait of ${displayName}`}>
-                  <img
-                    src={member.avatar}
-                    alt={displayName}
-                    className="full object-cover"
-                    onError={(e) => {
-                      e.target.style.opacity = '0.7';
-                    }}
-                  />
+                  {(() => {
+                    const hero = LANDING_PAGE_SECTIONS?.hero || {};
+                    const about = LANDING_PAGE_SECTIONS?.about || {};
+                    const avatarSrc = idx === 0
+                      ? (hero.founderPhoto || about.founderPhoto || member.avatar)
+                      : idx === 1
+                      ? (hero.coFounderPhoto || member.avatar)
+                      : member.avatar;
+                    return (
+                      <img
+                        src={avatarSrc}
+                        alt={displayName}
+                        className="full object-cover"
+                        onError={(e) => {
+                          e.target.style.opacity = '0.7';
+                        }}
+                      />
+                    );
+                  })()}
                 </div>
               </figure>
               <h3 className="person__name">{displayName}</h3>

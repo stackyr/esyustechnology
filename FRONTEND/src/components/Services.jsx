@@ -117,16 +117,21 @@ export default function Services({ onSelectService, onEnquireService }) {
               <div className="folder__in">
                 <div className="folder__tab">
                   <span className="folder__tab-num">{item.num}</span>
-                  <span className="folder__tab-title">{item.tab}</span>
+                  <span className="folder__tab-title">{serviceObj?.title || item.tab}</span>
+                  {serviceObj?.isComingSoon && (
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 border border-amber-500/30 ml-2">
+                      Coming Soon
+                    </span>
+                  )}
                 </div>
 
                 <div className="folder__body">
                   {/* Left Column: Details & Actions */}
                   <div className="folder__copy">
                     <div>
-                      <span className="folder__meta">{item.meta}</span>
-                      <h3 className="folder__h3">{serviceObj.title}</h3>
-                      <p className="folder__lead">{item.lead}</p>
+                      <span className="folder__meta">{serviceObj?.badge ? `${serviceObj.badge} · ${item.meta}` : item.meta}</span>
+                      <h3 className="folder__h3">{serviceObj?.title || item.tab}</h3>
+                      <p className="folder__lead">{serviceObj?.shortDesc || item.lead}</p>
                     </div>
 
                     <div className="folder__actions">
@@ -141,13 +146,20 @@ export default function Services({ onSelectService, onEnquireService }) {
                         </svg>
                       </button>
 
-                      <button
-                        type="button"
-                        className="btn btn--line btn--sm"
-                        onClick={() => onEnquireService(serviceObj.title)}
-                      >
-                        Enquire for project
-                      </button>
+                      {serviceObj?.isComingSoon ? (
+                        <div className="coming-soon-btn btn--sm cursor-default opacity-85 select-none inline-flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5 shrink-0" />
+                          <span>Coming Soon</span>
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          className="btn btn--line btn--sm"
+                          onClick={() => onEnquireService(serviceObj?.title || item.tab)}
+                        >
+                          Enquire for project
+                        </button>
+                      )}
                     </div>
                   </div>
 

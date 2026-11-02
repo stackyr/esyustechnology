@@ -288,18 +288,30 @@ export default function DownloadsPage({
                   <div className={`p-4 sm:p-5 pt-3 border-t mt-auto flex flex-col gap-2 ${
                     isFeatured ? 'border-white/10 bg-black/20' : 'border-[var(--line)] bg-[var(--bg)]/50'
                   }`}>
-                    {/* Primary Status: Coming Soon (No live download link) */}
-                    <button
-                      type="button"
-                      disabled
-                      className={`coming-soon-btn w-full h-11 justify-center text-xs uppercase tracking-wider cursor-default ${
-                        isFeatured ? '!bg-amber-400 !text-stone-950 !border-amber-400 opacity-95' : 'opacity-90'
-                      }`}
-                      title={`Official ${product.name} release in preparation`}
-                    >
-                      <Clock className="w-3.5 h-3.5 shrink-0" />
-                      <span>Coming Soon ({isAndroid ? 'Android APK' : 'Windows EXE'})</span>
-                    </button>
+                    {/* Primary Action: Active Download vs Coming Soon */}
+                    {product.isComingSoon === false && Boolean(product.downloadUrl) ? (
+                      <button
+                        type="button"
+                        onClick={() => onDownloadApp ? onDownloadApp(product) : (window.location.href = product.downloadUrl)}
+                        className={`w-full h-11 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 text-white shadow-md transition-all cursor-pointer active:scale-95 ${
+                          isFeatured ? 'bg-gradient-to-r from-[var(--c1)] to-[#e86a48]' : 'bg-[var(--c1)] hover:bg-[#d65a2f]'
+                        }`}
+                        title={`Download official ${product.name} package`}
+                      >
+                        <Download className="w-4 h-4 shrink-0" />
+                        <span>Download ({isAndroid ? 'Android APK' : 'Windows EXE'})</span>
+                      </button>
+                    ) : (
+                      <div
+                        className={`coming-soon-btn w-full h-11 justify-center text-xs uppercase tracking-wider cursor-default select-none ${
+                          isFeatured ? '!bg-amber-400 !text-stone-950 !border-amber-400 opacity-95' : 'opacity-90'
+                        }`}
+                        title={`Official ${product.name} release in preparation`}
+                      >
+                        <Clock className="w-3.5 h-3.5 shrink-0" />
+                        <span>Coming Soon ({isAndroid ? 'Android APK' : 'Windows EXE'})</span>
+                      </div>
+                    )}
 
                     {/* Secondary Specs Modal Trigger */}
                     <button

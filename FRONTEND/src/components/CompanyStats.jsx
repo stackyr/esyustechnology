@@ -9,6 +9,10 @@ export default function CompanyStats() {
     { label: "Custom Cloud Portals & Corporate Web", value: 16, tone: "tone-5", fill: "16%" }
   ];
 
+  const stats = COMPANY_INFO.stats || [];
+  const invoicesStat = stats[2] || { value: "50,000+", desc: "GST invoices generated completely offline" };
+  const uptimeStat = stats[0] || { value: "100%", desc: "local offline uptime with zero server downtime" };
+
   return (
     <section id="stats" className="facts" data-kind="facts" data-section="stats">
       <div className="wrap facts__in">
@@ -24,12 +28,12 @@ export default function CompanyStats() {
 
           <div className="figs">
             <p className="fig">
-              <span className="fig__num">50k+</span>
-              <span className="fig__label">GST invoices generated completely offline</span>
+              <span className="fig__num">{invoicesStat.value}</span>
+              <span className="fig__label">{invoicesStat.desc || invoicesStat.label || "GST invoices generated completely offline"}</span>
             </p>
             <p className="fig">
-              <span className="fig__num">100%</span>
-              <span className="fig__label">local offline uptime with zero server downtime</span>
+              <span className="fig__num">{uptimeStat.value}</span>
+              <span className="fig__label">{uptimeStat.desc || uptimeStat.label || "local offline uptime with zero server downtime"}</span>
             </p>
           </div>
         </div>

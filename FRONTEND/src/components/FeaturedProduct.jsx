@@ -32,7 +32,7 @@ export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick
         <div className="process__copy">
           <span className="eyebrow">Flagship Desktop Software</span>
           <h2 className="h2">
-            {fp.headline && !fp.headline.toLowerCase().includes('barcode') ? (
+            {fp.headline ? (
               fp.headline
             ) : (
               <>Finance Flow: From item entry to printed GST invoice in <em className="s">0.2 seconds</em></>
@@ -103,19 +103,29 @@ export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick
               <span className="text-xs font-bold text-[var(--ink)]">
                 Net Bill: ₹{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </span>
-              <button
-                type="button"
-                onClick={() => {
-                  if (onDownloadClick) onDownloadClick(financeFlow);
-                  else if (onDownloadFinanceFlow) onDownloadFinanceFlow(financeFlow);
-                }}
-                className="coming-soon-btn w-full sm:w-auto cursor-pointer"
-                title="Click to view software package in Release Center"
-              >
-                <Clock className="w-3.5 h-3.5 mr-1.5 shrink-0" />
-                <span>Coming Soon ({financeFlow.version || 'v2.4.0'})</span>
-                <span className="btn__arr ml-1">→</span>
-              </button>
+              {financeFlow && !financeFlow.isComingSoon && Boolean(financeFlow.downloadUrl) ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onDownloadClick) onDownloadClick(financeFlow);
+                    else if (onDownloadFinanceFlow) onDownloadFinanceFlow(financeFlow);
+                  }}
+                  className="btn btn--cta w-full sm:w-auto cursor-pointer"
+                  title={`Download Finance Flow ${financeFlow.version || 'v2.4.0'}`}
+                >
+                  <Download className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+                  <span>Download ({financeFlow.version || 'v2.4.0'})</span>
+                  <span className="btn__arr ml-1">→</span>
+                </button>
+              ) : (
+                <div
+                  className="coming-soon-btn w-full sm:w-auto cursor-default opacity-85 select-none"
+                  title="Official software package release in preparation"
+                >
+                  <Clock className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+                  <span>Coming Soon ({financeFlow.version || 'v2.4.0'})</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

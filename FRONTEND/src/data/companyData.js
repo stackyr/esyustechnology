@@ -468,6 +468,9 @@ export const LANDING_PAGE_SECTIONS = {
 export function applyDynamicData({ brand, services, products, faqs, landingPage }) {
   if (brand && typeof brand === 'object') {
     Object.assign(COMPANY_INFO, brand);
+    if (Array.isArray(brand.stats) && brand.stats.length > 0) {
+      COMPANY_INFO.stats = [...brand.stats];
+    }
   }
   if (landingPage && typeof landingPage === 'object') {
     if (landingPage.hero) Object.assign(LANDING_PAGE_SECTIONS.hero, landingPage.hero);
@@ -475,7 +478,12 @@ export function applyDynamicData({ brand, services, products, faqs, landingPage 
     if (landingPage.servicesSection) Object.assign(LANDING_PAGE_SECTIONS.servicesSection, landingPage.servicesSection);
     if (landingPage.productsSection) Object.assign(LANDING_PAGE_SECTIONS.productsSection, landingPage.productsSection);
     if (landingPage.featuredProduct) Object.assign(LANDING_PAGE_SECTIONS.featuredProduct, landingPage.featuredProduct);
-    if (landingPage.whyChooseUs) Object.assign(LANDING_PAGE_SECTIONS.whyChooseUs, landingPage.whyChooseUs);
+    if (landingPage.whyChooseUs) {
+      Object.assign(LANDING_PAGE_SECTIONS.whyChooseUs, landingPage.whyChooseUs);
+      if (Array.isArray(landingPage.whyChooseUs.pillarImages)) {
+        LANDING_PAGE_SECTIONS.whyChooseUs.pillarImages = [...landingPage.whyChooseUs.pillarImages];
+      }
+    }
     if (landingPage.downloadSection) Object.assign(LANDING_PAGE_SECTIONS.downloadSection, landingPage.downloadSection);
     if (landingPage.reviewsSection) Object.assign(LANDING_PAGE_SECTIONS.reviewsSection, landingPage.reviewsSection);
     if (landingPage.contact) Object.assign(LANDING_PAGE_SECTIONS.contact, landingPage.contact);

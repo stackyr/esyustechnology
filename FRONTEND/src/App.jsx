@@ -226,6 +226,7 @@ export default function App() {
       <main>
         {isDownloadsPage ? (
           <DownloadsPage
+            dataVersion={dataVersion}
             onBackToHome={handleBackToHome}
             onSelectProduct={(product) => setSelectedProduct(product)}
             onDownloadApp={handleDownloadAppDirectly}
