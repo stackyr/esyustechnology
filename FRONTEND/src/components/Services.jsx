@@ -125,13 +125,17 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
 
       {/* Stacked Interactive Folders (100% Database Driven) */}
       <div className="wrap folders" data-folders data-component="service-folders">
-        {activeServices.map((item) => {
+        {activeServices.map((item, idx) => {
           const srv = item.service;
           return (
             <article
               key={item.id}
               className={`folder ${item.tone}`}
               data-item={item.id}
+              style={{
+                '--i': idx,
+                '--p': activeServices.length > 1 ? (idx / (activeServices.length - 1)).toFixed(3) : 0
+              }}
             >
               <div className="folder__in">
                 <div className="folder__tab">

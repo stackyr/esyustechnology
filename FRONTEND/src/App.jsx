@@ -178,7 +178,7 @@ export default function App() {
 
   // Initialize Hearthly GSAP & Lenis smooth scroll engine (only on landing page)
   useEffect(() => {
-    if (isAdmin || isDownloadsPage) return;
+    if (isAdmin || isDownloadsPage || isInitialLoading) return;
     let cleanup = null;
     const timeout = setTimeout(() => {
       cleanup = initHearthlyAnimations();
@@ -188,7 +188,17 @@ export default function App() {
       clearTimeout(timeout);
       if (typeof cleanup === 'function') cleanup();
     };
-  }, [isAdmin, isDownloadsPage]);
+  }, [isAdmin, isDownloadsPage, isInitialLoading]);
+
+  // Refresh ScrollTrigger whenever live data changes so triggers adjust to content heights
+  useEffect(() => {
+    if (dataVersion > 0 && typeof window !== 'undefined' && window.ScrollTrigger) {
+      const timer = setTimeout(() => {
+        window.ScrollTrigger.refresh();
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [dataVersion]);
 
   // Navigation handlers
   const scrollToSection = (id) => {
@@ -293,7 +303,61 @@ export default function App() {
   }
 
   return (
-    <div key={`esyus-v-${dataVersion}`} className="min-h-screen selection:bg-[var(--c1)] selection:text-white">
+    <div className="min-h-screen selection:bg-[var(--c1)] selection:text-white relative">
+            {/* Full-Screen Live Database Preloader Overlay */}
+      {isInitialLoading && !isAdmin && (
+        <div
+          className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg)] text-[var(--ink)] select-none transition-opacity duration-500 ${
+            loadingStage === 'dismissing' ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
+        >
+          <div className="relative flex flex-col items-center space-y-6 text-center p-8 max-w-md w-full">
+            <div className="w-20 h-20 rounded-3xl bg-[var(--dark)] flex items-center justify-center shadow-2xl shadow-[var(--c1)]/20 border border-white/10 relative">
+              <span className="font-serif italic text-4xl font-bold text-[var(--c1)]">E</span>
+              <div className="absolute -inset-1 rounded-3xl border border-[var(--c1)]/30 animate-pulse pointer-events-none" />
+            </div>
+
+            <div className="space-y-1.5">
+              <h1 className="text-2xl font-bold tracking-tight text-[var(--ink)]">
+                Esyus <em className="s font-normal">Technology</em>
+              </h1>
+              <p className="text-xs text-[var(--muted)] font-mono">
+                Smart Software Solutions &bull; Enterprise Architecture
+              </p>
+            </div>
+
+            <div className="w-full flex flex-col items-center gap-3">
+              <div
+                className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono font-medium border transition-all duration-300 ${
+                  loadingStage === 'ready'
+                    ? 'bg-emerald-500/15 text-emerald-800 border-emerald-500/30'
+                    : 'bg-[var(--soft)] text-[var(--ink)]/80 border-[var(--line)]'
+                }`}
+              >
+                {loadingStage === 'ready' ? (
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 animate-bounce" />
+                ) : (
+                  <span className="w-2 h-2 rounded-full bg-[var(--c1)] animate-ping" />
+                )}
+                <span>{loadingStatusText}</span>
+              </div>
+
+              <div className="w-56 h-1.5 bg-[var(--line)]/60 rounded-full overflow-hidden relative">
+                <div
+                  className={`h-full bg-gradient-to-r from-[var(--c1)] via-[var(--c3)] to-[var(--c1)] rounded-full transition-all duration-500 ${
+                    loadingStage === 'ready'
+                      ? 'w-full'
+                      : loadingStage === 'fetching'
+                      ? 'w-4/5 animate-pulse'
+                      : 'w-2/5 animate-pulse'
+                  }`}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* SVG Sprite Definitions for Code Art & Symbols */}
       <SvgSprite />
       
@@ -338,7 +402,7 @@ export default function App() {
             />
 
             {/* Company Statistics */}
-            <CompanyStats key={`stats-${dataVersion}`} dataVersion={dataVersion} />
+            <CompanyStats dataVersion={dataVersion} />
 
             {/* 03. About Us / Company Introduction */}
             <AboutUs
