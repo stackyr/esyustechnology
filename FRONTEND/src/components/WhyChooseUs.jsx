@@ -77,7 +77,7 @@ export default function WhyChooseUs({ onContactClick }) {
       <ul className="wrap plates" data-plates>
         {pillars.map((item, idx) => {
           const arch = (1 - Math.abs(idx - centerIndex) / centerIndex).toFixed(3);
-          const tabClass = idx < centerIndex ? 'tab-l' : idx > centerIndex ? 'tab-r' : '';
+          const tabClass = idx < centerIndex ? 'tab-l' : 'tab-r';
 
           return (
             <li

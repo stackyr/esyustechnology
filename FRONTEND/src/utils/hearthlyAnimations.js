@@ -103,7 +103,7 @@ export function initHearthlyAnimations() {
     items.forEach((li, i) => {
       li.style.setProperty('--arch', c ? (1 - Math.abs(i - c) / c).toFixed(3) : 0);
       const card = li.querySelector('.plate__card');
-      if (card && c && i !== c) {
+      if (card) {
         card.classList.add(i < c ? 'tab-l' : 'tab-r');
       }
     });
