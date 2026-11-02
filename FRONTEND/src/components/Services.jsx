@@ -86,18 +86,26 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
         ? `${srv.badge} · ${(srv.techStack || []).slice(0, 3).join(', ') || matchedPreset.meta}`
         : matchedPreset.meta;
 
+      const shortTab = srv.shortTitle || srv.title
+        .replace(/ Application Development/i, ' App')
+        .replace(/ Software Development/i, '')
+        .replace(/ Development/i, '');
+
+      const uiTitle = matchedPreset.uiTitle || (srv.badge ? `${srv.badge} Architecture` : 'Core Architecture');
+
       return {
         service: srv,
         id: srv.id || `service-${idx}`,
         num,
         tab: srv.title,
+        shortTab,
         tone,
         image,
         isLogo,
         meta,
         lead: srv.shortDesc || srv.fullDesc || '',
         uiTop: srv.badge || matchedPreset.uiTop,
-        uiTitle: srv.title || matchedPreset.uiTitle,
+        uiTitle,
         row1,
         row2,
         row3,
@@ -140,7 +148,10 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
               <div className="folder__in">
                 <div className="folder__tab">
                   <span className="folder__tab-num">{item.num}</span>
-                  <span className="folder__tab-title">{item.tab}</span>
+                  <span className="folder__tab-title">
+                    <span className="inline md:hidden">{item.shortTab}</span>
+                    <span className="hidden md:inline">{item.tab}</span>
+                  </span>
                   {item.isComingSoon && (
                     <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 border border-amber-500/30 ml-2">
                       Coming Soon

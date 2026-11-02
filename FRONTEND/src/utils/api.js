@@ -41,11 +41,13 @@ const API_BASE = resolveApiBase();
 
 async function request(path, options = {}) {
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  const url = `${API_BASE}${cleanPath}`;
+  const separator = cleanPath.includes('?') ? '&' : '?';
+  const url = (options.method && options.method !== 'GET')
+    ? `${API_BASE}${cleanPath}`
+    : `${API_BASE}${cleanPath}${separator}_t=${Date.now()}`;
   const defaultHeaders = {
     'Content-Type': 'application/json',
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-    'Pragma': 'no-cache',
+
   };
 
   try {

@@ -118,11 +118,35 @@ const corsOptions = {
     'X-Requested-With',
     'Accept',
     'Origin',
-    'x-admin-key'
+    'x-admin-key',
+    'Cache-Control',
+    'Pragma',
+    'Expires',
+    'If-Modified-Since',
+    'If-None-Match',
+    'X-CSRF-Token',
+    'X-Api-Version'
   ],
   exposedHeaders: ['Content-Range', 'X-Content-Range'],
   maxAge: 86400 // Cache preflight requests for 24 hours
 };
+
+// Universal CORS & Preflight Response Middleware (Production & Vercel)
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS, HEAD');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin, x-admin-key, Cache-Control, Pragma, Expires, If-Modified-Since, If-None-Match, X-CSRF-Token, X-Api-Version');
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+  next();
+});
 
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
