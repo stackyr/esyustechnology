@@ -102,11 +102,13 @@ export function DataProvider({ children }) {
         throw new Error('Unable to verify live database response from MongoDB backend.');
       }
     } catch (err) {
-      console.error('[DataContext] Database sync error:', err.message);
-      setIsDatabaseConnected(false);
-      setConnectionError(err.message || 'MongoDB Atlas connection failed.');
-      setLoadingStage('error');
-      setLoadingStatusText('Database Connection Offline');
+      console.warn('[DataContext] Database sync notice:', err.message);
+      if (isInitial) {
+        setIsDatabaseConnected(false);
+        setConnectionError(err.message || 'MongoDB Atlas connection failed.');
+        setLoadingStage('error');
+        setLoadingStatusText('Database Connection Offline');
+      }
       return false;
     } finally {
       if (isInitial) {
@@ -169,8 +171,14 @@ export function DataProvider({ children }) {
     // 3. Perform verified initial load from MongoDB Atlas
     loadAllFromDatabase(true);
 
+    // 4. Continuous periodic background auto-refresh (every 8s) so new services, apps, and copy appear automatically
+    const pollInterval = setInterval(() => {
+      loadAllFromDatabase(false);
+    }, 8000);
+
     return () => {
       unsubscribe();
+      clearInterval(pollInterval);
     };
   }, [loadAllFromDatabase, syncToMemory]);
 

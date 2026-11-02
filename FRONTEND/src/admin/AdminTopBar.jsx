@@ -52,6 +52,12 @@ export default function AdminTopBar({
 
       {/* Right Controls */}
       <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* Live Auto-Sync Status Badge */}
+        <div className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-800 text-[10px] font-mono">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Auto-Sync Live (5s)</span>
+        </div>
+
         {/* Refresh */}
         <button
           type="button"

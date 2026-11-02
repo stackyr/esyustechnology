@@ -123,75 +123,54 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   }, []);
 
   // Fetch all data from backend
-  const loadAllData = useCallback(async (isInitial = false) => {
-    if (!isInitial) setIsRefreshing(true);
+  const loadAllData = useCallback(async (isInitial = false, isSilent = false) => {
+    if (!isInitial && !isSilent) setIsRefreshing(true);
 
     try {
-      // 1. Inquiries
-      try {
-        const inqRes = await api.getInquiries();
-        if (inqRes && inqRes.data) setInquiries(inqRes.data);
-      } catch (e) {
-        console.warn('Inquiries load error:', e);
-      }
+      const [inqRes, brandRes, landingRes, srvRes, prodRes, faqRes, healthRes] = await Promise.allSettled([
+        api.getInquiries(),
+        api.getBrand(),
+        api.getLandingPage(),
+        api.getServices(),
+        api.getProducts(),
+        api.getFaqs(),
+        api.checkHealth()
+      ]);
 
-      // 2. Brand
-      try {
-        const brandRes = await api.getBrand();
-        if (brandRes && brandRes.data) setBrand(brandRes.data);
-      } catch (e) {
-        console.warn('Brand load error:', e);
+      if (inqRes.status === 'fulfilled' && inqRes.value?.data) {
+        setInquiries(inqRes.value.data);
       }
-
-      // 2.5. Landing Page Sections & Visuals
-      try {
-        const landingRes = await api.getLandingPage();
-        if (landingRes && landingRes.data) setLandingPage(landingRes.data);
-      } catch (e) {
-        console.warn('Landing page load error:', e);
+      if (brandRes.status === 'fulfilled' && brandRes.value?.data) {
+        setBrand(brandRes.value.data);
       }
-
-      // 3. Services
-      try {
-        const srvRes = await api.getServices();
-        if (srvRes && srvRes.data) setServices(srvRes.data);
-      } catch (e) {
-        console.warn('Services load error:', e);
+      if (landingRes.status === 'fulfilled' && landingRes.value?.data) {
+        setLandingPage(landingRes.value.data);
       }
-
-      // 4. Products & Specs
-      try {
-        const prodRes = await api.getProducts();
-        if (prodRes && prodRes.data) setProducts(prodRes.data);
-      } catch (e) {
-        console.warn('Products load error:', e);
+      if (srvRes.status === 'fulfilled' && Array.isArray(srvRes.value?.data)) {
+        setServices(srvRes.value.data);
       }
-
-      // 5. FAQs
-      try {
-        const faqsRes = await api.getFaqs();
-        if (faqsRes && faqsRes.data) setFaqs(faqsRes.data);
-      } catch (e) {
-        console.warn('FAQs load error:', e);
+      if (prodRes.status === 'fulfilled' && Array.isArray(prodRes.value?.data)) {
+        setProducts(prodRes.value.data);
       }
-
-      // 6. Health & MongoDB status
-      try {
-        const health = await api.checkHealth();
-        if (health) setIsMongoConnected(!!health.mongoConnected);
-      } catch (e) {}
+      if (faqRes.status === 'fulfilled' && Array.isArray(faqRes.value?.data)) {
+        setFaqs(faqRes.value.data);
+      }
+      if (healthRes.status === 'fulfilled' && healthRes.value) {
+        setIsMongoConnected(!!healthRes.value.mongoConnected);
+      }
 
       setIsBackendConnected(true);
+      if (onDataChanged) onDataChanged();
     } catch (err) {
-      console.error('Failed to load data from backend:', err);
+      console.warn('Backend sync warning:', err.message);
       setIsBackendConnected(false);
     } finally {
-      setIsRefreshing(false);
+      if (!isSilent) setIsRefreshing(false);
       if (isInitial) {
         setIsInitialLoading(false);
       }
     }
-  }, []);
+  }, [onDataChanged]);
 
   // Initial load
   useEffect(() => {
@@ -227,23 +206,15 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     return () => unsub();
   }, []);
 
-  // Periodic polling every 5 seconds so incoming inquiries show up in real time!
+  // Continuous automatic periodic background refresh (every 5 seconds)
+  // Ensures new inquiries, customer updates, services, and apps are ALWAYS fresh across all sections
   useEffect(() => {
     const interval = setInterval(() => {
-      api.getInquiries()
-        .then((res) => {
-          if (res && res.data) {
-            setInquiries(res.data);
-            setIsBackendConnected(true);
-          }
-        })
-        .catch(() => {
-          setIsBackendConnected(false);
-        });
+      loadAllData(false, /* isSilent */ true);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [loadAllData]);
 
   // ----------------------------------------------------
   // Inquiries Handlers
