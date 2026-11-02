@@ -80,7 +80,7 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
       <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-[11px] font-mono uppercase tracking-widest text-[var(--c1)] font-bold">
-            Service Catalog ({services.length})
+            {isLoading ? 'Service Catalog (...)' : `Service Catalog (${services.length})`}
           </span>
           <h2 className="text-xl font-bold text-[var(--ink)] tracking-tight mt-0.5">
             Engineering &amp; Software Services
@@ -216,6 +216,7 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
           </div>
         ))}
       </div>
+      )}
 
       {/* Add / Edit Service Modal */}
       {modalOpen && (

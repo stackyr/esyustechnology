@@ -262,9 +262,29 @@ export default function ServicesPage({
 
         {/* Services Cards Grid */}
         {currentServices.length === 0 ? (
-          <div className="py-20 text-center rounded-3xl bg-white border border-[var(--line)] p-8 my-6 space-y-3 shadow-xs">
-            <div className="w-9 h-9 rounded-full border-2 border-[var(--c1)] border-t-transparent animate-spin mx-auto" />
-            <p className="text-xs text-[var(--muted)] font-mono">Loading engineering capabilities live from database...</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div key={n} className="rounded-2xl border border-[var(--line)] bg-[var(--soft)] p-6 space-y-4 animate-pulse">
+                <div className="flex justify-between items-center">
+                  <div className="w-20 h-4 rounded bg-stone-200" />
+                  <div className="w-16 h-5 rounded-full bg-stone-200" />
+                </div>
+                <div className="w-44 h-6 rounded bg-stone-200" />
+                <div className="space-y-2">
+                  <div className="w-full h-3 rounded bg-stone-200/70" />
+                  <div className="w-5/6 h-3 rounded bg-stone-200/70" />
+                </div>
+                <div className="flex gap-1.5 pt-2">
+                  <div className="w-14 h-5 rounded bg-stone-200/80" />
+                  <div className="w-14 h-5 rounded bg-stone-200/80" />
+                  <div className="w-14 h-5 rounded bg-stone-200/80" />
+                </div>
+                <div className="pt-4 border-t border-[var(--line)] flex justify-between items-center">
+                  <div className="w-28 h-4 rounded bg-stone-200" />
+                  <div className="w-24 h-9 rounded-xl bg-stone-200" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : filteredServices.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">

@@ -35,7 +35,8 @@ export default function CustomizationTab({
   onResetDefaults,
   isSaving,
   onRefresh,
-  isRefreshing
+  isRefreshing,
+  isInitialLoading = false
 }) {
   const [activeSubTab, setActiveSubTab] = useState('brand');
   const [saveSuccess, setSaveSuccess] = useState(false);

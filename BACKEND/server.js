@@ -6,6 +6,7 @@ import { randomUUID } from 'node:crypto';
 import { Server as SocketIOServer } from 'socket.io';
 import {
   connectMongoDB,
+  ensureMongoConnection,
   isMongoConnected,
   getAdminCredentials,
   updateAdminCredentials,
@@ -37,11 +38,16 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-// Anti-Cache Headers for all API responses so clients immediately receive additions, edits & deletes
-app.use('/api', (req, res, next) => {
+// Anti-Cache Headers & Connection Assurance for all API responses
+app.use('/api', async (req, res, next) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.set('Pragma', 'no-cache');
   res.set('Expires', '0');
+  try {
+    await ensureMongoConnection();
+  } catch (e) {
+    // continue
+  }
   next();
 });
 

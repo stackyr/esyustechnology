@@ -212,9 +212,25 @@ export default function DownloadsPage({
 
         {/* Software Cards Grid */}
         {currentProducts.length === 0 ? (
-          <div className="py-20 text-center rounded-3xl bg-white border border-[var(--line)] p-8 my-6 space-y-3 shadow-xs">
-            <div className="w-9 h-9 rounded-full border-2 border-[var(--c1)] border-t-transparent animate-spin mx-auto" />
-            <p className="text-xs text-[var(--muted)] font-mono">Loading verified software packages live from database...</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div key={n} className="rounded-2xl border border-[var(--line)] bg-[var(--soft)] p-6 space-y-4 animate-pulse">
+                <div className="flex justify-between items-center">
+                  <div className="w-24 h-4 rounded bg-stone-200" />
+                  <div className="w-16 h-5 rounded-full bg-stone-200" />
+                </div>
+                <div className="w-48 h-6 rounded bg-stone-200" />
+                <div className="space-y-2">
+                  <div className="w-full h-3 rounded bg-stone-200/70" />
+                  <div className="w-4/5 h-3 rounded bg-stone-200/70" />
+                </div>
+                <div className="h-20 rounded-xl bg-white border border-[var(--line)]" />
+                <div className="pt-4 border-t border-[var(--line)] flex justify-between items-center">
+                  <div className="w-20 h-4 rounded bg-stone-200" />
+                  <div className="w-24 h-9 rounded-xl bg-stone-200" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">

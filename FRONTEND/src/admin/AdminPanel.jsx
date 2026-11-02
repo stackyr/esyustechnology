@@ -549,19 +549,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
 
         {/* Tab Content Body */}
         <main className="flex-1 p-3 sm:p-5 lg:p-6 max-w-7xl w-full min-w-0 mx-auto space-y-5">
-          {isInitialLoading ? (
-            <div className="p-8 sm:p-12 rounded-3xl bg-white border border-[var(--line)] shadow-xs flex flex-col items-center justify-center text-center space-y-4 min-h-[420px]">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-[var(--c1)] animate-spin">
-                <RefreshCw className="w-6 h-6" />
-              </div>
-              <div className="space-y-1">
-                <h3 className="text-base font-bold text-[var(--ink)]">Loading Live Database Records...</h3>
-                <p className="text-xs text-[var(--muted)] font-mono">Synchronizing with MongoDB Atlas cloud database. Zero local cache.</p>
-              </div>
-            </div>
-          ) : (
-            <>
-              {refreshingSection === activeTab && (
+          {refreshingSection === activeTab && (
                 <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-mono flex items-center justify-between animate-pulse">
                   <span className="flex items-center gap-2">
                     <RefreshCw className="w-3.5 h-3.5 animate-spin text-[var(--c1)]" />
@@ -595,6 +583,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     isSaving={isSaving || refreshingSection === 'customization'}
                     onRefresh={() => loadAllData()}
                     isRefreshing={isRefreshing || refreshingSection === 'customization'}
+                    isInitialLoading={isInitialLoading}
                   />
                 )}
 
@@ -634,8 +623,6 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                   />
                 )}
               </AdminErrorBoundary>
-            </>
-          )}
         </main>
 
       </div>

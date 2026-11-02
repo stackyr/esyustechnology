@@ -130,7 +130,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
       <div className="p-5 sm:p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-[11px] font-mono uppercase tracking-widest text-[var(--c1)] font-bold">
-            Applications & Software Suite ({products.length})
+            {isLoading ? 'Applications & Software Suite (...)' : `Applications & Software Suite (${products.length})`}
           </span>
           <h2 className="text-xl font-bold text-[var(--ink)] tracking-tight mt-0.5">
             Software Products, Releases & Links

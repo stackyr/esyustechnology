@@ -46,7 +46,7 @@ export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq,
       <div className="p-5 rounded-2xl bg-white border border-[var(--line)] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <span className="text-[11px] font-mono uppercase tracking-widest text-[var(--c1)] font-bold">
-            Frequently Asked Questions ({faqs.length})
+            {isLoading ? 'Frequently Asked Questions (...)' : `Frequently Asked Questions (${faqs.length})`}
           </span>
           <h2 className="text-xl font-bold text-[var(--ink)] tracking-tight mt-0.5">
             Knowledge Base & Clarifications
@@ -142,6 +142,7 @@ export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq,
           </div>
         ))}
       </div>
+      )}
 
       {/* Add / Edit FAQ Modal */}
       {modalOpen && (
