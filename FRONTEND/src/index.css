@@ -4290,3 +4290,60 @@ em.s {
 .animate-badge-glow {
   animation: badge-glow 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* =========================================================================
+   CINEMATIC MINIMAL LOADING SCREEN & CURTAIN REVEAL TRANSITIONS
+   ========================================================================= */
+
+@keyframes loadingLogoFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-2.5px) scale(1.018);
+  }
+}
+
+.animate-loading-logo {
+  animation: loadingLogoFloat 3.2s ease-in-out infinite;
+}
+
+@keyframes loadingSheenSweep {
+  0% {
+    transform: translateX(-140%) skewX(-20deg);
+  }
+  40%, 100% {
+    transform: translateX(240%) skewX(-20deg);
+  }
+}
+
+.loading-logo-sheen {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 25%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0) 75%,
+    transparent 100%
+  );
+  animation: loadingSheenSweep 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes loadingPulseGlow {
+  0%, 100% {
+    opacity: 0.45;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-glow {
+  animation: loadingPulseGlow 3s ease-in-out infinite;
+}
+
+.duration-800 {
+  transition-duration: 800ms !important;
+}

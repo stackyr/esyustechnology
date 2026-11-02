@@ -23,6 +23,7 @@ import ProductModal from './components/ProductModal';
 import ServiceModal from './components/ServiceModal';
 import DownloadModal from './components/DownloadModal';
 import LegalModal from './components/LegalModal';
+import LoadingScreen from './components/LoadingScreen';
 
 // Admin Panel & API Integration
 import AdminPanel from './admin/AdminPanel';
@@ -302,106 +303,7 @@ export default function App() {
     reloadAll();
   };
 
-  // =========================================================================
-  // STRICT LOADING GATE: Website will NEVER open until MongoDB Atlas & Sockets connect!
-  // =========================================================================
-  if (!isAdmin && (isLoading || (!isDatabaseConnected && !connectionError))) {
-    return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg)] text-[var(--ink)] select-none">
-        {/* SVG Grain Overlay */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay bg-[var(--grain)]" />
-        
-        <div className="relative flex flex-col items-center space-y-5 text-center p-6 max-w-sm">
-          <div className="w-16 h-16 rounded-3xl bg-[var(--dark)] flex items-center justify-center shadow-xl shadow-[var(--c1)]/20 animate-pulse relative">
-            <span className="font-serif italic text-3xl font-bold text-[var(--c1)]">E</span>
-            <div className="absolute -inset-1 rounded-3xl border border-[var(--c1)]/40 animate-ping pointer-events-none" />
-          </div>
-
-          <div className="space-y-1.5">
-            <h1 className="text-xl font-bold tracking-tight text-[var(--ink)]">
-              {brand?.name || 'Esyus Technology'}
-            </h1>
-            <p className="text-xs text-[var(--muted)] font-mono flex items-center justify-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[var(--c1)] animate-ping" />
-              <span>{loadingStatusText}</span>
-            </p>
-          </div>
-
-          <div className="w-52 h-1.5 bg-[var(--line)] rounded-full overflow-hidden relative shadow-inner">
-            <div className="h-full bg-gradient-to-r from-[var(--c1)] via-[var(--c3)] to-[var(--c1)] w-1/2 rounded-full animate-marquee" />
-          </div>
-
-          <div className="flex flex-col items-center gap-1 pt-1">
-            <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--muted)] uppercase tracking-wider">
-              <Database className="w-3 h-3 text-[var(--c1)]" />
-              <span>MongoDB Atlas Cloud Live Link</span>
-            </div>
-            <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--muted)] uppercase tracking-wider">
-              <Radio className="w-3 h-3 text-emerald-600 animate-pulse" />
-              <span>Real-Time WebSocket Engine Active</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // =========================================================================
-  // CONNECTION ERROR GATE: If MongoDB fails, display dedicated reconnection screen
-  // =========================================================================
-  if (!isAdmin && connectionError && !isDatabaseConnected) {
-    return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[var(--bg)] text-[var(--ink)] p-6 select-none">
-        <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay bg-[var(--grain)]" />
-        
-        <div className="relative max-w-md w-full p-8 rounded-3xl bg-white border border-red-200 shadow-2xl space-y-5 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-600 shadow-sm">
-            <AlertCircle className="w-7 h-7" />
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-red-100 text-red-800 border border-red-200 uppercase tracking-wider">
-              Database Connection Offline
-            </span>
-            <h2 className="text-xl font-bold text-[var(--ink)]">
-              Connecting to MongoDB Atlas...
-            </h2>
-            <p className="text-xs text-[var(--muted)] leading-relaxed">
-              The website requires an active cloud connection to MongoDB Atlas to stream live services, release packages, and customizations. Stale local fallbacks are strictly disabled.
-            </p>
-          </div>
-
-          {connectionError && (
-            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-[11px] font-mono text-stone-600 text-left overflow-x-auto">
-              <code>{connectionError}</code>
-            </div>
-          )}
-
-          <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
-            <button
-              type="button"
-              onClick={() => reloadAll(true)}
-              className="px-6 py-2.5 rounded-xl bg-[var(--c1)] hover:bg-[#d64b22] text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <RefreshCw className="w-4 h-4 animate-spin" />
-              <span>Retry Connection Now</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                window.location.hash = '#admin';
-                setIsAdmin(true);
-              }}
-              className="px-4 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] hover:bg-stone-100 text-xs font-semibold text-[var(--ink)] cursor-pointer"
-            >
-              Open Admin Suite
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
+  
   // If authenticated and in Admin Mode, show full-screen Admin Control Suite
   if (isAdmin && isAdminAuthenticated) {
     return (
@@ -418,9 +320,31 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen selection:bg-[var(--c1)] selection:text-white relative">
-      
-      {/* SVG Sprite Definitions for Code Art & Symbols */}
+    <div className="min-h-screen selection:bg-[var(--c1)] selection:text-white relative overflow-x-hidden">
+      {/* Cinematic Minimal Loading Screen with Curtain Reveal Exit Transition */}
+      {!isAdmin && (
+        <LoadingScreen
+          isLoading={isLoading}
+          isDatabaseConnected={isDatabaseConnected}
+          connectionError={connectionError}
+          loadingStage={loadingStage}
+          loadingStatusText={loadingStatusText}
+          brand={brand}
+          onRetry={() => reloadAll(true)}
+          onOpenAdmin={() => {
+            window.location.hash = '#admin';
+            setIsAdmin(true);
+          }}
+        />
+      )}
+
+      {/* Main Website Wrapper with subtle slide-up entrance when loading completes */}
+      <div
+        className={`site-content-wrapper transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          !isAdmin && isLoading ? 'opacity-0 translate-y-6 pointer-events-none' : 'opacity-100 translate-y-0 pointer-events-auto'
+        }`}
+      >
+        {/* SVG Sprite Definitions for Code Art & Symbols */}
       <SvgSprite />
       
       {/* 01. Navbar / Header */}
@@ -562,6 +486,8 @@ export default function App() {
           setIsAdmin(true);
         }}
       />
+
+      </div>
 
       {/* Modals */}
       {selectedProduct && (
