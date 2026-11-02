@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Search, 
   X, 
@@ -13,15 +13,26 @@ import {
   Layers,
   FileCode2
 } from 'lucide-react';
-import { PRODUCTS, COMPANY_INFO } from '../data/companyData';
+import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
 export default function DownloadsPage({ 
   onBackToHome, 
   onSelectProduct, 
-  onDownloadApp 
+  onDownloadApp,
+  dataVersion = 0,
+  onRefresh,
+  isRefreshing = false
 }) {
+  const dlSec = LANDING_PAGE_SECTIONS?.downloadSection || {};
   const [searchQuery, setSearchQuery] = useState('');
   const [platformFilter, setPlatformFilter] = useState('all'); // 'all' | 'windows' | 'android'
+
+  // Auto-fetch latest catalog from backend on mount
+  useEffect(() => {
+    if (typeof onRefresh === 'function') {
+      onRefresh();
+    }
+  }, []);
 
   // Filter software packages based on live search query and platform tab
   const filteredProducts = useMemo(() => {
@@ -58,11 +69,11 @@ export default function DownloadsPage({
         chips.includes(q)
       );
     });
-  }, [searchQuery, platformFilter]);
+  }, [searchQuery, platformFilter, dataVersion]);
 
-  const totalCount = PRODUCTS.length;
-  const windowsCount = PRODUCTS.filter(p => (p.platform || '').toLowerCase().includes('windows')).length;
-  const androidCount = PRODUCTS.filter(p => (p.platform || '').toLowerCase().includes('android')).length;
+  const totalCount = useMemo(() => PRODUCTS.length, [dataVersion]);
+  const windowsCount = useMemo(() => PRODUCTS.filter(p => (p.platform || '').toLowerCase().includes('windows')).length, [dataVersion]);
+  const androidCount = useMemo(() => PRODUCTS.filter(p => (p.platform || '').toLowerCase().includes('android')).length, [dataVersion]);
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] pt-24 pb-20">
@@ -79,21 +90,41 @@ export default function DownloadsPage({
             <span>Back to Home</span>
           </button>
 
-          <div className="inline-flex items-center gap-2 text-xs font-mono text-[var(--muted)]">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>Official Release Center</span>
+          <div className="flex items-center gap-3">
+            {onRefresh && (
+              <button
+                type="button"
+                onClick={onRefresh}
+                disabled={isRefreshing}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--line)] bg-[var(--soft)] hover:bg-[var(--line)] text-xs font-semibold transition-all cursor-pointer shadow-xs active:scale-95"
+                title="Refresh latest software catalog from database"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-[var(--c1)]' : 'text-[var(--muted)]'}`} />
+                <span className="hidden sm:inline">{isRefreshing ? 'Syncing...' : 'Refresh Catalog'}</span>
+              </button>
+            )}
+
+            <div className="inline-flex items-center gap-2 text-xs font-mono text-[var(--muted)]">
+              <span className={`w-2 h-2 rounded-full ${isRefreshing ? 'bg-amber-500 animate-ping' : 'bg-emerald-500 animate-pulse'}`} />
+              <span>{isRefreshing ? 'Syncing Live Database...' : 'Official Release Center'}</span>
+            </div>
           </div>
         </div>
 
         {/* Page Hero Header */}
         <header className="mb-12">
-          <span className="eyebrow">Production Software Blueprint</span>
+          <span className="eyebrow">
+            {(dlSec.eyebrow ? dlSec.eyebrow.replace(/^Section\s+\d+\s*•?\s*/i, '') : '') || "Production Software Blueprint"}
+          </span>
           <h1 className="h2" style={{ marginTop: '14px' }}>
-            All Software & <em className="s">Application Packages</em>
+            {dlSec.headline ? (
+              dlSec.headline
+            ) : (
+              <>All Software &amp; <em className="s">Application Packages</em></>
+            )}
           </h1>
           <p className="lead" style={{ maxWidth: '46em', marginTop: '12px' }}>
-            Direct access to production installers, desktop GST billing systems, and native Android utility suites. 
-            All software is engineered with 100% offline resilience and zero cloud latency.
+            {dlSec.lead || "Direct access to production installers, desktop GST billing systems, and native Android utility suites. All software is engineered with 100% offline resilience and zero cloud latency."}
           </p>
         </header>
 

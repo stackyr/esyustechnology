@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import { Clock, Download, Search, X, ExternalLink } from 'lucide-react';
 
-export default function DownloadSection({ onDownloadApp, onOpenDownloadsPage }) {
+export default function DownloadSection({ onDownloadApp, onOpenDownloadsPage, dataVersion = 0 }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'windows' | 'android'
   const [searchQuery, setSearchQuery] = useState('');
   const sec = LANDING_PAGE_SECTIONS?.downloadSection || {};
 
-  const filteredApps = PRODUCTS.filter((app) => {
-    if (filter === 'windows' && !(app.platform || '').toLowerCase().includes('windows')) return false;
-    if (filter === 'android' && !(app.platform || '').toLowerCase().includes('android')) return false;
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
-      const match = (app.name || '').toLowerCase().includes(q) ||
-                    (app.tagline || '').toLowerCase().includes(q) ||
-                    (app.description || '').toLowerCase().includes(q) ||
-                    (app.platform || '').toLowerCase().includes(q) ||
-                    (app.highlights || []).join(' ').toLowerCase().includes(q);
-      if (!match) return false;
-    }
-    return true;
-  });
+  const filteredApps = useMemo(() => {
+    return PRODUCTS.filter((app) => {
+      if (filter === 'windows' && !(app.platform || '').toLowerCase().includes('windows')) return false;
+      if (filter === 'android' && !(app.platform || '').toLowerCase().includes('android')) return false;
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const match = (app.name || '').toLowerCase().includes(q) ||
+                      (app.tagline || '').toLowerCase().includes(q) ||
+                      (app.description || '').toLowerCase().includes(q) ||
+                      (app.platform || '').toLowerCase().includes(q) ||
+                      (app.highlights || []).join(' ').toLowerCase().includes(q);
+        if (!match) return false;
+      }
+      return true;
+    });
+  }, [filter, searchQuery, dataVersion]);
 
   return (
     <section id="download" className="pricing" data-sec="download">

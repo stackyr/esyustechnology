@@ -41,6 +41,8 @@ export default function App() {
     return typeof window !== 'undefined' && !!localStorage.getItem('esyus_admin_token');
   });
   const [dataVersion, setDataVersion] = useState(0);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   // Modal states
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
@@ -92,7 +94,8 @@ export default function App() {
   const [contactSubject, setContactSubject] = useState('Finance Flow Desktop Billing');
 
   // Load Dynamic Data from Backend API
-  const loadDynamicData = useCallback(async () => {
+  const loadDynamicData = useCallback(async (showRefreshingState = false) => {
+    if (showRefreshingState) setIsRefreshing(true);
     try {
       const [brandRes, srvRes, prodRes, faqRes, landingRes] = await Promise.allSettled([
         api.getBrand(),
@@ -117,12 +120,29 @@ export default function App() {
       }
     } catch (err) {
       console.warn('[App] Backend load warning:', err.message);
+    } finally {
+      setIsRefreshing(false);
     }
   }, []);
 
-  // Sync data on startup
+  // First fetch data from backend before showing the page (avoids stale/default data)
   useEffect(() => {
-    loadDynamicData();
+    let isMounted = true;
+    const safetyTimer = setTimeout(() => {
+      if (isMounted) setIsInitialLoading(false);
+    }, 2000);
+
+    loadDynamicData().finally(() => {
+      if (isMounted) {
+        clearTimeout(safetyTimer);
+        setTimeout(() => setIsInitialLoading(false), 80);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+      clearTimeout(safetyTimer);
+    };
   }, [loadDynamicData]);
 
   // Listen to hash changes (#admin, #downloads) and keyboard shortcut (Ctrl+Shift+A)
@@ -130,6 +150,7 @@ export default function App() {
     const handleHashChange = () => {
       setIsAdmin(window.location.hash.toLowerCase().includes('admin'));
       setIsDownloadsPage(window.location.hash.toLowerCase().includes('downloads'));
+      loadDynamicData(true);
     };
 
     const handleKeyDown = (e) => {
@@ -176,6 +197,7 @@ export default function App() {
     setIsDownloadsPage(true);
     window.location.hash = '#downloads';
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    loadDynamicData(true);
   };
 
   const handleBackToHome = () => {
@@ -184,6 +206,7 @@ export default function App() {
       history.pushState(null, '', window.location.pathname);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    loadDynamicData();
   };
 
   const handleEnquireService = (serviceTitle) => {
@@ -223,6 +246,33 @@ export default function App() {
     window.location.hash = '';
     loadDynamicData();
   };
+
+  // Initial luxury preloader: First load live data from backend before showing the site
+  if (isInitialLoading && !isAdmin) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#fbf9f4] text-[var(--ink)] select-none">
+        <div className="relative flex flex-col items-center space-y-5 text-center p-6 max-w-sm">
+          <div className="w-16 h-16 rounded-3xl bg-[var(--dark)] flex items-center justify-center shadow-xl shadow-[var(--c1)]/20 animate-pulse">
+            <span className="font-serif italic text-3xl font-bold text-[var(--c1)]">E</span>
+          </div>
+
+          <div className="space-y-1">
+            <h1 className="text-lg font-bold tracking-tight text-[var(--ink)]">
+              Esyus <em className="s font-normal">Technology</em>
+            </h1>
+            <p className="text-xs text-[var(--muted)] font-mono flex items-center justify-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[var(--c1)] animate-ping" />
+              <span>Fetching live catalog &amp; system data...</span>
+            </p>
+          </div>
+
+          <div className="w-44 h-1 bg-[var(--line)] rounded-full overflow-hidden relative">
+            <div className="h-full bg-gradient-to-r from-[var(--c1)] via-[var(--c3)] to-[var(--c1)] w-1/2 rounded-full animate-marquee" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // If authenticated and in Admin Mode, show full-screen Admin Control Suite
   if (isAdmin && isAdminAuthenticated) {
@@ -268,6 +318,8 @@ export default function App() {
         {isDownloadsPage ? (
           <DownloadsPage
             dataVersion={dataVersion}
+            isRefreshing={isRefreshing}
+            onRefresh={() => loadDynamicData(true)}
             onBackToHome={handleBackToHome}
             onSelectProduct={(product) => setSelectedProduct(product)}
             onDownloadApp={handleDownloadAppDirectly}

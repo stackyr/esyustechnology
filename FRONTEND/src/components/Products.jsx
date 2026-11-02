@@ -1,39 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import { Clock, Download } from 'lucide-react';
 
-export default function Products({ onSelectProduct, onDownloadProduct, onViewAllPackages, onDownloadClick }) {
+export default function Products({ onSelectProduct, onDownloadProduct, onViewAllPackages, onDownloadClick, dataVersion = 0 }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'desktop' | 'mobile'
   const sec = LANDING_PAGE_SECTIONS?.productsSection || {};
 
-  // Build software items dynamically from PRODUCTS state
-  const softwareItems = PRODUCTS.map((p, idx) => {
-    const isWindows = (p.platform || '').toLowerCase().includes('windows');
-    const isAndroid = (p.platform || '').toLowerCase().includes('android');
+  // Build software items dynamically from PRODUCTS state with dataVersion reactivity
+  const softwareItems = useMemo(() => {
+    return PRODUCTS.map((p, idx) => {
+      const isWindows = (p.platform || '').toLowerCase().includes('windows');
+      const isAndroid = (p.platform || '').toLowerCase().includes('android');
 
-    return {
-      id: p.id,
-      product: p,
-      num: String(idx + 1).padStart(2, '0'),
-      name: p.name,
-      category: p.category,
-      platformTag: p.platform,
-      isWindows,
-      isAndroid,
-      version: p.version || 'v1.0.0 Stable',
-      size: p.size || '25.0 MB',
-      downloadLabel: isWindows && isAndroid ? 'Download EXE / APK' : isAndroid ? 'Download APK' : 'Download EXE',
-      logo: p.logo || '/finance-flow-logo.png',
-      tagline: p.tagline || p.description,
-      chips: Array.isArray(p.chips) && p.chips.length > 0 ? p.chips : [
-        '⚡ 100% Offline',
-        isAndroid ? '📱 Mobile Ready' : '🖥️ Desktop Native',
-        '🔒 Encrypted Storage'
-      ],
-      isComingSoon: p.isComingSoon !== false,
-      downloadUrl: p.downloadUrl || ''
-    };
-  });
+      return {
+        id: p.id,
+        product: p,
+        num: String(idx + 1).padStart(2, '0'),
+        name: p.name,
+        category: p.category,
+        platformTag: p.platform,
+        isWindows,
+        isAndroid,
+        version: p.version || 'v1.0.0 Stable',
+        size: p.size || '25.0 MB',
+        downloadLabel: isWindows && isAndroid ? 'Download EXE / APK' : isAndroid ? 'Download APK' : 'Download EXE',
+        logo: p.logo || '/finance-flow-logo.png',
+        tagline: p.tagline || p.description,
+        chips: Array.isArray(p.chips) && p.chips.length > 0 ? p.chips : [
+          '⚡ 100% Offline',
+          isAndroid ? '📱 Mobile Ready' : '🖥️ Desktop Native',
+          '🔒 Encrypted Storage'
+        ],
+        isComingSoon: p.isComingSoon !== false,
+        downloadUrl: p.downloadUrl || ''
+      };
+    });
+  }, [dataVersion]);
 
   const allItems = softwareItems;
 

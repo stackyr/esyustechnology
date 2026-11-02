@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import { Clock, Download } from 'lucide-react';
 
-export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick }) {
-  const financeFlow = PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0];
+export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick, dataVersion = 0 }) {
+  const financeFlow = useMemo(() => {
+    return PRODUCTS.find((p) => p.id === 'finance-flow') || PRODUCTS[0] || {};
+  }, [dataVersion]);
   const fp = LANDING_PAGE_SECTIONS?.featuredProduct || {};
 
   // Interactive Live Invoice Simulator State
