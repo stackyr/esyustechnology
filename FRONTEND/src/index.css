@@ -2925,10 +2925,6 @@ em.s {
   .contact__in {
     grid-template-columns: minmax(0, 1fr);
   }
-
-  .contact__photo {
-    min-height: 380px;
-  }
 }
 
 /* Section 14: Footer */
@@ -3836,9 +3832,68 @@ em.s {
     gap: 22px !important;
   }
 
-  .contact__photo {
-    min-height: 290px !important;
-    border-radius: 18px !important;
+  .contact__photo,
+  .contact__photo.tab-r {
+    min-height: auto !important;
+    height: auto !important;
+    clip-path: none !important;
+    border-radius: 24px !important;
+    overflow: hidden !important;
+    position: relative !important;
+    box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  .contact__photo .art {
+    position: relative !important;
+    inset: auto !important;
+    min-height: auto !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 34px 16px 80px !important;
+  }
+
+  .contact__photo .art > img {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    opacity: 0.2 !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+  }
+
+  .contact__photo .phone {
+    width: min(84%, 255px) !important;
+    aspect-ratio: auto !important;
+    height: auto !important;
+    border-radius: 36px !important;
+    padding: 9px !important;
+    rotate: -2deg !important;
+    margin: 0 auto !important;
+  }
+
+  .contact__photo .phone__screen {
+    height: auto !important;
+    border-radius: 28px !important;
+    padding: 28px 12px 14px !important;
+    gap: 9px !important;
+  }
+
+  .contact__photo .chip {
+    position: absolute !important;
+    left: 14px !important;
+    right: 14px !important;
+    bottom: 14px !important;
+    z-index: 10 !important;
+    margin: 0 !important;
+    padding: 10px 14px !important;
+    font-size: 11px !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35) !important;
   }
 
   .contact__mail {
@@ -3911,6 +3966,14 @@ em.s {
   .foot__grid {
     gap: 24px 16px !important;
   }
+
+  .contact__photo .phone {
+    width: min(88%, 242px) !important;
+  }
+
+  .contact__photo .art {
+    padding: 30px 12px 76px !important;
+  }
 }
 
 /* ==========================================================================
@@ -3973,6 +4036,14 @@ em.s {
   .toggle__btn {
     font-size: 11.5px !important;
     padding: 0 0.85em !important;
+  }
+
+  .contact__photo .phone {
+    width: min(92%, 226px) !important;
+  }
+
+  .contact__photo .art {
+    padding: 24px 10px 72px !important;
   }
 }
 
