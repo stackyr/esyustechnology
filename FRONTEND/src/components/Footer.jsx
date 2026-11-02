@@ -46,9 +46,9 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
             const contact = landingPage?.contact || {};
             return (
               <div>
-                <span className="fcta__eyebrow">{contact.footerCtaEyebrow || 'Enterprise Precision • Zero Cloud Latency'}</span>
+                <span className="fcta__eyebrow">{contact.footerCtaEyebrow || 'Enterprise Precision • Zero Latency'}</span>
                 <h3 className="fcta__title">
-                  {contact.footerCtaTitle || 'Bring calm, offline precision to your billing counter.'}
+                  {contact.footerCtaTitle || 'Bring calm, high-performance precision to your billing counter.'}
                 </h3>
               </div>
             );
@@ -102,7 +102,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
             </a>
 
             <p className="foot__about">
-              {COMPANY_INFO.name} builds robust, offline-capable desktop billing suites and tailored Android applications designed to operate without internet dependency or recurring lock-ins.
+              {COMPANY_INFO.footerAbout || (COMPANY_INFO.name + ' builds robust, high-performance desktop suites, enterprise web platforms, and tailored Android applications designed to operate with absolute reliability and speed.')}
             </p>
 
             <span className="status">

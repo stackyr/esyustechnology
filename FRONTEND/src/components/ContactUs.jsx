@@ -122,7 +122,7 @@ export default function ContactUs({ preselectedSubject, dataVersion = 0 }) {
               <dd>{COMPANY_INFO.address}</dd>
             </div>
             <div>
-              <dt>Technical Helpdesk</dt>
+              <dt>Technical Helpdesk (24*6 Support)</dt>
               <dd>{COMPANY_INFO.supportEmail}</dd>
             </div>
             <div>
@@ -354,8 +354,8 @@ export default function ContactUs({ preselectedSubject, dataVersion = 0 }) {
               </svg>
             </span>
             <div>
-              <b>Fast Technical Response</b>
-              <small>Average reply within 2 to 4 business hours</small>
+              <b>24*6 Technical Support</b>
+              <small>24*6 dedicated engineering desk & rapid response</small>
             </div>
           </div>
         </figure>

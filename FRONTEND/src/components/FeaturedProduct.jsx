@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
+import { DEFAULT_WORKFLOW_STEPS } from '../data/companyData';
 import { Clock, Download } from 'lucide-react';
 
 export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick, dataVersion = 0 }) {
@@ -30,6 +31,8 @@ export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick
     setIsCopied(true);
     setTimeout(() => setIsCopied(false), 2000);
   };
+
+  const steps = Array.isArray(fp.steps) && fp.steps.length === 4 ? fp.steps : DEFAULT_WORKFLOW_STEPS;
 
   return (
     <section id="featured-product" className="process" data-kind="steps" data-section="process">
@@ -181,41 +184,14 @@ export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick
 
       {/* 4-Step Offline Workflow Rail */}
       <ol className="wrap steps" data-steps>
-        <li className="step">
-          <span className="step__dot" aria-hidden="true" />
-          <p className="step__time">Step 01 · 0.0s</p>
-          <h3 className="step__title">Instant Item Entry</h3>
-          <p className="step__text">
-            Keyboard-first rapid shortcut lookup and instant item code entry without touching a mouse.
-          </p>
-        </li>
-
-        <li className="step">
-          <span className="step__dot" aria-hidden="true" />
-          <p className="step__time">Step 02 · 0.1s</p>
-          <h3 className="step__title">Automatic GST Calculation</h3>
-          <p className="step__text">
-            Compliant with current Indian tax slabs (CGST, SGST, IGST) and automated HSN code reporting.
-          </p>
-        </li>
-
-        <li className="step">
-          <span className="step__dot" aria-hidden="true" />
-          <p className="step__time">Step 03 · 0.2s</p>
-          <h3 className="step__title">Direct Hardware Printing</h3>
-          <p className="step__text">
-            One-click output to 2" or 3" thermal receipt roll or laser A4/A5 tax invoices.
-          </p>
-        </li>
-
-        <li className="step">
-          <span className="step__dot" aria-hidden="true" />
-          <p className="step__time">Step 04 · Day End</p>
-          <h3 className="step__title">Encrypted Local Backup</h3>
-          <p className="step__text">
-            Automated daily sales tally and encrypted SQLite database snapshot stored safely on your drive.
-          </p>
-        </li>
+        {steps.map((st, idx) => (
+          <li key={idx} className="step">
+            <span className="step__dot" aria-hidden="true" />
+            <p className="step__time">{st.time || `Step 0${idx + 1}`}</p>
+            <h3 className="step__title">{st.title}</h3>
+            <p className="step__text">{st.text}</p>
+          </li>
+        ))}
       </ol>
     </section>
   );

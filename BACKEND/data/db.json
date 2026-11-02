@@ -36,8 +36,11 @@
       }
     ],
     "createdAt": "2026-11-02T07:50:45.568Z",
-    "updatedAt": "2026-11-02T16:54:24.394Z",
+    "updatedAt": "2026-11-02T17:11:10.443Z",
     "__v": 0,
+    "footerAbout": "Esyus Technology builds robust, high-performance desktop suites and tailored mobile applications.",
+    "navBadge": "Verified Suite",
+    "navSubtitle": "Enterprise Software",
     "id": "6ae840d5dab853fc6fea6575"
   },
   "landingPage": {
@@ -46,7 +49,7 @@
       "title": "Engineered for speed, built for reliability",
       "ringText": "Customized application · Website ·",
       "floodTitle": "Built for Indian business counters.",
-      "floodLead": "Local SQLite databases, instant 0.2s keystrokes, and plug-and-play thermal printer drivers. Total operational autonomy, no matter what happens to the internet.",
+      "floodLead": "Local SQLite databases, instant 0.2s keystrokes, and plug-and-play thermal printer drivers.",
       "videoUrl": "/demo-video.mp4?v=2",
       "collageA1": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=800",
       "collageA2": "https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=800",
@@ -55,7 +58,20 @@
       "collageE1": "https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?auto=format&fit=crop&q=80&w=800",
       "collageE2": "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800",
       "founderPhoto": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
-      "coFounderPhoto": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
+      "coFounderPhoto": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200",
+      "cardA1Sub": "0.2s Keystroke · Local SQLite",
+      "cardA1Title": "100% Offline Billing",
+      "cardA2Sub": "Thermal 2\" & 3\" Ready",
+      "cardA2Title": "GST Tax Invoice",
+      "cardBSub": "Zero cloud dependency",
+      "cardBTitle": "Offline Systems Ready",
+      "cardDSub": "Windows 10 / 11 · v2.4.0",
+      "cardDTitle": "Finance Flow Desktop",
+      "cardE1Sub": "Android APK · Handheld Sync",
+      "cardE1Title": "Esyus Mobile Billing",
+      "cardE2Sub": "Direct USB / Serial print",
+      "cardE2Title": "Hardware Interop",
+      "floodEyebrow": "Architecture • High Performance & Zero Latency"
     },
     "about": {
       "headline": "Building dependable software for real-world businesses",
@@ -114,7 +130,29 @@
       "lead": "The premier offline-first billing solution designed by Esyus Technology. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.",
       "stationImage": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900",
       "isComingSoon": true,
-      "downloadUrl": ""
+      "downloadUrl": "",
+      "steps": [
+        {
+          "time": "Step 01 · 0.0s",
+          "title": "Instant Item Entry",
+          "text": "Keyboard-first rapid shortcut lookup"
+        },
+        {
+          "time": "Step 02 · 0.1s",
+          "title": "Automatic GST Calculation",
+          "text": "Compliant with current Indian tax slabs"
+        },
+        {
+          "time": "Step 03 · 0.2s",
+          "title": "Direct Hardware Printing",
+          "text": "One-click output to thermal roll or laser invoices"
+        },
+        {
+          "time": "Step 04 · Day End",
+          "title": "Encrypted Local Backup",
+          "text": "Automated daily sales tally and SQLite backup"
+        }
+      ]
     },
     "whyChooseUs": {
       "headline": "Five core pillars. Engineered for uninterrupted operations.",
@@ -151,8 +189,38 @@
       "footerCtaTitle": "Bring calm, offline precision to your billing counter."
     },
     "createdAt": "2026-11-02T07:51:01.116Z",
-    "updatedAt": "2026-11-02T16:54:26.116Z",
-    "__v": 0
+    "updatedAt": "2026-11-02T17:11:10.780Z",
+    "__v": 0,
+    "team": {
+      "headline": "The minds behind the software architecture",
+      "lead": "Led by founder Sayantan Ghosh and co-founder Soham Dutta",
+      "members": [
+        {
+          "name": "Sayantan Ghosh",
+          "role": "Founder & Chief Executive Officer",
+          "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
+          "bio": "Visionary founder"
+        },
+        {
+          "name": "Soham Dutta",
+          "role": "Co-Founder & Chief Technology Officer",
+          "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
+          "bio": "Technical standard lead"
+        },
+        {
+          "name": "Ayan Banerjee",
+          "role": "Lead Full-Stack Web Engineer",
+          "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80",
+          "bio": "React & web portal lead"
+        },
+        {
+          "name": "Priya Mukherjee",
+          "role": "Senior Android & Mobile Developer",
+          "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+          "bio": "Native Android and offline sync"
+        }
+      ]
+    }
   },
   "services": [
     {

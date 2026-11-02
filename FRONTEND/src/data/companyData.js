@@ -4,13 +4,16 @@ export const COMPANY_INFO = {
   domain: "esyustechnology.com",
   tagline: "Smart Software Solutions for Tomorrow's Businesses",
   slogan: "High-Performance Desktop, Web & Android Systems Built for Absolute Reliability",
-  founder: "Milan Mandal",
-  coFounder: "Suman Raptan",
+  founder: "Sayantan Ghosh",
+  coFounder: "Soham Dutta",
   establishmentDate: "01/01/2027",
   email: "contact@esyustechnology.com",
   supportEmail: "support@esyustechnology.com",
   phone: "+91 98765 43210",
-  address: "Esyus Technology Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
+  address: "Burdwan, WEST BENGAL 70045",
+  navBadge: "Software",
+  navSubtitle: "Enterprise Suite",
+  footerAbout: "Esyus Technology builds robust, high-performance desktop suites, enterprise web platforms, and tailored Android applications designed to operate with absolute reliability and speed.",
   stats: [
     { label: "Offline Uptime", value: "100%", desc: "Works uninterrupted with local databases" },
     { label: "Software Products", value: "5+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
@@ -283,9 +286,32 @@ export const WHY_CHOOSE_US = [
   }
 ];
 
+export const DEFAULT_WORKFLOW_STEPS = [
+  {
+    time: "Step 01 · 0.0s",
+    title: "Instant Item Entry",
+    text: "Keyboard-first rapid shortcut lookup and instant item code entry without touching a mouse."
+  },
+  {
+    time: "Step 02 · 0.1s",
+    title: "Automatic GST Calculation",
+    text: "Compliant with current Indian tax slabs (CGST, SGST, IGST) and automated HSN code reporting."
+  },
+  {
+    time: "Step 03 · 0.2s",
+    title: "Direct Hardware Printing",
+    text: "One-click output to 2\" or 3\" thermal receipt roll or laser A4/A5 tax invoices."
+  },
+  {
+    time: "Step 04 · Day End",
+    title: "Encrypted Local Backup",
+    text: "Automated daily sales tally and encrypted SQLite database snapshot stored safely on your drive."
+  }
+];
+
 export const TEAM_MEMBERS = [
   {
-    name: "Milan Mandal",
+    name: "Sayantan Ghosh",
     role: "Founder & Chief Executive Officer",
     category: "Executive Leadership",
     bio: "Visionary founder driving Esyus Technology. Passionate about creating software solutions that solve real-world operational challenges for Indian businesses with reliability and speed.",
@@ -295,7 +321,7 @@ export const TEAM_MEMBERS = [
     featured: true
   },
   {
-    name: "Suman Raptan",
+    name: "Soham Dutta",
     role: "Co-Founder & Chief Technology Officer",
     category: "Executive Leadership",
     bio: "Co-founder leading core technology and engineering standards. Specializes in low-latency offline systems, desktop application runtime, and database performance optimization.",
@@ -395,7 +421,8 @@ export const FAQS = [
 export const LANDING_PAGE_SECTIONS = {
   hero: {
     title: "Engineered for speed, built for reliability",
-    ringText: "Offline Billing Suite · Fast & Dependable ·",
+    ringText: "High Performance Software Suite · Fast & Dependable ·",
+    floodEyebrow: "Architecture • High Performance & Zero Latency",
     floodTitle: "Built for Indian business counters.",
     floodLead: "Local SQLite databases, instant 0.2s keystrokes, and plug-and-play thermal printer drivers. Total operational autonomy, no matter what happens to the internet.",
     videoUrl: "/demo-video.mp4?v=2",
@@ -405,6 +432,18 @@ export const LANDING_PAGE_SECTIONS = {
     collageD: "https://images.unsplash.com/photo-1556742208-999815fca738?auto=format&fit=crop&q=80&w=800",
     collageE1: "https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?auto=format&fit=crop&q=80&w=800",
     collageE2: "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800",
+    cardA1Title: "100% Offline Billing",
+    cardA1Sub: "0.2s Keystroke · Local SQLite",
+    cardA2Title: "GST Tax Invoice",
+    cardA2Sub: "Thermal 2\" & 3\" Ready",
+    cardBTitle: "Offline Systems Ready",
+    cardBSub: "Zero cloud dependency",
+    cardDTitle: "Finance Flow Desktop",
+    cardDSub: "Windows 10 / 11 · v2.4.0",
+    cardE1Title: "Esyus Mobile Billing",
+    cardE1Sub: "Android APK · Handheld Sync",
+    cardE2Title: "Hardware Interop",
+    cardE2Sub: "Direct USB / Serial print",
     founderPhoto: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
     coFounderPhoto: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200"
   },
@@ -466,7 +505,59 @@ export const LANDING_PAGE_SECTIONS = {
     lead: "The premier offline-first billing solution designed by Esyus Technology. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.",
     stationImage: "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=900",
     isComingSoon: true,
-    downloadUrl: ""
+    downloadUrl: "",
+    steps: [
+      {
+        time: "Step 01 · 0.0s",
+        title: "Instant Item Entry",
+        text: "Keyboard-first rapid shortcut lookup and instant item code entry without touching a mouse."
+      },
+      {
+        time: "Step 02 · 0.1s",
+        title: "Automatic GST Calculation",
+        text: "Compliant with current Indian tax slabs (CGST, SGST, IGST) and automated HSN code reporting."
+      },
+      {
+        time: "Step 03 · 0.2s",
+        title: "Direct Hardware Printing",
+        text: "One-click output to 2\" or 3\" thermal receipt roll or laser A4/A5 tax invoices."
+      },
+      {
+        time: "Step 04 · Day End",
+        title: "Encrypted Local Backup",
+        text: "Automated daily sales tally and encrypted SQLite database snapshot stored safely on your drive."
+      }
+    ]
+  },
+  team: {
+    headline: "The minds behind the software architecture",
+    lead: "Led by founder Sayantan Ghosh and co-founder Soham Dutta, our engineers build robust offline and cloud-connected software solutions with high performance.",
+    members: [
+      {
+        name: "Sayantan Ghosh",
+        role: "Founder & Chief Executive Officer",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
+        bio: "Visionary founder driving Esyus Technology. Passionate about creating software solutions that solve real-world operational challenges for Indian businesses with reliability and speed."
+      },
+      {
+        name: "Soham Dutta",
+        role: "Co-Founder & Chief Technology Officer",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
+        bio: "Co-founder leading core technology and engineering standards. Specializes in low-latency offline systems, desktop application runtime, and database performance optimization."
+      },
+      {
+        name: "Ayan Banerjee",
+        role: "Lead Full-Stack Web Engineer",
+        avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80",
+        bio: "Expert web developer focused on responsive React platforms, enterprise web portals, and REST API integration with modern web security practices."
+      },
+      {
+        name: "Priya Mukherjee",
+        role: "Senior Android & Mobile Developer",
+        avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+        bio: "Specializes in native Android architecture, offline caching, Bluetooth hardware interfacing (thermal printers/scanners), and high-retention UX."
+      }
+    ]
   },
   whyChooseUs: {
     headline: "Five core pillars. Engineered for uninterrupted operations.",
@@ -526,7 +617,19 @@ export function applyDynamicData({ brand, services, products, faqs, landingPage 
     if (landingPage.about) Object.assign(LANDING_PAGE_SECTIONS.about, landingPage.about);
     if (landingPage.servicesSection) Object.assign(LANDING_PAGE_SECTIONS.servicesSection, landingPage.servicesSection);
     if (landingPage.productsSection) Object.assign(LANDING_PAGE_SECTIONS.productsSection, landingPage.productsSection);
-    if (landingPage.featuredProduct) Object.assign(LANDING_PAGE_SECTIONS.featuredProduct, landingPage.featuredProduct);
+    if (landingPage.featuredProduct) {
+      Object.assign(LANDING_PAGE_SECTIONS.featuredProduct, landingPage.featuredProduct);
+      if (Array.isArray(landingPage.featuredProduct.steps)) {
+        LANDING_PAGE_SECTIONS.featuredProduct.steps = [...landingPage.featuredProduct.steps];
+      }
+    }
+    if (landingPage.team) {
+      if (!LANDING_PAGE_SECTIONS.team) LANDING_PAGE_SECTIONS.team = {};
+      Object.assign(LANDING_PAGE_SECTIONS.team, landingPage.team);
+      if (Array.isArray(landingPage.team.members)) {
+        LANDING_PAGE_SECTIONS.team.members = [...landingPage.team.members];
+      }
+    }
     if (landingPage.whyChooseUs) {
       Object.assign(LANDING_PAGE_SECTIONS.whyChooseUs, landingPage.whyChooseUs);
       if (Array.isArray(landingPage.whyChooseUs.pillarImages)) {

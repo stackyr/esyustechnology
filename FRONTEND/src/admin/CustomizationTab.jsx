@@ -22,9 +22,15 @@ import {
   EyeOff,
   Eye,
   User,
-  Lock
+  Lock,
+  Users
 } from 'lucide-react';
-import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
+import {
+  COMPANY_INFO,
+  LANDING_PAGE_SECTIONS,
+  DEFAULT_WORKFLOW_STEPS,
+  TEAM_MEMBERS
+} from '../data/companyData';
 import api from '../utils/api';
 
 export default function CustomizationTab({
@@ -55,6 +61,9 @@ export default function CustomizationTab({
     supportEmail: brand?.supportEmail || COMPANY_INFO.supportEmail,
     phone: brand?.phone || COMPANY_INFO.phone,
     address: brand?.address || COMPANY_INFO.address,
+    navBadge: brand?.navBadge || COMPANY_INFO.navBadge || 'Software',
+    navSubtitle: brand?.navSubtitle || COMPANY_INFO.navSubtitle || 'Enterprise Suite',
+    footerAbout: brand?.footerAbout || COMPANY_INFO.footerAbout || '',
     stats: brand?.stats || [...COMPANY_INFO.stats]
   }));
 
@@ -62,9 +71,27 @@ export default function CustomizationTab({
   const [pageData, setPageData] = useState(() => ({
     hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage?.hero || {}) },
     about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage?.about || {}) },
+    team: {
+      headline: landingPage?.team?.headline || LANDING_PAGE_SECTIONS?.team?.headline || 'The minds behind the software architecture',
+      lead: landingPage?.team?.lead || LANDING_PAGE_SECTIONS?.team?.lead || '',
+      members: Array.isArray(landingPage?.team?.members) && landingPage.team.members.length > 0
+        ? landingPage.team.members
+        : (LANDING_PAGE_SECTIONS?.team?.members || TEAM_MEMBERS).map(m => ({
+            name: m.name,
+            role: m.role,
+            avatar: m.avatar,
+            bio: m.bio || ''
+          }))
+    },
     servicesSection: { ...(LANDING_PAGE_SECTIONS?.servicesSection || {}), ...(landingPage?.servicesSection || {}) },
     productsSection: { ...(LANDING_PAGE_SECTIONS?.productsSection || {}), ...(landingPage?.productsSection || {}) },
-    featuredProduct: { ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}), ...(landingPage?.featuredProduct || {}) },
+    featuredProduct: {
+      ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}),
+      ...(landingPage?.featuredProduct || {}),
+      steps: Array.isArray(landingPage?.featuredProduct?.steps) && landingPage.featuredProduct.steps.length === 4
+        ? landingPage.featuredProduct.steps
+        : (LANDING_PAGE_SECTIONS?.featuredProduct?.steps || DEFAULT_WORKFLOW_STEPS).map(s => ({ ...s }))
+    },
     whyChooseUs: {
       headline: landingPage?.whyChooseUs?.headline || LANDING_PAGE_SECTIONS?.whyChooseUs?.headline || '',
       lead: landingPage?.whyChooseUs?.lead || LANDING_PAGE_SECTIONS?.whyChooseUs?.lead || '',
@@ -106,6 +133,9 @@ export default function CustomizationTab({
         supportEmail: brand.supportEmail || COMPANY_INFO.supportEmail,
         phone: brand.phone || COMPANY_INFO.phone,
         address: brand.address || COMPANY_INFO.address,
+        navBadge: brand.navBadge || COMPANY_INFO.navBadge || 'Software',
+        navSubtitle: brand.navSubtitle || COMPANY_INFO.navSubtitle || 'Enterprise Suite',
+        footerAbout: brand.footerAbout || COMPANY_INFO.footerAbout || '',
         stats: Array.isArray(brand.stats) ? brand.stats : [...COMPANY_INFO.stats]
       });
     }
@@ -116,9 +146,27 @@ export default function CustomizationTab({
       setPageData({
         hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage.hero || {}) },
         about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage.about || {}) },
+        team: {
+          headline: landingPage.team?.headline || LANDING_PAGE_SECTIONS?.team?.headline || 'The minds behind the software architecture',
+          lead: landingPage.team?.lead || LANDING_PAGE_SECTIONS?.team?.lead || '',
+          members: Array.isArray(landingPage.team?.members) && landingPage.team.members.length > 0
+            ? landingPage.team.members
+            : (LANDING_PAGE_SECTIONS?.team?.members || TEAM_MEMBERS).map(m => ({
+                name: m.name,
+                role: m.role,
+                avatar: m.avatar,
+                bio: m.bio || ''
+              }))
+        },
         servicesSection: { ...(LANDING_PAGE_SECTIONS?.servicesSection || {}), ...(landingPage.servicesSection || {}) },
         productsSection: { ...(LANDING_PAGE_SECTIONS?.productsSection || {}), ...(landingPage.productsSection || {}) },
-        featuredProduct: { ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}), ...(landingPage.featuredProduct || {}) },
+        featuredProduct: {
+          ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}),
+          ...(landingPage.featuredProduct || {}),
+          steps: Array.isArray(landingPage.featuredProduct?.steps) && landingPage.featuredProduct.steps.length === 4
+            ? landingPage.featuredProduct.steps
+            : (LANDING_PAGE_SECTIONS?.featuredProduct?.steps || DEFAULT_WORKFLOW_STEPS).map(s => ({ ...s }))
+        },
         whyChooseUs: {
           headline: landingPage.whyChooseUs?.headline || LANDING_PAGE_SECTIONS?.whyChooseUs?.headline || '',
           lead: landingPage.whyChooseUs?.lead || LANDING_PAGE_SECTIONS?.whyChooseUs?.lead || '',
@@ -199,49 +247,6 @@ export default function CustomizationTab({
     }
   };
 
-  // Sync when props update
-  useEffect(() => {
-    if (brand) {
-      setBrandData({
-        name: brand.name || COMPANY_INFO.name,
-        shortName: brand.shortName || COMPANY_INFO.shortName,
-        domain: brand.domain || COMPANY_INFO.domain,
-        tagline: brand.tagline || COMPANY_INFO.tagline,
-        slogan: brand.slogan || COMPANY_INFO.slogan,
-        founder: brand.founder || COMPANY_INFO.founder,
-        coFounder: brand.coFounder || COMPANY_INFO.coFounder,
-        establishmentDate: brand.establishmentDate || COMPANY_INFO.establishmentDate,
-        email: brand.email || COMPANY_INFO.email,
-        supportEmail: brand.supportEmail || COMPANY_INFO.supportEmail,
-        phone: brand.phone || COMPANY_INFO.phone,
-        address: brand.address || COMPANY_INFO.address,
-        stats: brand.stats || [...COMPANY_INFO.stats]
-      });
-    }
-  }, [brand]);
-
-  useEffect(() => {
-    if (landingPage) {
-      setPageData({
-        hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage?.hero || {}) },
-        about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage?.about || {}) },
-        servicesSection: { ...(LANDING_PAGE_SECTIONS?.servicesSection || {}), ...(landingPage?.servicesSection || {}) },
-        productsSection: { ...(LANDING_PAGE_SECTIONS?.productsSection || {}), ...(landingPage?.productsSection || {}) },
-        featuredProduct: { ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}), ...(landingPage?.featuredProduct || {}) },
-        whyChooseUs: {
-          headline: landingPage?.whyChooseUs?.headline || LANDING_PAGE_SECTIONS?.whyChooseUs?.headline || '',
-          lead: landingPage?.whyChooseUs?.lead || LANDING_PAGE_SECTIONS?.whyChooseUs?.lead || '',
-          pillarImages: Array.isArray(landingPage?.whyChooseUs?.pillarImages) && landingPage.whyChooseUs.pillarImages.length === 5
-            ? landingPage.whyChooseUs.pillarImages
-            : [...(LANDING_PAGE_SECTIONS?.whyChooseUs?.pillarImages || [])]
-        },
-        reviewsSection: { ...(LANDING_PAGE_SECTIONS?.reviewsSection || {}), ...(landingPage?.reviewsSection || {}) },
-        downloadSection: { ...(LANDING_PAGE_SECTIONS?.downloadSection || {}), ...(landingPage?.downloadSection || {}) },
-        contact: { ...(LANDING_PAGE_SECTIONS?.contact || {}), ...(landingPage?.contact || {}) }
-      });
-    }
-  }, [landingPage]);
-
   // Brand updaters
   const handleBrandChange = (field, val) => {
     setBrandData((prev) => ({ ...prev, [field]: val }));
@@ -306,6 +311,44 @@ export default function CustomizationTab({
     setSaveSuccess(false);
   };
 
+  const handleStepChange = (index, field, val) => {
+    setPageData((prev) => {
+      const steps = Array.isArray(prev.featuredProduct?.steps) && prev.featuredProduct.steps.length === 4
+        ? prev.featuredProduct.steps.map(s => ({ ...s }))
+        : (LANDING_PAGE_SECTIONS?.featuredProduct?.steps || DEFAULT_WORKFLOW_STEPS).map(s => ({ ...s }));
+      if (steps[index]) {
+        steps[index] = { ...steps[index], [field]: val };
+      }
+      return {
+        ...prev,
+        featuredProduct: {
+          ...prev.featuredProduct,
+          steps
+        }
+      };
+    });
+    setSaveSuccess(false);
+  };
+
+  const handleTeamMemberChange = (index, field, val) => {
+    setPageData((prev) => {
+      const members = Array.isArray(prev.team?.members) && prev.team.members.length > 0
+        ? prev.team.members.map(m => ({ ...m }))
+        : (LANDING_PAGE_SECTIONS?.team?.members || TEAM_MEMBERS).map(m => ({ name: m.name, role: m.role, avatar: m.avatar, bio: m.bio || '' }));
+      if (members[index]) {
+        members[index] = { ...members[index], [field]: val };
+      }
+      return {
+        ...prev,
+        team: {
+          ...prev.team,
+          members
+        }
+      };
+    });
+    setSaveSuccess(false);
+  };
+
   // Master Save handler
   const handleSaveAll = async (e) => {
     if (e) e.preventDefault();
@@ -322,16 +365,17 @@ export default function CustomizationTab({
   };
 
   const subTabs = [
-    { id: 'brand', label: '1. Brand & Identity', icon: Building, desc: 'Name, contacts & stats' },
-    { id: 'hero', label: '2. Hero & Visuals', icon: Sparkles, desc: 'Headline, ring & collage images' },
+    { id: 'brand', label: '1. Brand & Navbar', icon: Building, desc: 'Name, contacts, nav pill & stats' },
+    { id: 'hero', label: '2. Hero & Visuals', icon: Sparkles, desc: 'Headline, 6 cards & video flood' },
     { id: 'about', label: '3. About Section', icon: FileText, desc: 'Story, quote & founder images' },
-    { id: 'services', label: '4. App Services', icon: Layers, desc: 'Capabilities copy & lead' },
-    { id: 'products', label: '5. Applications Ecosystem', icon: Layers, desc: 'Software ecosystem blueprint' },
-    { id: 'featuredProduct', label: '6. Featured Product', icon: Sliders, desc: 'Finance Flow station mockup' },
-    { id: 'whyChooseUs', label: '7. Why Choose Us', icon: Sparkles, desc: '5 pillar cards & photo links' },
-    { id: 'reviews', label: '8. Reviews & Proof', icon: MessageSquare, desc: 'Testimonial quote & verified author' },
-    { id: 'download', label: '9. Download Releases', icon: FileText, desc: 'Installers lead & security notice' },
-    { id: 'contactFooter', label: '10. Contact & Footer', icon: MessageSquare, desc: 'Hardware mockup & footer CTA' },
+    { id: 'team', label: '4. Team & Architects', icon: Users, desc: 'Headline, lead & 4 engineers' },
+    { id: 'services', label: '5. App Services', icon: Layers, desc: 'Capabilities copy & lead' },
+    { id: 'products', label: '6. Applications Ecosystem', icon: Layers, desc: 'Software ecosystem blueprint' },
+    { id: 'featuredProduct', label: '7. Featured Product', icon: Sliders, desc: 'Finance Flow & 4-step pipeline' },
+    { id: 'whyChooseUs', label: '8. Why Choose Us', icon: Sparkles, desc: '5 pillar cards & photo links' },
+    { id: 'reviews', label: '9. Reviews & Proof', icon: MessageSquare, desc: 'Testimonial quote & verified author' },
+    { id: 'download', label: '10. Download Releases', icon: FileText, desc: 'Installers lead & security notice' },
+    { id: 'contactFooter', label: '11. Contact & Footer', icon: MessageSquare, desc: 'Hardware mockup & footer CTA' },
   ];
 
   return (
@@ -448,12 +492,12 @@ export default function CustomizationTab({
                 <h3 className="text-base font-bold text-[var(--ink)]">Core Brand Identity</h3>
                 <p className="text-xs text-[var(--muted)]">Updates header, footer, modals and metadata site-wide</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Brand Settings</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Brand Info</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Company Full Name *</label>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Company Full Name</label>
                 <input
                   type="text"
                   value={brandData.name}
@@ -463,7 +507,7 @@ export default function CustomizationTab({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Short Name (Navbar/Chips) *</label>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Short Brand Name</label>
                 <input
                   type="text"
                   value={brandData.shortName}
@@ -473,7 +517,7 @@ export default function CustomizationTab({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Registered Domain *</label>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Primary Domain Name</label>
                 <input
                   type="text"
                   value={brandData.domain}
@@ -503,6 +547,52 @@ export default function CustomizationTab({
                   className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] font-mono focus:bg-white focus:outline-none focus:border-[var(--c1)]"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Header Navbar & Footer Branding */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Navbar &amp; Footer Branding</h3>
+                <p className="text-xs text-[var(--muted)]">Customize the logo status pill badge, header subtitle and footer mission statement</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Nav &amp; Footer</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Navbar Status Pill (Mobile &amp; Desktop)</label>
+                <input
+                  type="text"
+                  value={brandData.navBadge || 'Software'}
+                  onChange={(e) => handleBrandChange('navBadge', e.target.value)}
+                  placeholder="e.g. Software, Live, or Enterprise"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Navbar Header Subtitle (Large Screen)</label>
+                <input
+                  type="text"
+                  value={brandData.navSubtitle || 'Enterprise Suite'}
+                  onChange={(e) => handleBrandChange('navSubtitle', e.target.value)}
+                  placeholder="e.g. Enterprise Suite or Software Center"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Footer About Mission Statement</label>
+              <textarea
+                rows={2}
+                value={brandData.footerAbout || ''}
+                onChange={(e) => handleBrandChange('footerAbout', e.target.value)}
+                placeholder="Esyus Technology builds robust, high-performance desktop suites, enterprise web platforms, and tailored Android applications designed to operate with absolute reliability and speed."
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
             </div>
           </div>
 
@@ -560,7 +650,7 @@ export default function CustomizationTab({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Technical Helpdesk Email</label>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Technical Helpdesk Email (24*6 Support)</label>
                 <input
                   type="email"
                   value={brandData.supportEmail}
@@ -581,20 +671,20 @@ export default function CustomizationTab({
             </div>
           </div>
 
-          {/* 4 Proof Metric Stats */}
+          {/* Key Performance Indicators (Stats) */}
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Track Record &amp; Metric Proofs</h3>
-                <p className="text-xs text-[var(--muted)]">4 key metrics displayed across website stats ribbon</p>
+                <h3 className="text-base font-bold text-[var(--ink)]">Key Operational Metrics (Stats)</h3>
+                <p className="text-xs text-[var(--muted)]">4 highlighted numbers displayed in corporate credentials and proof</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Proof Stats</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Metrics</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {(brandData.stats || []).map((stat, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
-                  <span className="text-[10px] font-mono font-bold text-[var(--c1)]">METRIC 0{idx + 1}</span>
+              {brandData.stats?.map((stat, idx) => (
+                <div key={idx} className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+                  <span className="text-[10px] font-mono font-bold uppercase text-[var(--c1)]">Metric 0{idx + 1}</span>
                   <input
                     type="text"
                     value={stat.value}
@@ -690,7 +780,7 @@ export default function CustomizationTab({
                     type="text"
                     value={newAdminUsername}
                     onChange={(e) => setNewAdminUsername(e.target.value)}
-                    placeholder="e.g. admin or milan"
+                    placeholder="e.g. admin or sayantan"
                     required
                     className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                   />
@@ -734,8 +824,8 @@ export default function CustomizationTab({
                       type={showConfirmPass ? 'text' : 'password'}
                       value={confirmAdminPassword}
                       onChange={(e) => setConfirmAdminPassword(e.target.value)}
-                      placeholder="Repeat new password..."
-                      required
+                      placeholder="Re-enter new password..."
+                      required={Boolean(newAdminPassword)}
                       className="w-full px-3 py-1.5 pr-8 rounded-lg border border-[var(--line)] bg-white text-xs font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                     />
                     <button
@@ -779,11 +869,12 @@ export default function CustomizationTab({
       {/* ------------------------------------------------------------- */}
       {activeSubTab === 'hero' && (
         <div className="space-y-6">
+          {/* Main Hero Stage */}
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
                 <h3 className="text-base font-bold text-[var(--ink)]">Hero Stage Headlines &amp; Motion</h3>
-                <p className="text-xs text-[var(--muted)]">Main opening banner headline, rotating ring, and background demo video</p>
+                <p className="text-xs text-[var(--muted)]">Main opening banner headline, rotating ring, and leadership avatars</p>
               </div>
               <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Hero Banner</span>
             </div>
@@ -809,6 +900,52 @@ export default function CustomizationTab({
                 />
               </div>
             </div>
+          </div>
+
+          {/* Video Flood Banner Section */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Full-Screen Video Flood Banner</h3>
+                <p className="text-xs text-[var(--muted)]">Customize video eyebrow, headline, lead text, and video asset link</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Video Section</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Video Flood Eyebrow</label>
+                <input
+                  type="text"
+                  value={pageData.hero.floodEyebrow || ''}
+                  onChange={(e) => handlePageChange('hero', 'floodEyebrow', e.target.value)}
+                  placeholder="Architecture • High Performance & Zero Latency"
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Video Flood Headline</label>
+                <input
+                  type="text"
+                  value={pageData.hero.floodTitle || ''}
+                  onChange={(e) => handlePageChange('hero', 'floodTitle', e.target.value)}
+                  placeholder="Built for Indian business counters."
+                  className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Video Flood Lead Paragraph</label>
+              <textarea
+                rows={2}
+                value={pageData.hero.floodLead || ''}
+                onChange={(e) => handlePageChange('hero', 'floodLead', e.target.value)}
+                placeholder="Local SQLite databases, instant 0.2s keystrokes, and plug-and-play thermal printer drivers..."
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
 
             <div>
               <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Demo Video Link / Path</label>
@@ -816,42 +953,71 @@ export default function CustomizationTab({
                 type="text"
                 value={pageData.hero.videoUrl || ''}
                 onChange={(e) => handlePageChange('hero', 'videoUrl', e.target.value)}
+                placeholder="/demo-video.mp4?v=2"
                 className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] font-mono focus:bg-white focus:outline-none focus:border-[var(--c1)]"
               />
             </div>
           </div>
 
-          {/* 6 Collage Photo Links */}
+          {/* 6 Collage Cards & Overlay Chips */}
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Hero 6-Card Collage Visual Images</h3>
-                <p className="text-xs text-[var(--muted)]">Real photography links for billing counters, thermal printers and screens</p>
+                <h3 className="text-base font-bold text-[var(--ink)]">Hero 6 Collage Cards (Images &amp; Overlay Chips)</h3>
+                <p className="text-xs text-[var(--muted)]">Customize the photo and the overlay chip text (Title &amp; Subtitle) for each of the 6 cards</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Collage Visuals</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">6 Collage Cards</span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[
-                { key: 'collageA1', label: 'Collage A1 (Billing Counter)' },
-                { key: 'collageA2', label: 'Collage A2 (Thermal Receipt Print)' },
-                { key: 'collageB', label: 'Collage B (Retail Counter)' },
-                { key: 'collageD', label: 'Collage D (Store Checkout Lane)' },
-                { key: 'collageE1', label: 'Collage E1 (GST Invoice Ledger)' },
-                { key: 'collageE2', label: 'Collage E2 (Enterprise Terminal)' }
-              ].map(({ key, label }) => (
-                <div key={key} className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
-                  <span className="text-[11px] font-bold text-[var(--ink)] block truncate">{label}</span>
-                  <input
-                    type="text"
-                    value={pageData.hero[key] || ''}
-                    onChange={(e) => handlePageChange('hero', key, e.target.value)}
-                    className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
-                  />
-                  {pageData.hero[key] && (
+                { imgKey: 'collageA1', titleKey: 'cardA1Title', subKey: 'cardA1Sub', defaultTitle: '100% Offline Billing', defaultSub: '0.2s Keystroke · Local SQLite', label: 'Card A1 (Top Left)' },
+                { imgKey: 'collageA2', titleKey: 'cardA2Title', subKey: 'cardA2Sub', defaultTitle: 'GST Tax Invoice', defaultSub: 'Thermal 2" & 3" Ready', label: 'Card A2 (Bottom Left)' },
+                { imgKey: 'collageB', titleKey: 'cardBTitle', subKey: 'cardBSub', defaultTitle: 'Offline Systems Ready', defaultSub: 'Zero cloud dependency', label: 'Card B (Center-Left Lane)' },
+                { imgKey: 'collageD', titleKey: 'cardDTitle', subKey: 'cardDSub', defaultTitle: 'Finance Flow Desktop', defaultSub: 'Windows 10 / 11 · v2.4.0', label: 'Card D (Center-Right Counter)' },
+                { imgKey: 'collageE1', titleKey: 'cardE1Title', subKey: 'cardE1Sub', defaultTitle: 'Esyus Mobile Billing', defaultSub: 'Android APK · Handheld Sync', label: 'Card E1 (Top Right)' },
+                { imgKey: 'collageE2', titleKey: 'cardE2Title', subKey: 'cardE2Sub', defaultTitle: 'Hardware Interop', defaultSub: 'Direct USB / Serial print', label: 'Card E2 (Bottom Right)' }
+              ].map(({ imgKey, titleKey, subKey, defaultTitle, defaultSub, label }) => (
+                <div key={imgKey} className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-[var(--ink)]">{label}</span>
+                    <span className="text-[10px] font-mono text-[var(--c1)] font-bold">{titleKey}</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Chip Title</label>
+                    <input
+                      type="text"
+                      value={pageData.hero[titleKey] || defaultTitle}
+                      onChange={(e) => handlePageChange('hero', titleKey, e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs font-bold text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Chip Subtitle</label>
+                    <input
+                      type="text"
+                      value={pageData.hero[subKey] || defaultSub}
+                      onChange={(e) => handlePageChange('hero', subKey, e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Photo Link</label>
+                    <input
+                      type="text"
+                      value={pageData.hero[imgKey] || ''}
+                      onChange={(e) => handlePageChange('hero', imgKey, e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  {pageData.hero[imgKey] && (
                     <div className="w-full h-24 rounded-lg bg-stone-100 overflow-hidden border border-[var(--line)]">
                       <img
-                        src={pageData.hero[key]}
+                        src={pageData.hero[imgKey]}
                         alt={label}
                         className="w-full h-full object-cover"
                         onError={(e) => { e.target.style.display = 'none'; }}
@@ -922,7 +1088,7 @@ export default function CustomizationTab({
             </div>
           </div>
 
-          {/* Card 2: Corporate Profile Highlight Card (Left Dark Card on Website) */}
+          {/* Card 2: Corporate Profile Highlight Card */}
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
@@ -945,121 +1111,109 @@ export default function CustomizationTab({
                 rows={3}
                 value={pageData.about?.corporateBio || ''}
                 onChange={(e) => handlePageChange('about', 'corporateBio', e.target.value)}
-                placeholder="Headquartered in Sector V, Kolkata, we engineer reliable Windows desktop software, native Android applications, and enterprise web solutions engineered with 100% offline autonomy."
+                placeholder="Headquartered in Sector V, Kolkata, we engineer reliable Windows desktop software, native Android applications, and enterprise web solutions engineered with 100% operational autonomy."
                 className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)] leading-relaxed"
               />
             </div>
 
-            <div className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
-              <label className="block text-xs font-bold text-[var(--ink)]">
-                Office / Workspace Background Photo URL
-              </label>
-              <input
-                type="text"
-                value={pageData.about?.officePhoto || ''}
-                onChange={(e) => handlePageChange('about', 'officePhoto', e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
-              />
-              {pageData.about?.officePhoto && (
-                <div className="w-full h-20 rounded-lg overflow-hidden border border-[var(--line)]">
-                  <img src={pageData.about.officePhoto} alt="Office Preview" className="w-full h-full object-cover" />
-                </div>
-              )}
-            </div>
-
-            {/* Linked Organization Details Info Strip */}
-            <div className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] flex flex-wrap items-center justify-between gap-3 text-xs">
-              <div className="space-y-0.5">
-                <span className="font-bold text-[var(--ink)] block">
-                  Company: {brandData.name} (Est. {brandData.establishmentDate})
-                </span>
-                <span className="text-[11px] text-[var(--muted)] block">
-                  Founders: {brandData.founder} &amp; {brandData.coFounder} • Location: {brandData.address}
-                </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="space-y-2">
+                <label className="block text-xs font-semibold text-[var(--ink)]">
+                  Founder Avatar Link (Square Portrait)
+                </label>
+                <input
+                  type="text"
+                  value={pageData.about?.founderPhoto || ''}
+                  onChange={(e) => handlePageChange('about', 'founderPhoto', e.target.value)}
+                  placeholder="https://images.unsplash.com/..."
+                  className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+                />
+                {pageData.about?.founderPhoto && (
+                  <div className="w-16 h-16 rounded-full overflow-hidden border border-[var(--line)]">
+                    <img src={pageData.about.founderPhoto} alt="Founder Preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
               </div>
-              <button
-                type="button"
-                onClick={() => setActiveSubTab('brand')}
-                className="px-3 py-1 rounded-lg border border-[var(--line)] bg-white text-[11px] font-bold text-[var(--c1)] hover:bg-[var(--soft)] transition-colors cursor-pointer"
-              >
-                Edit in Brand Settings →
-              </button>
+
+              <div className="space-y-2">
+                <label className="block text-xs font-semibold text-[var(--ink)]">
+                  Office / Engineering Background Image
+                </label>
+                <input
+                  type="text"
+                  value={pageData.about?.officePhoto || ''}
+                  onChange={(e) => handlePageChange('about', 'officePhoto', e.target.value)}
+                  placeholder="https://images.unsplash.com/..."
+                  className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+                />
+                {pageData.about?.officePhoto && (
+                  <div className="w-full h-16 rounded-lg overflow-hidden border border-[var(--line)]">
+                    <img src={pageData.about.officePhoto} alt="Office Preview" className="w-full h-full object-cover" />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Card 3: The 4 Engineering Domain Cards (Right Grid on Website) */}
-          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-5">
+          {/* Card 3: 4 Engineering Domains */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">4 Engineering Domains (Capability Cards)</h3>
-                <p className="text-xs text-[var(--muted)]">Customize all titles, descriptions, domain tags and badges shown in the 2x2 grid</p>
+                <h3 className="text-base font-bold text-[var(--ink)]">Four Engineering Domains (Domain 01 - 04)</h3>
+                <p className="text-xs text-[var(--muted)]">Editable cards displayed on the right grid of the About Us section</p>
               </div>
               <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase px-2 py-0.5 rounded-full bg-[var(--soft)] border border-[var(--line)]">
-                4 Cards Grid
+                4 Domains
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {(pageData.about?.domains || LANDING_PAGE_SECTIONS.about.domains).map((dom, idx) => (
-                <div
-                  key={idx}
-                  className="p-4 sm:p-5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-3.5"
-                >
-                  <div className="flex items-center justify-between gap-2 border-b border-[var(--line)] pb-2.5">
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--c1)] font-bold">
-                      Domain {String(idx + 1).padStart(2, '0')}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(pageData.about?.domains || LANDING_PAGE_SECTIONS?.about?.domains || []).map((dom, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold uppercase text-[var(--c1)]">
+                      {dom.tag || `Domain 0${idx + 1}`}
                     </span>
-                    <input
-                      type="text"
-                      value={dom.tag || `Domain ${String(idx + 1).padStart(2, '0')}`}
-                      onChange={(e) => handleDomainChange(idx, 'tag', e.target.value)}
-                      placeholder={`Domain 0${idx + 1}`}
-                      className="w-28 px-2 py-1 rounded-md border border-[var(--line)] bg-white text-[11px] font-mono font-bold text-[var(--c1)] text-right focus:outline-none focus:border-[var(--c1)]"
-                    />
+                    <span className="text-[10px] font-mono text-[var(--muted)]">Slot 0{idx + 1}</span>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">Domain Title</label>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Domain Title</label>
                     <input
                       type="text"
                       value={dom.title || ''}
                       onChange={(e) => handleDomainChange(idx, 'title', e.target.value)}
-                      placeholder="e.g. Desktop Application Systems"
                       className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs font-bold text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-semibold text-[var(--ink)] mb-1">Description</label>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Description</label>
                     <textarea
-                      rows={3}
+                      rows={2}
                       value={dom.desc || ''}
                       onChange={(e) => handleDomainChange(idx, 'desc', e.target.value)}
-                      placeholder="Domain technical description..."
-                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)] leading-relaxed"
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 pt-1">
+                  <div className="grid grid-cols-2 gap-2">
                     <div>
-                      <label className="block text-[10px] font-mono text-[var(--muted)] mb-0.5">Left Badge</label>
+                      <label className="block text-[10px] font-semibold text-stone-500 mb-0.5">Badge 1</label>
                       <input
                         type="text"
                         value={dom.badge1 || ''}
                         onChange={(e) => handleDomainChange(idx, 'badge1', e.target.value)}
-                        placeholder="Enterprise Grade"
-                        className="w-full px-2.5 py-1 rounded-md border border-[var(--line)] bg-white text-[11px] font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                        className="w-full px-2 py-1 rounded-md border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-mono text-[var(--muted)] mb-0.5">Right Badge</label>
+                      <label className="block text-[10px] font-semibold text-stone-500 mb-0.5">Badge 2</label>
                       <input
                         type="text"
                         value={dom.badge2 || ''}
                         onChange={(e) => handleDomainChange(idx, 'badge2', e.target.value)}
-                        placeholder="Production Ready"
-                        className="w-full px-2.5 py-1 rounded-md border border-[var(--line)] bg-white text-[11px] font-mono text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                        className="w-full px-2 py-1 rounded-md border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                       />
                     </div>
                   </div>
@@ -1068,51 +1222,129 @@ export default function CustomizationTab({
             </div>
           </div>
 
-          {/* Card 4: Founder Story & Leadership Quote */}
-          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
-              <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Founder Quote &amp; Story</h3>
-                <p className="text-xs text-[var(--muted)]">Voice quote displayed at the top of the About section</p>
-              </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase px-2 py-0.5 rounded-full bg-[var(--soft)] border border-[var(--line)]">
-                Voice Quote
-              </span>
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Founder's Leadership Quote</label>
-              <textarea
-                rows={3}
-                value={pageData.about?.founderQuote || ''}
-                onChange={(e) => handlePageChange('about', 'founderQuote', e.target.value)}
-                placeholder="We bridge the gap between heavy enterprise needs..."
-                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
-              />
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
-              <span className="text-xs font-bold text-[var(--ink)]">Founder Photo URL</span>
-              <input
-                type="text"
-                value={pageData.about?.founderPhoto || ''}
-                onChange={(e) => handlePageChange('about', 'founderPhoto', e.target.value)}
-                placeholder="https://images.unsplash.com/..."
-                className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
-              />
-              {pageData.about?.founderPhoto && (
-                <div className="w-16 h-16 rounded-full overflow-hidden border border-[var(--line)]">
-                  <img src={pageData.about.founderPhoto} alt="Founder Preview" className="w-full h-full object-cover" />
-                </div>
-              )}
-            </div>
-          </div>
-
         </div>
       )}
 
       {/* ------------------------------------------------------------- */}
-      {/* 4. APP SERVICES SECTION TAB                                   */}
+      {/* 4. TEAM & ARCHITECTS TAB                                      */}
+      {/* ------------------------------------------------------------- */}
+      {activeSubTab === 'team' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Team Section Headlines</h3>
+                <p className="text-xs text-[var(--muted)]">Main headline and introductory lead introducing the software architects</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Team Intro</span>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Team Section Headline</label>
+              <input
+                type="text"
+                value={pageData.team?.headline || ''}
+                onChange={(e) => handlePageChange('team', 'headline', e.target.value)}
+                placeholder="The minds behind the software architecture"
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Team Section Lead Paragraph</label>
+              <textarea
+                rows={2}
+                value={pageData.team?.lead || ''}
+                onChange={(e) => handlePageChange('team', 'lead', e.target.value)}
+                placeholder="Led by founder Sayantan Ghosh and co-founder Soham Dutta, our engineers build robust offline and cloud-connected software solutions with high performance."
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+              />
+            </div>
+          </div>
+
+          {/* 4 Team Members */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">Core Engineering Team &amp; Architects (4 Members)</h3>
+                <p className="text-xs text-[var(--muted)]">Customize name, role, photo portrait link, and background bio for each architect</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">4 Architects</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(pageData.team?.members || TEAM_MEMBERS).map((member, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold uppercase text-[var(--c1)]">
+                      Architect 0{idx + 1}
+                    </span>
+                    <span className="text-[10px] font-mono text-[var(--muted)]">
+                      {idx === 0 ? 'Founder' : idx === 1 ? 'Co-Founder' : 'Core Engineer'}
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Full Name</label>
+                    <input
+                      type="text"
+                      value={member.name || ''}
+                      onChange={(e) => handleTeamMemberChange(idx, 'name', e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs font-bold text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Role / Position Title</label>
+                    <input
+                      type="text"
+                      value={member.role || ''}
+                      onChange={(e) => handleTeamMemberChange(idx, 'role', e.target.value)}
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Photo Avatar Link</label>
+                    <input
+                      type="text"
+                      value={member.avatar || ''}
+                      onChange={(e) => handleTeamMemberChange(idx, 'avatar', e.target.value)}
+                      placeholder="https://images.unsplash.com/..."
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  {member.avatar && (
+                    <div className="w-16 h-16 rounded-2xl overflow-hidden border border-[var(--line)] bg-stone-100">
+                      <img
+                        src={member.avatar}
+                        alt={member.name || 'Architect'}
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Bio / Responsibilities</label>
+                    <textarea
+                      rows={2}
+                      value={member.bio || ''}
+                      onChange={(e) => handleTeamMemberChange(idx, 'bio', e.target.value)}
+                      placeholder="Engineering focus, architecture standards, or product leadership..."
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* 5. APP SERVICES SECTION TAB                                   */}
       {/* ------------------------------------------------------------- */}
       {activeSubTab === 'services' && (
         <div className="space-y-6">
@@ -1155,7 +1387,7 @@ export default function CustomizationTab({
       )}
 
       {/* ------------------------------------------------------------- */}
-      {/* 5. APPLICATIONS ECOSYSTEM TAB                                 */}
+      {/* 6. APPLICATIONS ECOSYSTEM TAB                                 */}
       {/* ------------------------------------------------------------- */}
       {activeSubTab === 'products' && (
         <div className="space-y-6">
@@ -1209,7 +1441,7 @@ export default function CustomizationTab({
       )}
 
       {/* ------------------------------------------------------------- */}
-      {/* 6. FEATURED PRODUCT TAB                                       */}
+      {/* 7. FEATURED PRODUCT TAB                                       */}
       {/* ------------------------------------------------------------- */}
       {activeSubTab === 'featuredProduct' && (
         <div className="space-y-6">
@@ -1257,21 +1489,78 @@ export default function CustomizationTab({
               )}
             </div>
           </div>
+
+          {/* 4-Step Invoicing Workflow Pipeline */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">4-Step Invoicing Workflow Pipeline</h3>
+                <p className="text-xs text-[var(--muted)]">Customize the 4 horizontal step badges (Time, Title, and Description) below the simulator</p>
+              </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">4 Pipeline Steps</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {(pageData.featuredProduct.steps || DEFAULT_WORKFLOW_STEPS).map((st, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold uppercase text-[var(--c1)]">
+                      Pipeline Step 0{idx + 1}
+                    </span>
+                    <span className="text-[10px] font-mono text-[var(--muted)]">Rail Item</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Step Time Badge</label>
+                    <input
+                      type="text"
+                      value={st.time || ''}
+                      onChange={(e) => handleStepChange(idx, 'time', e.target.value)}
+                      placeholder={`Step 0${idx + 1} · 0.0s`}
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs font-mono font-bold text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Step Title</label>
+                    <input
+                      type="text"
+                      value={st.title || ''}
+                      onChange={(e) => handleStepChange(idx, 'title', e.target.value)}
+                      placeholder="e.g. Instant Item Entry"
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs font-bold text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-semibold text-stone-600 mb-0.5">Step Description</label>
+                    <textarea
+                      rows={2}
+                      value={st.text || ''}
+                      onChange={(e) => handleStepChange(idx, 'text', e.target.value)}
+                      placeholder="Keyboard-first rapid shortcut lookup..."
+                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 
       {/* ------------------------------------------------------------- */}
-      {/* 7. WHY CHOOSE US TAB                                          */}
+      {/* 8. WHY CHOOSE US TAB                                          */}
       {/* ------------------------------------------------------------- */}
       {activeSubTab === 'whyChooseUs' && (
         <div className="space-y-6">
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Why Choose Us (5 Pillars)</h3>
-                <p className="text-xs text-[var(--muted)]">Five core engineering pillars and high-resolution card photo links</p>
+                <h3 className="text-base font-bold text-[var(--ink)]">Why Choose Us Pillars Copy</h3>
+                <p className="text-xs text-[var(--muted)]">Section headline and lead copy</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Why Choose Us</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Pillars</span>
             </div>
 
             <div>
@@ -1287,96 +1576,98 @@ export default function CustomizationTab({
             <div>
               <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Lead Paragraph</label>
               <textarea
-                rows={2}
+                rows={3}
                 value={pageData.whyChooseUs.lead || ''}
                 onChange={(e) => handlePageChange('whyChooseUs', 'lead', e.target.value)}
                 className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
               />
             </div>
+          </div>
 
-            {/* 5 Pillar Images */}
-            <div className="space-y-3 pt-2">
-              <span className="text-xs font-bold text-[var(--c1)] uppercase tracking-wider font-mono">
-                5 Feature Pillar Card Images
-              </span>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[
-                  'Pillar 01: Experienced Team & Local DB',
-                  'Pillar 02: AES-256 Encryption & Security',
-                  'Pillar 03: 100% Tailored Custom Architecture',
-                  'Pillar 04: Plug-and-Play Thermal Hardware',
-                  'Pillar 05: 99% Milestone Compliance'
-                ].map((label, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
-                    <span className="text-[11px] font-bold text-[var(--ink)] block truncate">{label}</span>
-                    <input
-                      type="text"
-                      value={pageData.whyChooseUs?.pillarImages?.[idx] || ''}
-                      onChange={(e) => handlePillarImageChange(idx, e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
-                    />
-                    {pageData.whyChooseUs?.pillarImages?.[idx] && (
-                      <div className="w-full h-20 rounded-lg bg-stone-100 overflow-hidden border border-[var(--line)]">
-                        <img
-                          src={pageData.whyChooseUs.pillarImages[idx]}
-                          alt={label}
-                          className="w-full h-full object-cover"
-                          onError={(e) => { e.target.style.display = 'none'; }}
-                        />
-                      </div>
-                    )}
-                  </div>
-                ))}
+          {/* 5 Pillar Card Images */}
+          <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
+              <div>
+                <h3 className="text-base font-bold text-[var(--ink)]">5 Pillar Card Background Images</h3>
+                <p className="text-xs text-[var(--muted)]">Real photography links for each of the 5 core capability cards</p>
               </div>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Photos</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[
+                'Pillar 1: Experienced Team',
+                'Pillar 2: Quality & Security',
+                'Pillar 3: Custom Solutions',
+                'Pillar 4: On-Time Delivery',
+                'Pillar 5: Operational Autonomy'
+              ].map((label, idx) => (
+                <div key={idx} className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
+                  <span className="text-[11px] font-bold text-[var(--ink)] block truncate">{label}</span>
+                  <input
+                    type="text"
+                    value={pageData.whyChooseUs.pillarImages[idx] || ''}
+                    onChange={(e) => handlePillarImageChange(idx, e.target.value)}
+                    className="w-full px-3 py-1.5 rounded-lg border border-[var(--line)] bg-white text-[11px] text-[var(--ink)] font-mono focus:outline-none focus:border-[var(--c1)]"
+                  />
+                  {pageData.whyChooseUs.pillarImages[idx] && (
+                    <div className="w-full h-24 rounded-lg bg-stone-100 overflow-hidden border border-[var(--line)]">
+                      <img
+                        src={pageData.whyChooseUs.pillarImages[idx]}
+                        alt={label}
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       )}
 
       {/* ------------------------------------------------------------- */}
-      {/* 8. REVIEWS & SOCIAL PROOF TAB                                 */}
+      {/* 9. REVIEWS & SOCIAL PROOF TAB                                 */}
       {/* ------------------------------------------------------------- */}
       {activeSubTab === 'reviews' && (
         <div className="space-y-6">
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Customer Reviews &amp; Testimonial Quote</h3>
-                <p className="text-xs text-[var(--muted)]">Featured pull-quote and verified merchant endorsement</p>
+                <h3 className="text-base font-bold text-[var(--ink)]">Verified Social Proof &amp; Testimonial</h3>
+                <p className="text-xs text-[var(--muted)]">Hero pull-quote and verified business client credentials</p>
               </div>
               <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Reviews</span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Featured Voice Headline Quote</label>
+              <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Featured Testimonial Quote</label>
               <textarea
                 rows={3}
-                value={pageData.reviewsSection?.headlineQuote || ''}
+                value={pageData.reviewsSection.headlineQuote || ''}
                 onChange={(e) => handlePageChange('reviewsSection', 'headlineQuote', e.target.value)}
-                placeholder="Finance Flow eliminated 100% of our checkout delays..."
-                className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
+                className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
               />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Quote Author Name</label>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Author Name</label>
                 <input
                   type="text"
-                  value={pageData.reviewsSection?.quoteAuthor || ''}
+                  value={pageData.reviewsSection.quoteAuthor || ''}
                   onChange={(e) => handlePageChange('reviewsSection', 'quoteAuthor', e.target.value)}
-                  placeholder="Sunil Agarwal"
                   className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Author Company &amp; Meta</label>
+                <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Author Business &amp; Location</label>
                 <input
                   type="text"
-                  value={pageData.reviewsSection?.authorMeta || ''}
+                  value={pageData.reviewsSection.authorMeta || ''}
                   onChange={(e) => handlePageChange('reviewsSection', 'authorMeta', e.target.value)}
-                  placeholder="Agarwal Mega Store, Kolkata · Verified User"
                   className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
                 />
               </div>
@@ -1386,15 +1677,15 @@ export default function CustomizationTab({
       )}
 
       {/* ------------------------------------------------------------- */}
-      {/* 9. DOWNLOAD RELEASES TAB                                      */}
+      {/* 10. DOWNLOAD RELEASES TAB                                     */}
       {/* ------------------------------------------------------------- */}
       {activeSubTab === 'download' && (
         <div className="space-y-6">
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Application Releases Center</h3>
-                <p className="text-xs text-[var(--muted)]">Section title, lead, and digital safety guarantee notice</p>
+                <h3 className="text-base font-bold text-[var(--ink)]">Download Center Copy</h3>
+                <p className="text-xs text-[var(--muted)]">Header, description and digital safety guarantee notice</p>
               </div>
               <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Downloads</span>
             </div>
@@ -1447,7 +1738,7 @@ export default function CustomizationTab({
       )}
 
       {/* ------------------------------------------------------------- */}
-      {/* 10. CONTACT & FOOTER TAB                                      */}
+      {/* 11. CONTACT & FOOTER TAB                                      */}
       {/* ------------------------------------------------------------- */}
       {activeSubTab === 'contactFooter' && (
         <div className="space-y-6">
@@ -1504,7 +1795,7 @@ export default function CustomizationTab({
                   <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Banner Eyebrow</label>
                   <input
                     type="text"
-                    value={pageData.contact.footerCtaEyebrow || 'Enterprise Precision • Zero Cloud Latency'}
+                    value={pageData.contact.footerCtaEyebrow || 'Enterprise Precision • Zero Latency'}
                     onChange={(e) => handlePageChange('contact', 'footerCtaEyebrow', e.target.value)}
                     className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
                   />
@@ -1513,7 +1804,7 @@ export default function CustomizationTab({
                   <label className="block text-xs font-semibold text-[var(--ink)] mb-1">Banner Title</label>
                   <input
                     type="text"
-                    value={pageData.contact.footerCtaTitle || 'Bring calm, offline precision to your billing counter.'}
+                    value={pageData.contact.footerCtaTitle || 'Bring calm, high-performance precision to your billing counter.'}
                     onChange={(e) => handlePageChange('contact', 'footerCtaTitle', e.target.value)}
                     className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
                   />
@@ -1524,7 +1815,7 @@ export default function CustomizationTab({
         </div>
       )}
 
-      {/* Floating Bottom Save Bar - Positioned cleanly inside content area, never overlapping sidebar */}
+      {/* Floating Bottom Save Bar */}
       <div className="fixed bottom-4 sm:bottom-6 left-0 lg:left-72 right-0 z-30 pointer-events-none px-4 sm:px-6">
         <div className="max-w-5xl mx-auto p-3.5 sm:p-4 bg-white/95 backdrop-blur-md border border-[var(--line)] shadow-2xl rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 pointer-events-auto">
           <div className="flex items-center gap-2 text-xs text-[var(--muted)]">
@@ -1550,7 +1841,7 @@ export default function CustomizationTab({
               type="button"
               onClick={handleSaveAll}
               disabled={isSaving}
-              className={`w-full sm:w-auto px-6 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shrink-0 ${
+              className={`px-6 py-2 rounded-xl font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer ${
                 saveSuccess
                   ? 'bg-emerald-600 text-white'
                   : 'bg-[var(--c1)] hover:bg-[#d64b22] text-white'
@@ -1558,18 +1849,18 @@ export default function CustomizationTab({
             >
               {isSaving ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   <span>Saving...</span>
                 </>
               ) : saveSuccess ? (
                 <>
-                  <Check className="w-4 h-4" />
-                  <span>All Changes Saved!</span>
+                  <Check className="w-3.5 h-3.5" />
+                  <span>Saved!</span>
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4" />
-                  <span>Save All Customizations</span>
+                  <Save className="w-3.5 h-3.5" />
+                  <span>Save All Changes</span>
                 </>
               )}
             </button>

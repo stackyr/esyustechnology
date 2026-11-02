@@ -142,10 +142,10 @@ export default function Navbar({
             {/* Mobile / Tablet Status Pill */}
             <span className="inline-flex xl:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9.5px] font-mono font-bold text-emerald-800 tracking-tight shrink-0">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              {isDownloadsPage ? 'Apps' : isServicesPage ? 'Services' : 'Offline'}
+              {isDownloadsPage ? 'Apps' : isServicesPage ? 'Services' : (COMPANY_INFO.navBadge || 'Software')}
             </span>
             <span className="hidden xl:inline-flex items-center text-[9.5px] tracking-widest uppercase text-[var(--muted)] font-mono border-l border-[var(--line)] pl-2.5 ml-0.5 whitespace-nowrap">
-              {isDownloadsPage ? 'Software Center' : isServicesPage ? 'Engineering Catalog' : 'Offline First'}
+              {isDownloadsPage ? 'Software Center' : isServicesPage ? 'Engineering Catalog' : (COMPANY_INFO.navSubtitle || 'Enterprise Suite')}
             </span>
           </a>
 
@@ -192,7 +192,7 @@ export default function Navbar({
               className="ibtn ibtn--bare hdr__tool-btn hidden md:inline-grid"
               onClick={() => handleNavClick('faq')}
               aria-label="FAQ & Help"
-              title="Help & Questions"
+              title="24*6 Support & FAQ"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="10" />

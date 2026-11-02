@@ -16,7 +16,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
               <path id="ring-path" d="M11 50a39 39 0 1 1 78 0a39 39 0 1 1-78 0" fill="none" />
               <text>
                 <textPath href="#ring-path" textLength="240" lengthAdjust="spacingAndGlyphs">
-                  {hero.ringText || `Offline Billing Suite · ${COMPANY_INFO.name} · `}
+                  {hero.ringText || `High Performance Software Suite · ${COMPANY_INFO.name} · `}
                 </textPath>
               </text>
             </svg>
@@ -37,10 +37,10 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             )}
           </h1>
 
-          <a className="crew" href="#team" title={`Leadership: ${COMPANY_INFO.founder} & ${COMPANY_INFO.coFounder} — Kolkata, WB`}>
+          <a className="crew" href="#team" title={`Leadership: ${COMPANY_INFO.founder} & ${COMPANY_INFO.coFounder} — West Bengal`}>
             <span className="crew__img">
               <img
-                src={hero.founderPhoto || landingPage?.about?.founderPhoto}
+                src={hero.founderPhoto || landingPage?.about?.founderPhoto || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120"}
                 alt={`${COMPANY_INFO.founder} — Founder`}
               />
             </span>
@@ -59,13 +59,13 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           </a>
         </div>
 
-        {/* 5-Column Floating Collage with Real Topic-Related Images */}
+        {/* 5-Column Floating Collage with Real Dynamic Cards */}
         <div className="wrap collage" data-fixed="7">
           {/* Column A */}
           <div className="collage__col col-a">
             <figure className="look look--xl tab-l overflow-hidden relative group" style={{ '--plate': 'var(--c1)' }}>
               <img
-                src={hero.collageA1}
+                src={hero.collageA1 || "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=800"}
                 alt="Retail Billing Counter"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
@@ -75,15 +75,15 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
                   <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
                 </span>
                 <span>
-                  <b>100% Offline Billing</b>
-                  <small>0.2s Keystroke · Local SQLite</small>
+                  <b>{hero.cardA1Title || '100% Offline Billing'}</b>
+                  <small>{hero.cardA1Sub || '0.2s Keystroke · Local SQLite'}</small>
                 </span>
               </div>
             </figure>
 
             <figure className="look look--sm overflow-hidden relative group" style={{ '--plate': 'var(--c3)' }}>
               <img
-                src={hero.collageA2}
+                src={hero.collageA2 || "https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=800"}
                 alt="Thermal Receipt Printing"
                 className="w-full h-full object-cover brightness-90 group-hover:scale-105 transition-transform duration-700"
               />
@@ -93,8 +93,8 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
                   <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
                 </span>
                 <span>
-                  <b>GST Tax Invoice</b>
-                  <small>Thermal 2" & 3" Ready</small>
+                  <b>{hero.cardA2Title || 'GST Tax Invoice'}</b>
+                  <small>{hero.cardA2Sub || 'Thermal 2" & 3" Ready'}</small>
                 </span>
               </div>
             </figure>
@@ -104,7 +104,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           <div className="collage__col col-b">
             <figure className="look look--xxl tab-l overflow-hidden relative group" style={{ '--plate': 'var(--c2)' }}>
               <img
-                src={hero.collageB}
+                src={hero.collageB || "https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=800"}
                 alt="Supermarket Checkout Counter"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
@@ -114,8 +114,8 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
                   <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
                 </span>
                 <span>
-                  <b>Offline Systems Ready</b>
-                  <small>Zero cloud dependency</small>
+                  <b>{hero.cardBTitle || 'Offline Systems Ready'}</b>
+                  <small>{hero.cardBSub || 'Zero cloud dependency'}</small>
                 </span>
               </div>
             </figure>
@@ -144,7 +144,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
             </svg>
 
             <figure className="look look--md" style={{ '--plate': 'var(--c3)' }} data-flood-from>
-              <div className="art g-cream" role="img" aria-label={`${COMPANY_INFO.name} Offline Core Engine`}>
+              <div className="art g-cream" role="img" aria-label={`${COMPANY_INFO.name} Core Engine`}>
                 <svg className="ico" viewBox="0 0 200 200" style={{ '--s': '86%' }}>
                   <use href="#s-orb" />
                 </svg>
@@ -166,7 +166,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           <div className="collage__col col-d">
             <figure className="look look--xxl tab-r overflow-hidden relative group" style={{ '--plate': 'var(--c4)' }}>
               <img
-                src={hero.collageD}
+                src={hero.collageD || "https://images.unsplash.com/photo-1556742208-999815fca738?auto=format&fit=crop&q=80&w=800"}
                 alt="Finance Flow Desktop Billing Counter"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
@@ -176,8 +176,8 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
                   <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
                 </span>
                 <span>
-                  <b>Finance Flow Desktop</b>
-                  <small>Windows 10 / 11 · v2.4.0</small>
+                  <b>{hero.cardDTitle || 'Finance Flow Desktop'}</b>
+                  <small>{hero.cardDSub || 'Windows 10 / 11 · v2.4.0'}</small>
                 </span>
               </div>
             </figure>
@@ -187,7 +187,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           <div className="collage__col col-e">
             <figure className="look look--xl tab-r overflow-hidden relative group" style={{ '--plate': 'var(--c2)' }}>
               <img
-                src={hero.collageE1}
+                src={hero.collageE1 || "https://images.unsplash.com/photo-1580828343064-fde4fc206bc6?auto=format&fit=crop&q=80&w=800"}
                 alt="Android Mobile Billing"
                 className="w-full h-full object-cover brightness-95 group-hover:scale-105 transition-transform duration-700"
               />
@@ -197,15 +197,15 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
                   <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
                 </span>
                 <span>
-                  <b>{COMPANY_INFO.shortName} Mobile Billing</b>
-                  <small>Android APK · Handheld Sync</small>
+                  <b>{hero.cardE1Title || `${COMPANY_INFO.shortName || 'Esyus'} Mobile Billing`}</b>
+                  <small>{hero.cardE1Sub || 'Android APK · Handheld Sync'}</small>
                 </span>
               </div>
             </figure>
 
             <figure className="look look--sm overflow-hidden relative group" style={{ '--plate': 'var(--c5)' }}>
               <img
-                src={hero.collageE2}
+                src={hero.collageE2 || "https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?auto=format&fit=crop&q=80&w=800"}
                 alt="Thermal Hardware Terminal"
                 className="w-full h-full object-cover brightness-90 group-hover:scale-105 transition-transform duration-700"
               />
@@ -215,8 +215,8 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
                   <svg viewBox="0 0 24 24"><use href="#s-spark" /></svg>
                 </span>
                 <span>
-                  <b>Hardware Interop</b>
-                  <small>Direct USB / Serial print</small>
+                  <b>{hero.cardE2Title || 'Hardware Interop'}</b>
+                  <small>{hero.cardE2Sub || 'Direct USB / Serial print'}</small>
                 </span>
               </div>
             </figure>
@@ -225,7 +225,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
 
         {/* Full-Screen Pin Flood Scene */}
         <div className="flood" data-flood>
-          <div className="art g-night" role="img" aria-label={`${COMPANY_INFO.name} offline retail billing software video demonstration`}>
+          <div className="art g-night" role="img" aria-label={`${COMPANY_INFO.name} software video demonstration`}>
             <video
               src={hero.videoUrl || "/demo-video.mp4?v=2"}
               autoPlay
@@ -238,7 +238,9 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
           </div>
           <div className="wrap flood__text">
             <div>
-              <span className="eyebrow" style={{ color: 'var(--c3)' }}>Offline Architecture • Zero Latency</span>
+              <span className="eyebrow" style={{ color: 'var(--c3)' }}>
+                {hero.floodEyebrow || 'Architecture • High Performance & Zero Latency'}
+              </span>
               <h2 className="flood__title" style={{ marginTop: '8px' }}>
                 {hero.floodTitle || `${COMPANY_INFO.name}. Built for Indian business counters.`}
               </h2>

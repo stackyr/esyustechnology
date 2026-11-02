@@ -10,7 +10,7 @@ export default function FAQSection({ onContactClick, dataVersion = 0 }) {
         
         {/* Left Column: Heading and Support Direct CTA */}
         <div className="faq__head">
-          <span className="eyebrow">Frequently Asked Questions</span>
+          <span className="eyebrow">24*6 Support & FAQ</span>
           <h2 className="h2">
             Straightforward <em className="s">answers.</em>
           </h2>
@@ -20,7 +20,7 @@ export default function FAQSection({ onContactClick, dataVersion = 0 }) {
 
           <div className="pt-4 flex flex-col gap-3">
             <span className="text-xs uppercase tracking-wider text-[var(--muted)] font-mono">
-              Have a hardware or architecture inquiry?
+              Need 24*6 Technical Assistance?
             </span>
             <button
               type="button"
