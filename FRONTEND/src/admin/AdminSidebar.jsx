@@ -109,13 +109,13 @@ export default function AdminSidebar({
               : 'bg-amber-500/10 border-amber-500/30 text-amber-900'
           }`}
         >
-          <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isMongoConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+          <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${isMongoConnected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500 animate-ping'}`} />
           <div className="flex-1 truncate">
             <span className="font-bold block truncate">
-              {isMongoConnected ? 'MongoDB Connected' : 'MERN Engine Active'}
+              {isMongoConnected ? 'MongoDB Atlas Active' : 'MongoDB Atlas Syncing'}
             </span>
             <span className="text-[10px] text-[var(--muted)] block truncate">
-              {isMongoConnected ? 'Mongoose Models Synced' : 'Express :5000 + Local DB'}
+              {isMongoConnected ? 'Production Cloud Database' : 'Auto-Reconnecting Link...'}
             </span>
           </div>
         </div>

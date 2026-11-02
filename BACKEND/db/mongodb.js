@@ -17,34 +17,98 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config();
 
-const getMongoUri = () => process.env.MONGODB_URI || 'mongodb://localhost:27017/esyus_db';
+const getMongoUri = () => {
+  let uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/test';
+  if (uri.startsWith('mongodb+srv://') && !uri.includes('?')) {
+    uri = uri.replace(/\/?$/, '/test?retryWrites=true&w=majority');
+  }
+  return uri;
+};
 
-let isConnected = false;
+// Global cached connection for Node.js daemons and Serverless cold-starts
+let cached = global.mongoose;
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
+}
+
+const MONGO_OPTIONS = {
+  maxPoolSize: 15,
+  minPoolSize: 2,
+  serverSelectionTimeoutMS: 10000,
+  socketTimeoutMS: 45000,
+  heartbeatFrequencyMS: 10000,
+  connectTimeoutMS: 10000,
+  autoIndex: true
+};
+
+let listenersRegistered = false;
+
+function setupConnectionListeners() {
+  if (listenersRegistered) return;
+  listenersRegistered = true;
+
+  mongoose.connection.on('connected', () => {
+    console.log(`[MERN: MongoDB Atlas] Connection active: ${mongoose.connection.name}`);
+  });
+
+  mongoose.connection.on('disconnected', () => {
+    console.warn('[MERN: MongoDB Atlas] Connection severed. Auto-reconnecting in 2 seconds...');
+    cached.conn = null;
+    cached.promise = null;
+    setTimeout(() => {
+      connectMongoDB().catch((e) => console.warn('[Auto-reconnect error]:', e.message));
+    }, 2000);
+  });
+
+  mongoose.connection.on('error', (err) => {
+    console.error('[MERN: MongoDB Atlas] Connection error:', err.message);
+  });
+}
 
 export async function connectMongoDB() {
-  try {
+  setupConnectionListeners();
+
+  if (cached.conn && mongoose.connection.readyState === 1) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
     mongoose.set('strictQuery', false);
     const uri = getMongoUri();
-    const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 8000,
-      connectTimeoutMS: 8000
+    cached.promise = mongoose.connect(uri, MONGO_OPTIONS).then(async (conn) => {
+      console.log(`[MERN: MongoDB Atlas] Successfully connected to database: ${conn.connection.name}`);
+      await seedMongoDefaults();
+      return conn;
+    }).catch((err) => {
+      cached.promise = null;
+      console.warn(`[MERN: MongoDB Atlas] Connection attempt failed (${err.message}). Retrying...`);
+      throw err;
     });
-    isConnected = true;
-    console.log(`[MERN: MongoDB] Connected to MongoDB database: ${conn.connection.name}`);
-    
-    // Seed initial data if collections are empty
-    await seedMongoDefaults();
-    return true;
+  }
+
+  try {
+    cached.conn = await cached.promise;
+    return cached.conn;
   } catch (err) {
-    isConnected = false;
-    console.warn(`[MERN: MongoDB] Could not reach MongoDB at ${getMongoUri()} (${err.message}).`);
-    console.warn(`[MERN: MongoDB] Seamlessly operating with persistent local cache. To use MongoDB Atlas, paste your connection string in BACKEND/.env`);
+    cached.promise = null;
+    return null;
+  }
+}
+
+export async function ensureMongoConnection() {
+  if (mongoose.connection.readyState === 1) {
+    return true;
+  }
+  try {
+    await connectMongoDB();
+    return mongoose.connection.readyState === 1;
+  } catch (e) {
     return false;
   }
 }
 
 export function isMongoConnected() {
-  return isConnected && mongoose.connection.readyState === 1;
+  return mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2;
 }
 
 // Seed default data into MongoDB from local defaults
@@ -127,6 +191,7 @@ async function seedMongoDefaults() {
 
 // 0. ADMIN CREDENTIALS & SECURITY
 export async function getAdminCredentials() {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const doc = await Admin.findOne().sort({ createdAt: 1 }).lean();
     if (doc) return doc;
@@ -179,6 +244,7 @@ export async function updateAdminCredentials({ currentPassword, newUsername, new
     email: cleanEmail
   };
 
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     let doc = await Admin.findOne();
     if (!doc) {
@@ -210,6 +276,7 @@ export async function updateAdminCredentials({ currentPassword, newUsername, new
 
 // 1. BRAND
 export async function getBrandData() {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const doc = await Brand.findOne().sort({ createdAt: -1 }).lean();
     if (doc) return doc;
@@ -218,6 +285,7 @@ export async function getBrandData() {
 }
 
 export async function updateBrandData(updates) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     let doc = await Brand.findOne();
     if (!doc) {
@@ -241,6 +309,7 @@ export async function updateBrandData(updates) {
 
 // 1.5. LANDING PAGE SECTIONS & IMAGES
 export async function getLandingPageData() {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const doc = await LandingPage.findOne().sort({ createdAt: -1 }).lean();
     if (doc) return doc;
@@ -250,6 +319,7 @@ export async function getLandingPageData() {
 }
 
 export async function updateLandingPageData(updates) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     let doc = await LandingPage.findOne();
     if (!doc) {
@@ -297,6 +367,7 @@ export async function updateLandingPageData(updates) {
 
 // 2. INQUIRIES (MAIN FOCUS)
 export async function getInquiriesData({ status, search } = {}) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const query = {};
     if (status && status !== 'all') {
@@ -336,6 +407,7 @@ export async function getInquiriesData({ status, search } = {}) {
 }
 
 export async function createInquiryData(inq) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const created = await Inquiry.create(inq);
     // keep local in sync
@@ -352,6 +424,7 @@ export async function createInquiryData(inq) {
 }
 
 export async function updateInquiryData(id, updates) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const updated = await Inquiry.findOneAndUpdate({ id }, { ...updates, updatedAt: new Date() }, { new: true }).lean();
     if (updated) {
@@ -371,6 +444,7 @@ export async function updateInquiryData(id, updates) {
 }
 
 export async function deleteInquiryData(id) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     await Inquiry.deleteOne({ id });
   }
@@ -382,6 +456,7 @@ export async function deleteInquiryData(id) {
 
 // 3. SERVICES
 export async function getServicesData() {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     return await Service.find().sort({ createdAt: 1 }).lean();
   }
@@ -389,6 +464,7 @@ export async function getServicesData() {
 }
 
 export async function createServiceData(srv) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const created = await Service.create(srv);
     const db = getDB();
@@ -403,6 +479,7 @@ export async function createServiceData(srv) {
 }
 
 export async function updateServiceData(id, updates) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const updated = await Service.findOneAndUpdate({ id }, updates, { new: true }).lean();
     if (updated) {
@@ -421,6 +498,7 @@ export async function updateServiceData(id, updates) {
 }
 
 export async function deleteServiceData(id) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     await Service.deleteOne({ id });
   }
@@ -432,6 +510,7 @@ export async function deleteServiceData(id) {
 
 // 4. PRODUCTS & SPECS
 export async function getProductsData() {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     return await Product.find().sort({ isFeatured: -1, createdAt: 1 }).lean();
   }
@@ -439,6 +518,7 @@ export async function getProductsData() {
 }
 
 export async function createProductData(prod) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const created = await Product.create(prod);
     const db = getDB();
@@ -453,6 +533,7 @@ export async function createProductData(prod) {
 }
 
 export async function updateProductData(id, updates) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const updated = await Product.findOneAndUpdate({ id }, updates, { new: true }).lean();
     if (updated) {
@@ -471,6 +552,7 @@ export async function updateProductData(id, updates) {
 }
 
 export async function deleteProductData(id) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     await Product.deleteOne({ id });
   }
@@ -482,6 +564,7 @@ export async function deleteProductData(id) {
 
 // 5. FAQS
 export async function getFaqsData() {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     return await Faq.find().sort({ order: 1, createdAt: 1 }).lean();
   }
@@ -489,6 +572,7 @@ export async function getFaqsData() {
 }
 
 export async function createFaqData(faq) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const created = await Faq.create(faq);
     const db = getDB();
@@ -503,6 +587,7 @@ export async function createFaqData(faq) {
 }
 
 export async function updateFaqData(id, updates) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     const updated = await Faq.findOneAndUpdate({ id }, updates, { new: true }).lean();
     if (updated) {
@@ -521,6 +606,7 @@ export async function updateFaqData(id, updates) {
 }
 
 export async function deleteFaqData(id) {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     await Faq.deleteOne({ id });
   }
@@ -532,6 +618,7 @@ export async function deleteFaqData(id) {
 
 // Reset Database
 export async function resetAllData() {
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     await Promise.all([
       Brand.deleteMany({}),
@@ -544,6 +631,7 @@ export async function resetAllData() {
     ]);
   }
   const defaultData = resetLocalDB();
+  await ensureMongoConnection();
   if (isMongoConnected()) {
     await seedMongoDefaults();
   }
