@@ -96,7 +96,7 @@ export default function InquiriesTab({
             </span>
             <Mail className="w-4 h-4 text-[var(--muted)]" />
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-[var(--ink)] mt-2">{totalCount}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-[var(--ink)] mt-2">{isLoading ? <span className="inline-block w-10 h-7 rounded-lg bg-stone-200/80 animate-pulse align-middle" /> : totalCount}</p>
           <span className="text-[10px] text-[var(--muted)]">Received from all website forms</span>
         </div>
 
@@ -108,7 +108,7 @@ export default function InquiriesTab({
             </span>
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-amber-900 mt-2">{newCount}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-amber-900 mt-2">{isLoading ? <span className="inline-block w-10 h-7 rounded-lg bg-amber-200/60 animate-pulse align-middle" /> : newCount}</p>
           <span className="text-[10px] text-amber-800 font-medium">Awaiting merchant callback</span>
         </div>
 
@@ -120,7 +120,7 @@ export default function InquiriesTab({
             </span>
             <Clock className="w-4 h-4 text-blue-700" />
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-blue-900 mt-2">{inProgressCount}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-blue-900 mt-2">{isLoading ? <span className="inline-block w-10 h-7 rounded-lg bg-blue-200/60 animate-pulse align-middle" /> : inProgressCount}</p>
           <span className="text-[10px] text-blue-800 font-medium">Under discussion / quotation</span>
         </div>
 
@@ -132,7 +132,7 @@ export default function InquiriesTab({
             </span>
             <CheckCircle2 className="w-4 h-4 text-emerald-700" />
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-emerald-900 mt-2">{resolvedCount}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-emerald-900 mt-2">{isLoading ? <span className="inline-block w-10 h-7 rounded-lg bg-emerald-200/60 animate-pulse align-middle" /> : resolvedCount}</p>
           <span className="text-[10px] text-emerald-800 font-medium">Completed deals & installations</span>
         </div>
       </div>

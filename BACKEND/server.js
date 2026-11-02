@@ -38,6 +38,14 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
+// URL Normalizer: Supports both /api/* and /* (critical for Vercel serverless rewrites)
+app.use((req, res, next) => {
+  if (!req.url.startsWith('/api') && !req.url.startsWith('/socket.io')) {
+    req.url = '/api' + (req.url.startsWith('/') ? req.url : '/' + req.url);
+  }
+  next();
+});
+
 // Anti-Cache Headers & Connection Assurance for all API responses
 app.use('/api', async (req, res, next) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');

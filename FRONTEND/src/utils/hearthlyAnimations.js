@@ -129,28 +129,31 @@ export function initHearthlyAnimations() {
   let tickerCb = null;
   try {
     lenis = new Lenis({
-      duration: 1.5, // Rich, slow, graceful duration (seconds)
+      duration: 1.15, // Responsive, buttery smooth duration
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration curve
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 0.85, // Controlled, gentle wheel speed so it feels weighty, elegant, and not abrupt or jerky
-      touchMultiplier: 1.5,
+      wheelMultiplier: 1.1, // Responsive natural wheel response (no sluggish drag or getting stuck)
+      touchMultiplier: 1.8,
       infinite: false,
       autoResize: true,
+      syncTouch: false, // High refresh rate native touch momentum
       allowNestedScroll: true,
       overscroll: true,
       prevent: (node) => {
         return (
           node?.hasAttribute?.('data-lenis-prevent') ||
-          !!node?.closest?.('[data-lenis-prevent]')
+          !!node?.closest?.('[data-lenis-prevent]') ||
+          !!node?.closest?.('.modal-scroll') ||
+          !!node?.closest?.('.drawer-scroll')
         );
       }
     });
     lenis.on('scroll', ScrollTrigger.update);
     tickerCb = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tickerCb);
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.lagSmoothing(500, 33);
     globalLenis = lenis;
     if (typeof window !== 'undefined') {
       window.__lenis = lenis;
