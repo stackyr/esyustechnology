@@ -41,6 +41,7 @@
     "id": "6ae840d5dab853fc6fea6575"
   },
   "landingPage": {
+    "_id": "6ae840e5dab853fc6fea6587",
     "hero": {
       "title": "Engineered for speed, built for reliability",
       "ringText": "Customized application · Website ·",
@@ -62,7 +63,46 @@
       "motive": "Transforming complex enterprise technology into simple, intuitive, and easy-to-use software that empowers everyday business.",
       "founderQuote": "We bridge the gap between heavy enterprise needs and practical everyday reliability with offline-first desktop software and modern digital systems that never stop working.",
       "founderPhoto": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120",
-      "officePhoto": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900"
+      "officePhoto": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=900",
+      "corporateBio": "Headquartered in Sector V, Kolkata, we engineer reliable Windows desktop software, native Android applications, and enterprise web solutions engineered with 100% offline autonomy.",
+      "domains": [
+        {
+          "num": "01",
+          "tag": "Domain 01",
+          "title": "Desktop Application Systems",
+          "desc": "Robust Windows software built for offline resilience, high-speed point of sale, and instant invoice printing.",
+          "badge1": "Enterprise Grade",
+          "badge2": "Production Ready",
+          "_id": "6ae8bf3ce2f8607dbb403138"
+        },
+        {
+          "num": "02",
+          "tag": "Domain 02",
+          "title": "Website & Web Applications",
+          "desc": "Modern corporate websites.",
+          "badge1": "Enterprise Grade",
+          "badge2": "Production Ready",
+          "_id": "6ae8bf3ce2f8607dbb403139"
+        },
+        {
+          "num": "03",
+          "tag": "Domain 03",
+          "title": "Android Mobile Development",
+          "desc": "Native Android apps.",
+          "badge1": "Enterprise Grade",
+          "badge2": "Production Ready",
+          "_id": "6ae8bf3ce2f8607dbb40313a"
+        },
+        {
+          "num": "04",
+          "tag": "Domain 04",
+          "title": "Custom Software Solutions",
+          "desc": "Bespoke DB.",
+          "badge1": "Enterprise Grade",
+          "badge2": "Production Ready",
+          "_id": "6ae8bf3ce2f8607dbb40313b"
+        }
+      ]
     },
     "servicesSection": {
       "eyebrow": "Engineering Capabilities",
@@ -110,11 +150,9 @@
       "footerCtaEyebrow": "Enterprise Precision • Zero Cloud Latency",
       "footerCtaTitle": "Bring calm, offline precision to your billing counter."
     },
-    "_id": "6ae840e5dab853fc6fea6587",
     "createdAt": "2026-11-02T07:51:01.116Z",
-    "updatedAt": "2026-11-02T16:46:22.340Z",
-    "__v": 0,
-    "id": "6ae840e5dab853fc6fea6587"
+    "updatedAt": "2026-11-02T16:50:04.294Z",
+    "__v": 0
   },
   "services": [
     {

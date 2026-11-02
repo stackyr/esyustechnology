@@ -329,30 +329,34 @@ export async function updateLandingPageData(updates) {
     let doc = await LandingPage.findOne();
     if (!doc) {
       doc = await LandingPage.create(updates);
-    } else {
-      for (const section of Object.keys(updates)) {
-        if (updates[section] && typeof updates[section] === 'object' && !Array.isArray(updates[section])) {
-          const currentSec = doc[section] ? (doc[section].toObject ? doc[section].toObject() : doc[section]) : {};
-          doc[section] = { ...currentSec, ...updates[section] };
-        } else {
-          doc[section] = updates[section];
-        }
-      }
-      doc.markModified('hero');
-      doc.markModified('about');
-      doc.markModified('servicesSection');
-      doc.markModified('productsSection');
-      doc.markModified('featuredProduct');
-      doc.markModified('whyChooseUs');
-      doc.markModified('reviewsSection');
-      doc.markModified('downloadSection');
-      doc.markModified('contact');
-      await doc.save();
+      const res = doc.toObject ? doc.toObject() : doc;
+      const db = getDB();
+      db.landingPage = res;
+      saveDB(db);
+      return res;
     }
+
+    const setObj = {};
+    for (const section of Object.keys(updates)) {
+      if (updates[section] && typeof updates[section] === 'object' && !Array.isArray(updates[section])) {
+        for (const key of Object.keys(updates[section])) {
+          setObj[`${section}.${key}`] = updates[section][key];
+        }
+      } else {
+        setObj[section] = updates[section];
+      }
+    }
+
+    const updatedDoc = await LandingPage.findByIdAndUpdate(
+      doc._id,
+      { $set: setObj },
+      { new: true, runValidators: false, lean: true }
+    );
+
     const db = getDB();
-    db.landingPage = doc.toObject();
+    db.landingPage = updatedDoc;
     saveDB(db);
-    return doc.toObject();
+    return updatedDoc;
   }
 
   const db = getDB();
