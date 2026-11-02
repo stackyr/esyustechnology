@@ -1,7 +1,7 @@
 import React from 'react';
 import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
-export default function Hero({ onExploreServices, onViewApplications, onDownloadClick }) {
+export default function Hero({ onExploreServices, onViewApplications, onDownloadClick, dataVersion = 0 }) {
   const hero = LANDING_PAGE_SECTIONS.hero;
 
   return (

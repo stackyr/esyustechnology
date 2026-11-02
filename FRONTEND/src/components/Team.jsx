@@ -1,7 +1,7 @@
 import React from 'react';
 import { TEAM_MEMBERS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
-export default function Team({ onContactClick }) {
+export default function Team({ onContactClick, dataVersion = 0 }) {
   const tones = ['tone-3', 'tone-2', 'tone-4', 'tone-1'];
   const arts = ['g-sage', 'g-sky', 'g-amber', 'g-ember'];
 

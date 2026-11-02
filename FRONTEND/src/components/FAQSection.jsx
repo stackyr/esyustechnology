@@ -1,7 +1,7 @@
 import React from 'react';
 import { FAQS } from '../data/companyData';
 
-export default function FAQSection({ onContactClick }) {
+export default function FAQSection({ onContactClick, dataVersion = 0 }) {
   return (
     <section id="faq" className="faq" data-sec="faq">
       <div className="wrap faq__in">

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { CheckCircle2 } from 'lucide-react';
 import SvgSprite from './components/SvgSprite';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -42,6 +43,8 @@ export default function App() {
   });
   const [dataVersion, setDataVersion] = useState(0);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [loadingStage, setLoadingStage] = useState('connecting'); // 'connecting' | 'fetching' | 'ready' | 'dismissing'
+  const [loadingStatusText, setLoadingStatusText] = useState('Connecting to Esyus Production Database...');
   const [isRefreshing, setIsRefreshing] = useState(false);
   // Modal states
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -290,7 +293,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen selection:bg-[var(--c1)] selection:text-white">
+    <div key={`esyus-v-${dataVersion}`} className="min-h-screen selection:bg-[var(--c1)] selection:text-white">
       {/* SVG Sprite Definitions for Code Art & Symbols */}
       <SvgSprite />
       

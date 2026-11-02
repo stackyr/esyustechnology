@@ -1,7 +1,7 @@
 import React from 'react';
 import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
-export default function AboutUs({ onContactClick }) {
+export default function AboutUs({ onContactClick, dataVersion = 0 }) {
   const about = LANDING_PAGE_SECTIONS?.about || {};
 
   const domains = [

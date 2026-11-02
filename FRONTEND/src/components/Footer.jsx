@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { COMPANY_INFO, SERVICES, PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import api from '../utils/api';
 
-export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin, onOpenDownloadsPage }) {
+export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin, onOpenDownloadsPage, dataVersion = 0 }) {
   const [subscribed, setSubscribed] = useState(false);
   const [emailInput, setEmailInput] = useState('');
 
@@ -66,7 +66,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
               </svg>
               <div>
                 <small>Release Status</small>
-                <b>Coming Soon</b>
+                <b>{PRODUCTS.some(p => p.isComingSoon === false && Boolean(p.downloadUrl)) ? 'Downloads Live' : 'Coming Soon'}</b>
               </div>
             </a>
 
@@ -75,7 +75,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
               <div>
-                <small>Call Founder</small>
+                <small>Call {COMPANY_INFO.founder ? `Founder (${COMPANY_INFO.founder})` : "Founder"}</small>
                 <b>{COMPANY_INFO.phone}</b>
               </div>
             </a>

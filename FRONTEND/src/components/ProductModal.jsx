@@ -16,7 +16,7 @@ export default function ProductModal({ product, onClose, _onDownload }) {
     >
       <div
         data-lenis-prevent="true"
-        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp"
+        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp"
       >
         {/* Header */}
         <div className="bg-[var(--bg)]/95 backdrop-blur-md px-6 py-4.5 border-b border-[var(--line)] flex items-center justify-between shrink-0 z-10">
@@ -53,7 +53,7 @@ export default function ProductModal({ product, onClose, _onDownload }) {
         {/* Modal Body with smooth native scrolling */}
         <div
           data-lenis-prevent="true"
-          className="p-6 space-y-6 overflow-y-auto overscroll-contain flex-1"
+          className="p-5 sm:p-6 pb-6 space-y-6 overflow-y-auto overscroll-contain flex-1 min-h-0 modal-scroll"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {/* Blueprint Overview Box */}

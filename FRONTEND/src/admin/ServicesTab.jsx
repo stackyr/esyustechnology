@@ -204,7 +204,7 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
+            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1 min-h-0 modal-scroll">
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {/* Title */}

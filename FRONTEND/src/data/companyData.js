@@ -471,9 +471,23 @@ export function applyDynamicData({ brand, services, products, faqs, landingPage 
     if (Array.isArray(brand.stats) && brand.stats.length > 0) {
       COMPANY_INFO.stats = [...brand.stats];
     }
+    if (brand.founder && TEAM_MEMBERS[0]) {
+      TEAM_MEMBERS[0].name = brand.founder;
+    }
+    if (brand.coFounder && TEAM_MEMBERS[1]) {
+      TEAM_MEMBERS[1].name = brand.coFounder;
+    }
   }
   if (landingPage && typeof landingPage === 'object') {
-    if (landingPage.hero) Object.assign(LANDING_PAGE_SECTIONS.hero, landingPage.hero);
+    if (landingPage.hero) {
+      Object.assign(LANDING_PAGE_SECTIONS.hero, landingPage.hero);
+      if (landingPage.hero.founderPhoto && TEAM_MEMBERS[0]) {
+        TEAM_MEMBERS[0].avatar = landingPage.hero.founderPhoto;
+      }
+      if (landingPage.hero.coFounderPhoto && TEAM_MEMBERS[1]) {
+        TEAM_MEMBERS[1].avatar = landingPage.hero.coFounderPhoto;
+      }
+    }
     if (landingPage.about) Object.assign(LANDING_PAGE_SECTIONS.about, landingPage.about);
     if (landingPage.servicesSection) Object.assign(LANDING_PAGE_SECTIONS.servicesSection, landingPage.servicesSection);
     if (landingPage.productsSection) Object.assign(LANDING_PAGE_SECTIONS.productsSection, landingPage.productsSection);

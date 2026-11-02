@@ -1,7 +1,7 @@
 import React from 'react';
 import { CUSTOMER_REVIEWS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
-export default function Reviews({ onAddFeedbackClick }) {
+export default function Reviews({ onAddFeedbackClick, dataVersion = 0 }) {
   // Double reviews for infinite seamless marquee loop
   const marqueeItems = [...CUSTOMER_REVIEWS, ...CUSTOMER_REVIEWS];
 

@@ -7,7 +7,8 @@ export default function Navbar({
   onContactClick,
   isDownloadsPage = false,
   onBackToHome,
-  onNavigateSection
+  onNavigateSection,
+  dataVersion = 0
 }) {
   const [isSolid, setIsSolid] = useState(false);
   const [isHidden, setIsHidden] = useState(false);

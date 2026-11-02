@@ -356,7 +356,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
+            <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1 min-h-0 modal-scroll">
               
               {/* Release Link vs Coming Soon Controller */}
               <div className="p-4 rounded-2xl bg-white border border-[var(--line)] space-y-3">

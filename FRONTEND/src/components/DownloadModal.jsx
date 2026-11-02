@@ -14,7 +14,7 @@ export default function DownloadModal({ product, onClose }) {
     >
       <div
         data-lenis-prevent="true"
-        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-md w-full shadow-2xl border border-[var(--line)] overflow-hidden animate-scaleUp max-h-[92vh] flex flex-col"
+        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-md w-full shadow-2xl border border-[var(--line)] overflow-hidden animate-scaleUp max-h-[90vh] flex flex-col"
       >
         {/* Header */}
         <div className="p-5 bg-[var(--dark)] text-[var(--bg)] flex items-center justify-between border-b border-white/10 shrink-0">
@@ -44,7 +44,7 @@ export default function DownloadModal({ product, onClose }) {
         {/* Content with smooth native scrolling */}
         <div
           data-lenis-prevent="true"
-          className="p-6 space-y-5 overflow-y-auto overscroll-contain flex-1"
+          className="p-5 sm:p-6 pb-6 space-y-5 overflow-y-auto overscroll-contain flex-1 min-h-0 modal-scroll"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {/* Coming Soon Notice Card */}

@@ -14,7 +14,7 @@ export default function ServiceModal({ service, onClose, onEnquire }) {
     >
       <div
         data-lenis-prevent="true"
-        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp"
+        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp"
       >
         {/* Header */}
         <div className="bg-[var(--bg)]/95 backdrop-blur-md px-6 py-4.5 border-b border-[var(--line)] flex items-center justify-between shrink-0 z-10">
@@ -44,7 +44,7 @@ export default function ServiceModal({ service, onClose, onEnquire }) {
         {/* Modal Body with smooth native scrolling */}
         <div
           data-lenis-prevent="true"
-          className="p-6 space-y-6 overflow-y-auto overscroll-contain flex-1"
+          className="p-5 sm:p-6 pb-6 space-y-6 overflow-y-auto overscroll-contain flex-1 min-h-0 modal-scroll"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           <p className="text-xs sm:text-sm text-[var(--ink)]/85 leading-relaxed">
@@ -83,7 +83,7 @@ export default function ServiceModal({ service, onClose, onEnquire }) {
           </div>
 
           {/* Service Commitment Note */}
-          <div className="p-4 rounded-xl bg-[var(--dark)] text-[var(--bg)] space-y-1 shadow-md border border-white/10">
+          <div className="p-4 rounded-xl bg-[var(--dark)] text-[var(--bg)] space-y-1 shadow-md border border-white/10 mb-2">
             <span className="font-bold text-[var(--c3)] block text-xs font-mono uppercase tracking-wider">
               Esyus Technology Assurance
             </span>

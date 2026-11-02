@@ -42,7 +42,7 @@ export default function LegalModal({ type, onClose }) {
         {/* Modal Body with smooth native scrolling */}
         <div
           data-lenis-prevent="true"
-          className="p-6 text-xs text-[var(--ink)]/80 space-y-4 leading-relaxed overflow-y-auto overscroll-contain flex-1"
+          className="p-5 sm:p-6 pb-6 text-xs text-[var(--ink)]/80 space-y-4 leading-relaxed overflow-y-auto overscroll-contain flex-1 min-h-0 modal-scroll"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {isPrivacy ? (

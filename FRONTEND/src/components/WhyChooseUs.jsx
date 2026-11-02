@@ -1,7 +1,7 @@
 import React from 'react';
 import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 
-export default function WhyChooseUs({ onContactClick }) {
+export default function WhyChooseUs({ onContactClick, dataVersion = 0 }) {
   const wcu = LANDING_PAGE_SECTIONS?.whyChooseUs || {};
   const pillarImages = wcu.pillarImages || [];
 

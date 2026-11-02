@@ -26,6 +26,33 @@ body {
   background: transparent !important;
 }
 
+
+/* Sleek, ultra-clean custom scrollbar for modals & panels */
+.modal-scroll {
+  scrollbar-width: thin !important;
+  scrollbar-color: color-mix(in oklab, var(--c1) 40%, transparent) transparent !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+.modal-scroll::-webkit-scrollbar {
+  display: block !important;
+  width: 5px !important;
+  height: 5px !important;
+}
+
+.modal-scroll::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--c1) 35%, transparent) !important;
+  border-radius: 999px !important;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--c1) !important;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

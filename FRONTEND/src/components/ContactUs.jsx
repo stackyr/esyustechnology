@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { COMPANY_INFO, SERVICES, PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import api from '../utils/api';
 
-export default function ContactUs({ preselectedSubject }) {
+export default function ContactUs({ preselectedSubject, dataVersion = 0 }) {
   const contactSec = LANDING_PAGE_SECTIONS?.contact || {};
   const [formData, setFormData] = useState({
     name: '',
