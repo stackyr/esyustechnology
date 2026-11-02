@@ -64,7 +64,7 @@ export default function AdminTopBar({
         </button>
 
         {/* Admin Security */}
-        {onOpenSecurity && (
+        {typeof onOpenSecurity === 'function' && (
           <button
             type="button"
             onClick={onOpenSecurity}

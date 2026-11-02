@@ -17,7 +17,7 @@ export default function AdminSidebar({
   isRefreshing = false,
   isOpenMobile = false,
   onCloseMobile,
-  onOpenSecurity
+  onOpenSecurity = null
 }) {
   const navItems = [
     {
@@ -201,12 +201,12 @@ export default function AdminSidebar({
         </button>
 
         {/* Change Admin Password & Username */}
-        {onOpenSecurity && (
+        {typeof onOpenSecurity === 'function' && (
           <button
             type="button"
             onClick={() => {
               if (onCloseMobile) onCloseMobile();
-              onOpenSecurity();
+              if (typeof onOpenSecurity === 'function') onOpenSecurity();
             }}
             className="w-full flex items-center justify-between p-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] hover:bg-white text-xs font-bold text-[var(--ink)] transition-colors cursor-pointer"
           >
