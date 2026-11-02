@@ -399,6 +399,34 @@
       "badge": "Partner Suite",
       "logo": "/bharat-yatra-sathi-partner-logo.png",
       "image": "/card-bharat-yatra-sathi-partner.png"
+    },
+    {
+      "id": "gughbjh",
+      "name": "gughbjh",
+      "category": "Desktop Billing",
+      "platform": "Windows 10 / 11",
+      "version": "v1.0.0",
+      "size": "25.0 MB",
+      "isFeatured": false,
+      "tagline": "High-performance software built for reliability.",
+      "description": "Engineered for seamless offline business productivity.",
+      "highlights": [
+        "Works 100% offline with zero cloud dependency",
+        "Encrypted local SQLite database",
+        "Instant thermal printer & hardware integration"
+      ],
+      "chips": [
+        "⚡ 100% Offline",
+        "🔒 Local Database",
+        "🖨️ Hardware Ready"
+      ],
+      "downloadFile": "Setup.exe",
+      "downloadUrl": "",
+      "isComingSoon": true,
+      "accentColor": "from-blue-600 to-indigo-700",
+      "badge": "Desktop App",
+      "logo": "/finance-flow-logo.png",
+      "image": "/card-finance-flow.png"
     }
   ],
   "faqs": [

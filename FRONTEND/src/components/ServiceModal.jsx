@@ -5,15 +5,30 @@ export default function ServiceModal({ service, onClose, onEnquire }) {
   if (!service) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-fadeIn">
-      <div className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp">
-        
+    <div
+      data-lenis-prevent="true"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-fadeIn"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        data-lenis-prevent="true"
+        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp"
+      >
         {/* Header */}
         <div className="bg-[var(--bg)]/95 backdrop-blur-md px-6 py-4.5 border-b border-[var(--line)] flex items-center justify-between shrink-0 z-10">
           <div>
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[var(--c1)] block">
-              {service.badge}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[var(--c1)] block">
+                {service.badge}
+              </span>
+              {service.isComingSoon && (
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 border border-amber-500/30">
+                  Coming Soon
+                </span>
+              )}
+            </div>
             <h3 className="text-xl font-bold text-[var(--ink)] tracking-tight mt-0.5">{service.title}</h3>
           </div>
 
@@ -26,8 +41,12 @@ export default function ServiceModal({ service, onClose, onEnquire }) {
           </button>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 space-y-6 overflow-y-auto">
+        {/* Modal Body with smooth native scrolling */}
+        <div
+          data-lenis-prevent="true"
+          className="p-6 space-y-6 overflow-y-auto overscroll-contain flex-1"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           <p className="text-xs sm:text-sm text-[var(--ink)]/85 leading-relaxed">
             {service.fullDesc}
           </p>
@@ -37,7 +56,7 @@ export default function ServiceModal({ service, onClose, onEnquire }) {
               Included Engineering Deliverables
             </h4>
             <div className="space-y-2">
-              {service.features.map((feat, idx) => (
+              {(service.features || []).map((feat, idx) => (
                 <div key={idx} className="flex items-start gap-2.5 text-xs text-[var(--ink)] bg-[var(--soft)] p-3 rounded-xl border border-[var(--line)]">
                   <CheckCircle2 className="w-4 h-4 text-[var(--c1)] shrink-0 mt-0.5" />
                   <span className="font-medium leading-relaxed">{feat}</span>
@@ -52,7 +71,7 @@ export default function ServiceModal({ service, onClose, onEnquire }) {
               Primary Technologies & Frameworks
             </h4>
             <div className="flex flex-wrap gap-2">
-              {service.techStack.map((tech, idx) => (
+              {(service.techStack || []).map((tech, idx) => (
                 <span
                   key={idx}
                   className="px-3 py-1 bg-[var(--soft)] border border-[var(--line)] text-[var(--ink)] text-xs font-mono font-medium rounded-full"
@@ -90,11 +109,10 @@ export default function ServiceModal({ service, onClose, onEnquire }) {
             }}
             className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-[var(--c1)] hover:bg-[var(--c1)]/90 text-white text-xs font-bold rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105 active:scale-95 cursor-pointer"
           >
-            <span>Request Quotation</span>
+            <span>{service.isComingSoon ? 'Join Waitlist / Enquire' : 'Request Quotation'}</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
-
       </div>
     </div>
   );

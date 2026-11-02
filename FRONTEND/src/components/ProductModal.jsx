@@ -4,12 +4,20 @@ import { X, CheckCircle2, Clock, Monitor, Smartphone, Cpu, Download } from 'luci
 export default function ProductModal({ product, onClose, _onDownload }) {
   if (!product) return null;
 
-  const isAndroid = product.platform.toLowerCase().includes('android');
+  const isAndroid = (product.platform || '').toLowerCase().includes('android');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-fadeIn">
-      <div className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp">
-        
+    <div
+      data-lenis-prevent="true"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-fadeIn"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        data-lenis-prevent="true"
+        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp"
+      >
         {/* Header */}
         <div className="bg-[var(--bg)]/95 backdrop-blur-md px-6 py-4.5 border-b border-[var(--line)] flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-3.5">
@@ -42,9 +50,12 @@ export default function ProductModal({ product, onClose, _onDownload }) {
           </button>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 space-y-6 overflow-y-auto">
-          
+        {/* Modal Body with smooth native scrolling */}
+        <div
+          data-lenis-prevent="true"
+          className="p-6 space-y-6 overflow-y-auto overscroll-contain flex-1"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           {/* Blueprint Overview Box */}
           <div className="p-4 sm:p-5 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-2">
             <div className="flex items-center gap-2">
@@ -67,7 +78,7 @@ export default function ProductModal({ product, onClose, _onDownload }) {
               <span className="text-[10px] font-mono text-[var(--muted)]">Verified Specifications</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {product.highlights.map((feat, idx) => (
+              {(product.highlights || []).map((feat, idx) => (
                 <div
                   key={idx}
                   className="flex items-start gap-2.5 text-xs text-[var(--ink)] bg-[var(--soft)]/80 p-3 rounded-xl border border-[var(--line)] transition-colors hover:border-[var(--c1)]/50"
@@ -94,7 +105,7 @@ export default function ProductModal({ product, onClose, _onDownload }) {
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
                 <span className="text-[10px] text-stone-400 uppercase tracking-wider block font-mono">Release Status</span>
                 <span className="font-mono text-xs font-semibold text-amber-300 truncate block">
-                  Coming Soon ({product.version})
+                  {product.isComingSoon ? `Coming Soon (${product.version})` : `Verified Release (${product.version})`}
                 </span>
               </div>
               <div className="p-3 rounded-xl bg-white/5 border border-white/10 space-y-1">
@@ -117,7 +128,6 @@ export default function ProductModal({ product, onClose, _onDownload }) {
               Full technical support is provided for installing and calibrating thermal printer drivers, receipt hardware, and encrypted database backups.
             </p>
           </div>
-
         </div>
 
         {/* Modal Footer */}
@@ -143,14 +153,13 @@ export default function ProductModal({ product, onClose, _onDownload }) {
           ) : (
             <div
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--soft)] border border-[var(--c1)]/40 text-[var(--c1)] text-xs font-bold rounded-full shadow-xs cursor-default select-none"
-              title="Download link will be provided soon"
+              title="Official release in preparation"
             >
               <Clock className="w-3.5 h-3.5 text-[var(--c1)]" />
               <span>Download Coming Soon</span>
             </div>
           )}
         </div>
-
       </div>
     </div>
   );

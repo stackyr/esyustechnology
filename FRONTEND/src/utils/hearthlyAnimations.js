@@ -33,7 +33,7 @@ export function lenisScrollTo(target, options = {}) {
 
   const isHomeOrTop = actualTarget === 0;
   const offset = options.offset !== undefined ? options.offset : (isHomeOrTop ? 0 : -80);
-  const duration = options.duration !== undefined ? options.duration : 1.2;
+  const duration = options.duration !== undefined ? options.duration : 1.5;
 
   const instance = globalLenis || (typeof window !== 'undefined' ? window.__lenis : null);
 
@@ -41,7 +41,11 @@ export function lenisScrollTo(target, options = {}) {
     if (options.immediate) {
       instance.scrollTo(actualTarget, { offset: isHomeOrTop ? 0 : offset, immediate: true });
     } else {
-      instance.scrollTo(actualTarget, { offset: isHomeOrTop ? 0 : offset, duration });
+      instance.scrollTo(actualTarget, {
+        offset: isHomeOrTop ? 0 : offset,
+        duration,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+      });
     }
   } else if (isHomeOrTop) {
     if (options.immediate) {
@@ -120,11 +124,29 @@ export function initHearthlyAnimations() {
     });
   });
 
-  // Initialize Lenis smooth scroll
+  // Initialize Lenis smooth scroll with luxurious, high-end momentum glide
   let lenis = null;
   let tickerCb = null;
   try {
-    lenis = new Lenis({ lerp: 0.1 });
+    lenis = new Lenis({
+      duration: 1.5, // Rich, slow, graceful duration (seconds)
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration curve
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 0.85, // Controlled, gentle wheel speed so it feels weighty, elegant, and not abrupt or jerky
+      touchMultiplier: 1.5,
+      infinite: false,
+      autoResize: true,
+      allowNestedScroll: true,
+      overscroll: true,
+      prevent: (node) => {
+        return (
+          node?.hasAttribute?.('data-lenis-prevent') ||
+          !!node?.closest?.('[data-lenis-prevent]')
+        );
+      }
+    });
     lenis.on('scroll', ScrollTrigger.update);
     tickerCb = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tickerCb);
@@ -143,7 +165,7 @@ export function initHearthlyAnimations() {
     const id = a.getAttribute('href');
     if (!id || id === '#') return;
     e.preventDefault();
-    lenisScrollTo(id, { offset: (id === '#home' || id === '#top') ? 0 : -80, duration: 1.2 });
+    lenisScrollTo(id, { offset: (id === '#home' || id === '#top') ? 0 : -80, duration: 1.5 });
   };
   document.addEventListener('click', handleAnchorClick);
 

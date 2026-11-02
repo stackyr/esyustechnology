@@ -5,11 +5,19 @@ export default function DownloadModal({ product, onClose }) {
   if (!product) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-fadeIn">
-      <div className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-md w-full shadow-2xl border border-[var(--line)] overflow-hidden animate-scaleUp">
-        
+    <div
+      data-lenis-prevent="true"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-fadeIn"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        data-lenis-prevent="true"
+        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-md w-full shadow-2xl border border-[var(--line)] overflow-hidden animate-scaleUp max-h-[92vh] flex flex-col"
+      >
         {/* Header */}
-        <div className="p-5 bg-[var(--dark)] text-[var(--bg)] flex items-center justify-between border-b border-white/10">
+        <div className="p-5 bg-[var(--dark)] text-[var(--bg)] flex items-center justify-between border-b border-white/10 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-md shrink-0 overflow-hidden">
               {product.logo ? (
@@ -33,8 +41,12 @@ export default function DownloadModal({ product, onClose }) {
           </button>
         </div>
 
-        {/* Content */}
-        <div className="p-6 space-y-5">
+        {/* Content with smooth native scrolling */}
+        <div
+          data-lenis-prevent="true"
+          className="p-6 space-y-5 overflow-y-auto overscroll-contain flex-1"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           {/* Coming Soon Notice Card */}
           <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 flex items-start gap-3">
             <Clock className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
@@ -117,7 +129,6 @@ export default function DownloadModal({ product, onClose }) {
             </a>
           </div>
         </div>
-
       </div>
     </div>
   );

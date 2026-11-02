@@ -47,6 +47,47 @@ export default function App() {
   const [downloadingProduct, setDownloadingProduct] = useState(null);
   const [legalModalType, setLegalModalType] = useState(null); // 'privacy' | 'terms' | null
 
+  const isAnyModalOpen = Boolean(selectedProduct || selectedService || downloadingProduct || legalModalType);
+
+  // Lock background scroll and pause Lenis while modal is open so modal content scrolls natively and smoothly
+  useEffect(() => {
+    if (isAnyModalOpen) {
+      if (typeof window !== 'undefined' && window.__lenis) {
+        window.__lenis.stop();
+      }
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      if (typeof window !== 'undefined' && window.__lenis) {
+        window.__lenis.start();
+      }
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      if (typeof window !== 'undefined' && window.__lenis) {
+        window.__lenis.start();
+      }
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isAnyModalOpen]);
+
+  // Handle ESC key to dismiss any open modal
+  useEffect(() => {
+    if (!isAnyModalOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setSelectedProduct(null);
+        setSelectedService(null);
+        setDownloadingProduct(null);
+        setLegalModalType(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isAnyModalOpen]);
+
   // Preselected subject in Contact Us form
   const [contactSubject, setContactSubject] = useState('Finance Flow Desktop Billing');
 

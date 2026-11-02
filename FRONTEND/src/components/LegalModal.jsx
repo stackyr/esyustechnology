@@ -8,9 +8,17 @@ export default function LegalModal({ type, onClose }) {
   const isPrivacy = type === 'privacy';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-fadeIn">
-      <div className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-2xl w-full max-h-[88vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp">
-        
+    <div
+      data-lenis-prevent="true"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-fadeIn"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div
+        data-lenis-prevent="true"
+        className="bg-[var(--bg)] text-[var(--ink)] rounded-3xl max-w-2xl w-full max-h-[88vh] flex flex-col shadow-2xl border border-[var(--line)] relative overflow-hidden animate-scaleUp"
+      >
         {/* Header */}
         <div className="bg-[var(--bg)]/95 backdrop-blur-md px-6 py-4.5 border-b border-[var(--line)] flex items-center justify-between shrink-0 z-10">
           <div className="flex items-center gap-3">
@@ -31,8 +39,12 @@ export default function LegalModal({ type, onClose }) {
           </button>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 text-xs text-[var(--ink)]/80 space-y-4 leading-relaxed overflow-y-auto">
+        {/* Modal Body with smooth native scrolling */}
+        <div
+          data-lenis-prevent="true"
+          className="p-6 text-xs text-[var(--ink)]/80 space-y-4 leading-relaxed overflow-y-auto overscroll-contain flex-1"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
           {isPrivacy ? (
             <>
               <p>
@@ -107,7 +119,6 @@ export default function LegalModal({ type, onClose }) {
             Acknowledge & Close
           </button>
         </div>
-
       </div>
     </div>
   );
