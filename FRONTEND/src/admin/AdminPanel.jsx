@@ -10,6 +10,42 @@ import FaqsTab from './FaqsTab';
 import AdminSecurityModal from './AdminSecurityModal';
 import { CheckCircle2, AlertCircle, X } from 'lucide-react';
 
+class AdminErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('[AdminErrorBoundary] Caught component error:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-8 max-w-xl mx-auto my-12 text-center bg-white rounded-2xl border border-red-200 shadow-sm">
+          <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+            <AlertCircle className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-stone-900 mb-2">Something went wrong in this tab</h3>
+          <p className="text-xs text-stone-600 font-mono mb-6 bg-stone-50 p-3 rounded-lg border border-stone-200 text-left overflow-auto">
+            {this.state.error?.message || 'Component failed to render'}
+          </p>
+          <button
+            type="button"
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="px-4 py-2 bg-[var(--c1)] text-white text-xs font-bold rounded-xl hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            Retry Tab
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const [activeTab, setActiveTab] = useState('inquiries'); // Default to Inquiries (MAIN FOCUS)
   const [isOpenMobile, setIsOpenMobile] = useState(false);
@@ -367,6 +403,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
 
         {/* Tab Content Body */}
         <main className="flex-1 p-3 sm:p-5 lg:p-6 max-w-7xl w-full min-w-0 mx-auto space-y-5">
+          <AdminErrorBoundary key={activeTab}>
           {activeTab === 'inquiries' && (
             <InquiriesTab
               inquiries={inquiries}
@@ -414,6 +451,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
               onDeleteFaq={handleDeleteFaq}
             />
           )}
+          </AdminErrorBoundary>
         </main>
 
       </div>

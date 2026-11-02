@@ -16,7 +16,13 @@ import {
   ExternalLink,
   ShieldCheck,
   Download,
-  Clock
+  Clock,
+  AlertCircle,
+  KeyRound,
+  EyeOff,
+  Eye,
+  User,
+  Lock
 } from 'lucide-react';
 import { COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import api from '../utils/api';
