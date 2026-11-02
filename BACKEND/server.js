@@ -631,7 +631,12 @@ app.post('/api/reset', requireAdminAuth, async (req, res) => {
   }
 });
 
-if (!process.env.VERCEL) {
+const isDirectRun = process.argv[1] && (
+  process.argv[1].endsWith('server.js') ||
+  process.argv[1].endsWith('dev.js')
+);
+
+if (!process.env.VERCEL && isDirectRun) {
   app.listen(PORT, () => {
     console.log(`=======================================================`);
     console.log(` Esyus MERN Stack API Server running at http://localhost:${PORT}`);
