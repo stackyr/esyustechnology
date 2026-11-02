@@ -1,56 +1,106 @@
 /* ======================================================== */
-/* 00. GLOBAL SCROLLBAR REMOVAL (Clean, Ultra-Modern UI)    */
+/* 00. MINIMAL THEME-INTEGRATED CUSTOM SCROLLBAR ENGINE      */
 /* ======================================================== */
+/* Firefox & Modern Browser Standard Spec */
 html,
 body {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--c1) 42%, var(--muted) 58%) transparent;
 }
 
+/* WebKit / Chromium (Chrome, Edge, Safari, Brave, Opera) */
 ::-webkit-scrollbar {
-  display: none !important;
-  width: 0px !important;
-  height: 0px !important;
-  background: transparent !important;
+  width: 7px;
+  height: 7px;
 }
 
-* {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-*::-webkit-scrollbar {
-  display: none !important;
-  width: 0px !important;
-  height: 0px !important;
-  background: transparent !important;
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--c1) 40%, var(--muted) 60%);
+  border-radius: 9999px;
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.2s cubic-bezier(0.2, 0.75, 0.15, 1), box-shadow 0.2s ease;
 }
 
-
-/* Sleek, ultra-clean custom scrollbar for modals & panels */
-.modal-scroll {
-  scrollbar-width: thin !important;
-  scrollbar-color: color-mix(in oklab, var(--c1) 40%, transparent) transparent !important;
-  -webkit-overflow-scrolling: touch !important;
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c1);
+  box-shadow: 0 0 10px rgba(232, 105, 60, 0.45);
 }
 
-.modal-scroll::-webkit-scrollbar {
-  display: block !important;
-  width: 5px !important;
-  height: 5px !important;
+::-webkit-scrollbar-thumb:active {
+  background: #c95228;
 }
 
-.modal-scroll::-webkit-scrollbar-track {
-  background: transparent !important;
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
-.modal-scroll::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--c1) 35%, transparent) !important;
-  border-radius: 999px !important;
+/* Sub-containers & panels (Modals, Admin Drawers, Textareas, Code, Tables) */
+.modal-scroll,
+.drawer-scroll,
+.sidebar-scroll,
+pre,
+textarea,
+.overflow-y-auto,
+.overflow-x-auto,
+.overflow-auto {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--c1) 45%, transparent) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
-.modal-scroll::-webkit-scrollbar-thumb:hover {
-  background: var(--c1) !important;
+.modal-scroll::-webkit-scrollbar,
+.drawer-scroll::-webkit-scrollbar,
+.sidebar-scroll::-webkit-scrollbar,
+pre::-webkit-scrollbar,
+textarea::-webkit-scrollbar,
+.overflow-y-auto::-webkit-scrollbar,
+.overflow-x-auto::-webkit-scrollbar,
+.overflow-auto::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.modal-scroll::-webkit-scrollbar-track,
+.drawer-scroll::-webkit-scrollbar-track,
+.sidebar-scroll::-webkit-scrollbar-track,
+pre::-webkit-scrollbar-track,
+textarea::-webkit-scrollbar-track,
+.overflow-y-auto::-webkit-scrollbar-track,
+.overflow-x-auto::-webkit-scrollbar-track,
+.overflow-auto::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb,
+.drawer-scroll::-webkit-scrollbar-thumb,
+.sidebar-scroll::-webkit-scrollbar-thumb,
+pre::-webkit-scrollbar-thumb,
+textarea::-webkit-scrollbar-thumb,
+.overflow-y-auto::-webkit-scrollbar-thumb,
+.overflow-x-auto::-webkit-scrollbar-thumb,
+.overflow-auto::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--c1) 40%, transparent);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.modal-scroll::-webkit-scrollbar-thumb:hover,
+.drawer-scroll::-webkit-scrollbar-thumb:hover,
+.sidebar-scroll::-webkit-scrollbar-thumb:hover,
+pre::-webkit-scrollbar-thumb:hover,
+textarea::-webkit-scrollbar-thumb:hover,
+.overflow-y-auto::-webkit-scrollbar-thumb:hover,
+.overflow-x-auto::-webkit-scrollbar-thumb:hover,
+.overflow-auto::-webkit-scrollbar-thumb:hover {
+  background: var(--c1);
+  box-shadow: 0 0 6px rgba(232, 105, 60, 0.4);
 }
 
 @tailwind base;
@@ -122,24 +172,7 @@ body {
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
-}
 
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--ink) 25%, var(--bg));
-  border-radius: 99px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in oklab, var(--ink) 45%, var(--bg));
-}
 
 /* Typography Helpers */
 em.s {
