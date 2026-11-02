@@ -340,14 +340,14 @@ export function initHearthlyAnimations() {
         defaults: { ease: 'none' },
         scrollTrigger: {
           trigger: next,
-          start: 'top bottom',
+          start: 'top 85%',
           end: () => 'top ' + (parseFloat(getComputedStyle(next).top) || 0) + 'px',
           scrub: true,
           invalidateOnRefresh: true,
         },
       });
-      tl.to(inner, { scale: 0.955 }, 0);
-      if (body) tl.to(body, { '--dim': 0.3 }, 0);
+      tl.to(inner, { scale: 0.965 }, 0);
+      if (body) tl.to(body, { '--dim': 0.22 }, 0);
     });
   });
 
