@@ -108,7 +108,6 @@ export default function Products({ onSelectProduct, _onDownloadProduct, onViewAl
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
           {filteredItems.map((item) => {
             const hasProduct = Boolean(item.product);
-            const isLiveDownload = !item.isComingSoon && Boolean(item.downloadUrl);
 
             return (
               <article
@@ -184,33 +183,19 @@ export default function Products({ onSelectProduct, _onDownloadProduct, onViewAl
                       <span className="spec-btn__arr" aria-hidden="true">→</span>
                     </button>
 
-                    {isLiveDownload ? (
-                      <a
-                        href={item.downloadUrl}
-                        download
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="btn btn--sm flex-1 bg-[var(--c1)] hover:bg-[#d64b22] text-white text-xs font-bold text-center flex items-center justify-center gap-1.5 shadow-sm transition-all"
-                        title={`Download official ${item.name} installer`}
-                      >
-                        <Download className="w-3.5 h-3.5 shrink-0" />
-                        <span>{item.downloadLabel || 'Download'}</span>
-                      </a>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (onViewAllPackages) onViewAllPackages(item.product);
-                          else if (onDownloadClick) onDownloadClick(item.product);
-                        }}
-                        className="coming-soon-btn flex-1"
-                        title={`Click to download ${item.name} in Release Center`}
-                      >
-                        <Clock className="w-3.5 h-3.5 shrink-0" />
-                        <span>Coming Soon</span>
-                        <span className="btn__arr ml-0.5">→</span>
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (onViewAllPackages) onViewAllPackages(item.product);
+                        else if (onDownloadClick) onDownloadClick(item.product);
+                      }}
+                      className="coming-soon-btn flex-1"
+                      title={`Click to view ${item.name} in Release Center`}
+                    >
+                      <Clock className="w-3.5 h-3.5 shrink-0" />
+                      <span>Coming Soon</span>
+                      <span className="btn__arr ml-0.5">→</span>
+                    </button>
                   </div>
                 </div>
               </article>

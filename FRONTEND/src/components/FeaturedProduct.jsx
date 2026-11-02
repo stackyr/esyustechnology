@@ -103,33 +103,19 @@ export default function FeaturedProduct({ onDownloadFinanceFlow, onDownloadClick
               <span className="text-xs font-bold text-[var(--ink)]">
                 Net Bill: ₹{totalAmount.toLocaleString('en-IN', { minimumFractionDigits: 2 })}
               </span>
-              {financeFlow.isComingSoon === false && Boolean(financeFlow.downloadUrl) ? (
-                <a
-                  href={financeFlow.downloadUrl}
-                  download
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn--sm w-full sm:w-auto justify-center font-bold bg-[var(--c1)] hover:bg-[#d64b22] text-white shadow-md transition-colors"
-                  title={`Download ${financeFlow.name} Setup`}
-                >
-                  <Download className="w-3.5 h-3.5 mr-1.5 text-white shrink-0" />
-                  <span>Download Setup ({financeFlow.version || 'v2.4.0'})</span>
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onDownloadClick) onDownloadClick(financeFlow);
-                    else if (onDownloadFinanceFlow) onDownloadFinanceFlow(financeFlow);
-                  }}
-                  className="coming-soon-btn w-full sm:w-auto cursor-pointer"
-                  title="Click to view download package in Release Center"
-                >
-                  <Clock className="w-3.5 h-3.5 mr-1.5 shrink-0" />
-                  <span>Coming Soon ({financeFlow.version || 'v2.4.0'})</span>
-                  <span className="btn__arr ml-1">→</span>
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={() => {
+                  if (onDownloadClick) onDownloadClick(financeFlow);
+                  else if (onDownloadFinanceFlow) onDownloadFinanceFlow(financeFlow);
+                }}
+                className="coming-soon-btn w-full sm:w-auto cursor-pointer"
+                title="Click to view software package in Release Center"
+              >
+                <Clock className="w-3.5 h-3.5 mr-1.5 shrink-0" />
+                <span>Coming Soon ({financeFlow.version || 'v2.4.0'})</span>
+                <span className="btn__arr ml-1">→</span>
+              </button>
             </div>
           </div>
         </div>

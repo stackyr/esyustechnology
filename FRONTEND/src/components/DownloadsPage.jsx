@@ -182,7 +182,6 @@ export default function DownloadsPage({
             {filteredProducts.map((product) => {
               const isWindows = (product.platform || '').toLowerCase().includes('windows');
               const isAndroid = (product.platform || '').toLowerCase().includes('android');
-              const isLiveDownload = product.isComingSoon === false && Boolean(product.downloadUrl);
               const isFeatured = product.id === 'finance-flow';
 
               return (
@@ -289,33 +288,18 @@ export default function DownloadsPage({
                   <div className={`p-4 sm:p-5 pt-3 border-t mt-auto flex flex-col gap-2 ${
                     isFeatured ? 'border-white/10 bg-black/20' : 'border-[var(--line)] bg-[var(--bg)]/50'
                   }`}>
-                    {/* Primary Download / Coming Soon Trigger */}
-                    {isLiveDownload ? (
-                      <a
-                        href={product.downloadUrl}
-                        download
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full h-11 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] text-white shadow-md hover:from-[#e86a48] hover:to-[var(--c1)] transition-all cursor-pointer"
-                        title={`Download official ${product.name} installer`}
-                      >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Download {isAndroid ? 'APK' : 'Installer (.EXE)'}</span>
-                      </a>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => onDownloadApp(product)}
-                        className={`coming-soon-btn w-full h-11 justify-center text-xs uppercase tracking-wider group ${
-                          isFeatured ? '!bg-amber-400 !text-stone-950 !border-amber-400 hover:!bg-amber-300' : ''
-                        }`}
-                        title={`Official ${product.name} release in preparation`}
-                      >
-                        <Clock className="w-3.5 h-3.5 shrink-0" />
-                        <span>Coming Soon ({isAndroid ? 'Android APK' : 'Windows EXE'})</span>
-                        <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
-                      </button>
-                    )}
+                    {/* Primary Status: Coming Soon (No live download link) */}
+                    <button
+                      type="button"
+                      disabled
+                      className={`coming-soon-btn w-full h-11 justify-center text-xs uppercase tracking-wider cursor-default ${
+                        isFeatured ? '!bg-amber-400 !text-stone-950 !border-amber-400 opacity-95' : 'opacity-90'
+                      }`}
+                      title={`Official ${product.name} release in preparation`}
+                    >
+                      <Clock className="w-3.5 h-3.5 shrink-0" />
+                      <span>Coming Soon ({isAndroid ? 'Android APK' : 'Windows EXE'})</span>
+                    </button>
 
                     {/* Secondary Specs Modal Trigger */}
                     <button

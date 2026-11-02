@@ -104,7 +104,6 @@ export default function DownloadSection({ _onDownloadApp, onOpenDownloadsPage })
           {filteredApps.map((app) => {
             const isFeatured = app.id === 'finance-flow';
             const isAndroid = (app.platform || '').toLowerCase().includes('android');
-            const isLiveDownload = app.isComingSoon === false && Boolean(app.downloadUrl);
 
             return (
               <div
@@ -198,90 +197,48 @@ export default function DownloadSection({ _onDownloadApp, onOpenDownloadsPage })
                   </li>
                 </ul>
 
-                {/* CTA Button: Dynamic Live Download Link OR Coming Soon */}
+                {/* CTA Button: Coming Soon / Navigate to Release Center */}
                 <div className="w-full mt-auto pt-2 sm:pt-3">
                   {isFeatured ? (
-                    isLiveDownload ? (
-                      <>
-                        <a
-                          href={app.downloadUrl}
-                          download
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] hover:from-[#e86a48] hover:to-[var(--c1)] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-pointer"
-                          title={`Download ${app.name} (${app.downloadFile})`}
-                        >
-                          <Download className="w-4 h-4 mr-1 text-white shrink-0" />
-                          <span className="text-white font-bold tracking-wide">
-                            Download {app.downloadFile || 'Installer (.EXE)'}
-                          </span>
-                        </a>
-                        <div className="text-[11px] text-center font-mono mt-1.5 truncate text-amber-200/80 font-medium">
-                          Verified Official Installer • {app.size}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (onOpenDownloadsPage) onOpenDownloadsPage(app);
-                          }}
-                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-pointer hover:shadow-xl active:scale-95 group"
-                          title={`Click to download ${app.name} in Release Center`}
-                        >
-                          <Clock className="w-4 h-4 mr-1 text-white shrink-0 animate-pulse" />
-                          <span className="text-white font-bold tracking-wide">
-                            Coming Soon (Windows .EXE)
-                          </span>
-                          <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
-                        </button>
-                        <div className="text-[11px] text-center font-mono mt-1.5 truncate text-amber-200/80 font-medium">
-                          Official release in preparation • {app.size}
-                        </div>
-                      </>
-                    )
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onOpenDownloadsPage) onOpenDownloadsPage(app);
+                        }}
+                        className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[14px] flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] text-white shadow-lg shadow-[var(--c1)]/30 border border-white/20 transition-all duration-300 cursor-pointer hover:shadow-xl active:scale-95 group"
+                        title={`Click to view ${app.name} in Release Center`}
+                      >
+                        <Clock className="w-4 h-4 mr-1 text-white shrink-0 animate-pulse" />
+                        <span className="text-white font-bold tracking-wide">
+                          Coming Soon (Windows .EXE)
+                        </span>
+                        <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
+                      </button>
+                      <div className="text-[11px] text-center font-mono mt-1.5 truncate text-amber-200/80 font-medium">
+                        Official release in preparation • {app.size}
+                      </div>
+                    </>
                   ) : (
-                    isLiveDownload ? (
-                      <>
-                        <a
-                          href={app.downloadUrl}
-                          download
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[13.5px] flex items-center justify-center gap-2 bg-[var(--c1)] hover:bg-[#d64b22] text-white shadow-md cursor-pointer transition-colors"
-                          title={`Download ${app.name} (${app.downloadFile})`}
-                        >
-                          <Download className="w-4 h-4 mr-1 shrink-0 text-white" />
-                          <span className="truncate font-bold text-[13px] sm:text-[13.5px] text-white">
-                            Download {isAndroid ? 'APK' : 'EXE'} ({app.size})
-                          </span>
-                        </a>
-                        <div className="text-[11px] text-center font-mono mt-1.5 truncate text-[var(--muted)]">
-                          Verified Official Package • {app.size}
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (onOpenDownloadsPage) onOpenDownloadsPage(app);
-                          }}
-                          className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[13.5px] flex items-center justify-center gap-2 coming-soon-btn cursor-pointer shadow-xs active:scale-95 transition-all group"
-                          title={`Click to download ${app.name} in Release Center`}
-                        >
-                          <Clock className="w-4 h-4 mr-1 shrink-0" />
-                          <span className="truncate font-bold text-[13px] sm:text-[13.5px]">
-                            Coming Soon ({isAndroid ? 'Android .APK' : 'Windows .EXE'})
-                          </span>
-                          <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
-                        </button>
-                        <div className="text-[11px] text-center font-mono mt-1.5 truncate text-[var(--muted)]">
-                          Official release in preparation • {app.size}
-                        </div>
-                      </>
-                    )
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (onOpenDownloadsPage) onOpenDownloadsPage(app);
+                        }}
+                        className="w-full h-11 sm:h-12 rounded-full font-bold text-[13px] sm:text-[13.5px] flex items-center justify-center gap-2 coming-soon-btn cursor-pointer shadow-xs active:scale-95 transition-all group"
+                        title={`Click to view ${app.name} in Release Center`}
+                      >
+                        <Clock className="w-4 h-4 mr-1 shrink-0" />
+                        <span className="truncate font-bold text-[13px] sm:text-[13.5px]">
+                          Coming Soon ({isAndroid ? 'Android .APK' : 'Windows .EXE'})
+                        </span>
+                        <span className="btn__arr ml-1 inline-block transition-transform group-hover:translate-x-1 group-active:translate-x-1">→</span>
+                      </button>
+                      <div className="text-[11px] text-center font-mono mt-1.5 truncate text-[var(--muted)]">
+                        Official release in preparation • {app.size}
+                      </div>
+                    </>
                   )}
                 </div>
               </div>

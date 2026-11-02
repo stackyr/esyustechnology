@@ -1,67 +1,8 @@
-import React, { useState } from 'react';
-import { X, Clock, ShieldCheck, Mail, Download, CheckCircle2 } from 'lucide-react';
+import React from 'react';
+import { X, Clock, ShieldCheck, Mail } from 'lucide-react';
 
 export default function DownloadModal({ product, onClose }) {
-  const [downloadSuccess, setDownloadSuccess] = useState(false);
-
   if (!product) return null;
-
-  const handleDownload = () => {
-    if (product.downloadUrl) {
-      window.open(product.downloadUrl, '_blank');
-      setDownloadSuccess(true);
-      return;
-    }
-
-    const filename = product.downloadFile || `${product.name.replace(/\s+/g, '')}-Installer.exe`;
-    const manifestContent = `=====================================================
-ESYUS TECHNOLOGY — OFFICIAL SOFTWARE EVALUATION PACKAGE
-=====================================================
-Application: ${product.name}
-Version:     ${product.version || 'v1.0.0'}
-Platform:    ${product.platform || 'Cross-Platform'}
-Package ID:  ${product.id}
-Size:        ${product.size || '25.0 MB'}
-Build Date:  ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
-Status:      Verified Official Evaluation Build
-
------------------------------------------------------
-DEPLOYMENT & OFFLINE ARCHITECTURE SUMMARY:
------------------------------------------------------
-- 100% Offline Capability: Requires zero internet connection.
-- Local SQLite Encrypted Storage engine included.
-- Hardware Ready: Compatible with standard thermal receipt printers (2" & 3").
-- Plug & Play: Zero server dependency or third-party cloud lock-in.
-
------------------------------------------------------
-DIRECT INSTALLATION INSTRUCTIONS:
------------------------------------------------------
-1. Run the installer package executable on your target operating system.
-2. Select your local data folder for encrypted SQLite database storage.
-3. Connect your USB, Bluetooth, or Network thermal receipt printer.
-4. Launch the application to begin issuing zero-latency GST invoices.
-
------------------------------------------------------
-SUPPORT & LICENSING ASSISTANCE:
------------------------------------------------------
-Direct Desk:  +91 98765 43210
-Inquiries:    contact@esyustechnology.com
-Website:      https://esyustechnology.com
-
-© ${new Date().getFullYear()} Esyus Technology. All rights reserved.
-=====================================================`;
-
-    const blob = new Blob([manifestContent], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename.endsWith('.exe') || filename.endsWith('.apk') ? `${filename}.txt` : `${filename}-Package.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    setDownloadSuccess(true);
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-md animate-fadeIn">
@@ -127,27 +68,14 @@ Website:      https://esyustechnology.com
             </div>
           </div>
 
-          {/* Direct Download Trigger */}
+          {/* Release in Preparation Status Badge (No Live Download Link) */}
           <div className="space-y-2 pt-1">
-            <button
-              type="button"
-              onClick={handleDownload}
-              className="w-full h-11 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--c1)] to-[#e86a48] text-white shadow-md hover:from-[#e86a48] hover:to-[var(--c1)] active:scale-95 transition-all cursor-pointer"
-            >
-              {downloadSuccess ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4 text-white" />
-                  <span>Download Initiated Successfully!</span>
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4 text-white" />
-                  <span>Download Evaluation Package ({product.size || '22.0 MB'})</span>
-                </>
-              )}
-            </button>
+            <div className="w-full h-11 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 bg-[var(--soft)] border border-[var(--c1)]/30 text-[var(--c1)] shadow-xs">
+              <Clock className="w-4 h-4 text-[var(--c1)] animate-pulse" />
+              <span>Official Download Coming Soon ({product.version || 'v1.0.0'})</span>
+            </div>
             <div className="text-[11px] text-center font-mono text-[var(--muted)]">
-              SHA-256 Verified Official Package • 100% Offline
+              Official build undergoing final verification • Zero cloud lag
             </div>
           </div>
 
