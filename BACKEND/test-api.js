@@ -1,5 +1,10 @@
 // Verification script for Esyus Backend API & Data Handling with Security Auth
+import dotenv from 'dotenv';
+dotenv.config({ path: 'BACKEND/.env' });
+dotenv.config();
 const API_BASE = 'http://localhost:5000/api';
+const DEFAULT_USER = process.env.ADMIN_USERNAME || 'admin';
+const DEFAULT_PASS = process.env.ADMIN_PASSWORD || 'admin';
 
 async function runTests() {
   console.log('--- STARTING ESYUS SECURE BACKEND API VERIFICATION SUITE ---\n');
@@ -72,7 +77,7 @@ async function runTests() {
     const res = await fetch(`${API_BASE}/admin/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: 'admin', password: 'admin' })
+      body: JSON.stringify({ username: DEFAULT_USER, password: DEFAULT_PASS })
     });
     const data = await res.json();
     if (!data.success || !data.token) throw new Error('Admin login failed');
@@ -328,7 +333,7 @@ async function runTests() {
       method: 'PUT',
       headers: authHeaders(),
       body: JSON.stringify({
-        currentPassword: 'admin',
+        currentPassword: DEFAULT_PASS,
         newUsername: 'milan_admin',
         newPassword: 'securePassword2027'
       })

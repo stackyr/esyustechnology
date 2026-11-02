@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { COMPANY_INFO, SERVICES, PRODUCTS, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import api from '../utils/api';
 
 export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin, onOpenDownloadsPage, dataVersion = 0 }) {
   const [subscribed, setSubscribed] = useState(false);
   const [emailInput, setEmailInput] = useState('');
+
+  // Live data dynamically bound to dataVersion
+  const activeProducts = useMemo(() => [...PRODUCTS], [dataVersion]);
+  const activeServices = useMemo(() => [...SERVICES], [dataVersion]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -66,7 +70,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
               </svg>
               <div>
                 <small>Release Status</small>
-                <b>{PRODUCTS.some(p => p.isComingSoon === false && Boolean(p.downloadUrl)) ? 'Downloads Live' : 'Coming Soon'}</b>
+                <b>{activeProducts.some(p => p.isComingSoon === false && Boolean(p.downloadUrl)) ? 'Downloads Live' : 'Coming Soon'}</b>
               </div>
             </a>
 
@@ -114,7 +118,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
           <nav className="foot__col" aria-label="Applications">
             <h3>Applications</h3>
             <ul>
-              {PRODUCTS.map((prod) => (
+              {activeProducts.map((prod) => (
                 <li key={prod.id}>
                   <button
                     type="button"
@@ -151,7 +155,7 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
           <nav className="foot__col" aria-label="Services">
             <h3>Services</h3>
             <ul>
-              {SERVICES.map((srv) => (
+              {activeServices.map((srv) => (
                 <li key={srv.id}>
                   <button
                     type="button"

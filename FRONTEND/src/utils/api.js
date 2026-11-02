@@ -44,6 +44,8 @@ async function request(path, options = {}) {
   const url = `${API_BASE}${cleanPath}`;
   const defaultHeaders = {
     'Content-Type': 'application/json',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    'Pragma': 'no-cache',
   };
 
   try {
@@ -55,6 +57,7 @@ async function request(path, options = {}) {
 
   try {
     const res = await fetch(url, {
+      cache: 'no-store',
       ...options,
       headers: {
         ...defaultHeaders,

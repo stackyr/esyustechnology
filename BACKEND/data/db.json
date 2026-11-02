@@ -1,5 +1,6 @@
 {
   "brand": {
+    "_id": "6ae840d5dab853fc6fea6575",
     "name": "Esyus Technology",
     "shortName": "Esyus",
     "domain": "esyustechnology.com",
@@ -33,7 +34,11 @@
         "value": "99.4%",
         "desc": "Rated by retail & enterprise clients"
       }
-    ]
+    ],
+    "createdAt": "2026-11-02T07:50:45.568Z",
+    "updatedAt": "2026-11-02T09:27:39.155Z",
+    "__v": 0,
+    "id": "6ae840d5dab853fc6fea6575"
   },
   "landingPage": {
     "hero": {
@@ -64,11 +69,6 @@
       "headline": "Five ways we engineer business reliability",
       "lead": "From offline Windows billing software and thermal receipt printing to cloud enterprise applications, we build robust systems with zero downtime."
     },
-    "productsSection": {
-      "eyebrow": "Production Software Blueprint",
-      "headline": "Inside our software ecosystem",
-      "lead": "Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience."
-    },
     "featuredProduct": {
       "headline": "Finance Flow: From item entry to printed GST invoice in 0.2 seconds",
       "lead": "The premier offline-first billing solution designed by Esyus Technology. Create customer GST invoices in milliseconds with zero internet dependency and zero cloud latency.",
@@ -87,6 +87,11 @@
         "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=700"
       ]
     },
+    "productsSection": {
+      "eyebrow": "Production Software Blueprint",
+      "headline": "Inside our software ecosystem",
+      "lead": "Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience."
+    },
     "downloadSection": {
       "eyebrow": "Application Releases",
       "headline": "Installers built for offline endurance.",
@@ -104,7 +109,12 @@
       "counterImage": "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&q=80&w=900",
       "footerCtaEyebrow": "Enterprise Precision • Zero Cloud Latency",
       "footerCtaTitle": "Bring calm, offline precision to your billing counter."
-    }
+    },
+    "_id": "6ae840e5dab853fc6fea6587",
+    "createdAt": "2026-11-02T07:51:01.116Z",
+    "updatedAt": "2026-11-02T09:27:40.018Z",
+    "__v": 0,
+    "id": "6ae840e5dab853fc6fea6587"
   },
   "services": [
     {
@@ -399,34 +409,6 @@
       "badge": "Partner Suite",
       "logo": "/bharat-yatra-sathi-partner-logo.png",
       "image": "/card-bharat-yatra-sathi-partner.png"
-    },
-    {
-      "id": "gughbjh",
-      "name": "gughbjh",
-      "category": "Desktop Billing",
-      "platform": "Windows 10 / 11",
-      "version": "v1.0.0",
-      "size": "25.0 MB",
-      "isFeatured": false,
-      "tagline": "High-performance software built for reliability.",
-      "description": "Engineered for seamless offline business productivity.",
-      "highlights": [
-        "Works 100% offline with zero cloud dependency",
-        "Encrypted local SQLite database",
-        "Instant thermal printer & hardware integration"
-      ],
-      "chips": [
-        "⚡ 100% Offline",
-        "🔒 Local Database",
-        "🖨️ Hardware Ready"
-      ],
-      "downloadFile": "Setup.exe",
-      "downloadUrl": "",
-      "isComingSoon": true,
-      "accentColor": "from-blue-600 to-indigo-700",
-      "badge": "Desktop App",
-      "logo": "/finance-flow-logo.png",
-      "image": "/card-finance-flow.png"
     }
   ],
   "faqs": [
@@ -456,7 +438,56 @@
       "a": "You can download the installers directly from the 'Download Applications' section on this website. Our desktop installers are packaged as easy-to-use Windows .exe setup files, and Android applications are available as secure APKs."
     }
   ],
-  "inquiries": [],
+  "inquiries": [
+    {
+      "id": "inq-1793611624660-a87bd4",
+      "name": "Milan Test Visitor",
+      "mobile": "+91 98765 00000",
+      "email": "milan.test@example.com",
+      "address": "Kolkata Sector V",
+      "subject": "Finance Flow Desktop Billing",
+      "message": "Need GST offline billing machine for retail shop.",
+      "type": "enquiry",
+      "status": "new",
+      "notes": "",
+      "createdAt": "2026-11-02T09:27:04.661Z",
+      "_id": "6ae8576847dce4088e7b4bb5",
+      "updatedAt": "2026-11-02T09:27:04.661Z",
+      "__v": 0
+    },
+    {
+      "id": "inq-1793611504597-ebd0b7",
+      "name": "Milan Test Visitor",
+      "mobile": "+91 98765 00000",
+      "email": "milan.test@example.com",
+      "address": "Kolkata Sector V",
+      "subject": "Finance Flow Desktop Billing",
+      "message": "Need GST offline billing machine for retail shop.",
+      "type": "enquiry",
+      "status": "new",
+      "notes": "",
+      "createdAt": "2026-11-02T09:25:04.598Z",
+      "_id": "6ae856f0409ade2723dc67c3",
+      "updatedAt": "2026-11-02T09:25:04.598Z",
+      "__v": 0
+    },
+    {
+      "id": "inq-1793611439282-deab4e",
+      "name": "Milan Test Visitor",
+      "mobile": "+91 98765 00000",
+      "email": "milan.test@example.com",
+      "address": "Kolkata Sector V",
+      "subject": "Finance Flow Desktop Billing",
+      "message": "Need GST offline billing machine for retail shop.",
+      "type": "enquiry",
+      "status": "new",
+      "notes": "",
+      "createdAt": "2026-11-02T09:23:59.282Z",
+      "_id": "6ae856af76a7bb3e0405f3a1",
+      "updatedAt": "2026-11-02T09:23:59.282Z",
+      "__v": 0
+    }
+  ],
   "admin": {
     "username": "admin",
     "password": "admin",

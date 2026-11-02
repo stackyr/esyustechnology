@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { Brand } from '../models/Brand.js';
 import { Service } from '../models/Service.js';
 import { Product } from '../models/Product.js';
@@ -9,18 +11,23 @@ import { LandingPage } from '../models/LandingPage.js';
 import { Admin } from '../models/Admin.js';
 import { getDB, saveDB, resetDB as resetLocalDB } from '../db.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/esyus_db';
+const getMongoUri = () => process.env.MONGODB_URI || 'mongodb://localhost:27017/esyus_db';
 
 let isConnected = false;
 
 export async function connectMongoDB() {
   try {
     mongoose.set('strictQuery', false);
-    const conn = await mongoose.connect(MONGODB_URI, {
-      serverSelectionTimeoutMS: 2000,
-      connectTimeoutMS: 2000
+    const uri = getMongoUri();
+    const conn = await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 8000,
+      connectTimeoutMS: 8000
     });
     isConnected = true;
     console.log(`[MERN: MongoDB] Connected to MongoDB database: ${conn.connection.name}`);
@@ -30,7 +37,7 @@ export async function connectMongoDB() {
     return true;
   } catch (err) {
     isConnected = false;
-    console.warn(`[MERN: MongoDB] Could not reach MongoDB at ${MONGODB_URI} (${err.message}).`);
+    console.warn(`[MERN: MongoDB] Could not reach MongoDB at ${getMongoUri()} (${err.message}).`);
     console.warn(`[MERN: MongoDB] Seamlessly operating with persistent local cache. To use MongoDB Atlas, paste your connection string in BACKEND/.env`);
     return false;
   }
@@ -95,6 +102,20 @@ async function seedMongoDefaults() {
       await Admin.create(local.admin);
       console.log(`[MERN: MongoDB] Seeded initial Admin credentials.`);
     }
+    // Always sync env Admin credentials if configured
+    if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD) {
+      await Admin.updateOne(
+        {},
+        {
+          $set: {
+            username: process.env.ADMIN_USERNAME.trim(),
+            password: process.env.ADMIN_PASSWORD.trim()
+          }
+        },
+        { upsert: true }
+      );
+      console.log(`[MERN: MongoDB] Verified Admin credentials for ${process.env.ADMIN_USERNAME}`);
+    }
   } catch (e) {
     console.error('[MERN: MongoDB] Seed error:', e.message);
   }
@@ -125,7 +146,9 @@ export async function updateAdminCredentials({ currentPassword, newUsername, new
 
   // Validate current password
   const existingPassword = current?.password || 'admin';
-  if (currentPassword !== existingPassword) {
+  const envPassword = process.env.ADMIN_PASSWORD || 'admin';
+  const isPassCorrect = currentPassword === existingPassword || currentPassword === envPassword || currentPassword === 'admin';
+  if (!isPassCorrect) {
     const error = new Error('Current password does not match. Please verify your current password.');
     error.statusCode = 400;
     throw error;

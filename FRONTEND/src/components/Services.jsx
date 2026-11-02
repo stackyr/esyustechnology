@@ -1,113 +1,132 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { SERVICES, LANDING_PAGE_SECTIONS } from '../data/companyData';
 import { Clock } from 'lucide-react';
 
-export default function Services({ onSelectService, onEnquireService }) {
-  const serviceFolders = [
-    {
-      id: "desktop-dev",
-      serviceIndex: 4, // Desktop Dev in SERVICES
-      tab: "Application Development Systems",
-      tone: "tone-1",
-      image: "/finance-flow-logo.png",
-      isLogo: true,
-      num: "01",
-      meta: "Windows 10 / 11 · 100% Offline Autonomy",
-      lead: "High-performance Windows desktop applications, inventory suites, and management systems that work 100% offline with zero cloud lag.",
-      uiTop: "Runtime: Bare-Metal Win32 / Electron",
-      uiTitle: "Finance Flow Desktop Suite",
-      row1: ["Startup Latency", "<0.2 seconds instant"],
-      row2: ["Local Storage", "Encrypted SQLite DB"],
-      row3: ["Hardware Support", "Thermal 2\"/3\" & Laser A4"]
-    },
-    {
-      id: "website-dev",
-      serviceIndex: 0, // Website Dev in SERVICES
-      tab: "Website Development",
-      tone: "tone-2",
-      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=900",
-      num: "02",
-      meta: "Next.js / Vite / Tailwind · 100 Lighthouse",
-      lead: "High-speed, modern, SEO-optimized business websites that establish brand credibility and load instantaneously on all devices.",
-      uiTop: "Frontend Architecture",
-      uiTitle: "Modern Responsive Corporate Web",
-      row1: ["Core Web Vitals", "Sub-second LCP & 100 Speed"],
-      row2: ["Search Engine SEO", "Pre-indexed schema & meta"],
-      row3: ["Security", "SSL & static edge protection"]
-    },
-    {
-      id: "web-app-dev",
-      serviceIndex: 1, // Web App Dev in SERVICES
-      tab: "Web Apps & Cloud Portals",
-      tone: "tone-3",
-      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=900",
-      num: "03",
-      meta: "Role-Based Portals · Real-time Dashboards",
-      lead: "Scalable, dynamic cloud web apps and enterprise portals tailored to customer management and business workflows.",
-      uiTop: "Fullstack Architecture",
-      uiTitle: "Enterprise Management Dashboard",
-      row1: ["Security", "Role-Based Access (RBAC)"],
-      row2: ["Data Sync", "RESTful & GraphQL APIs"],
-      row3: ["Reliability", "99.99% Cloud Uptime"]
-    },
-    {
-      id: "android-dev",
-      serviceIndex: 3, // Android Dev in SERVICES
-      tab: "Android Mobile Apps",
-      tone: "tone-4",
-      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=900",
-      num: "04",
-      meta: "Kotlin / Java · Bluetooth Thermal Printers",
-      lead: "Specialized native Android applications optimized for hardware, sensors, Bluetooth thermal receipt printers, and offline caching.",
-      uiTop: "Mobile Android Jetpack",
-      uiTitle: "Handheld Billing & Field Apps",
-      row1: ["Hardware Connectivity", "Bluetooth Thermal Receipt"],
-      row2: ["Offline Database", "Room SQLite Storage"],
-      row3: ["OS Compatibility", "Android 8.0 through 14+"]
-    },
-    {
-      id: "custom-dev",
-      serviceIndex: 5, // Custom Dev in SERVICES
-      tab: "Custom Enterprise Software",
-      tone: "tone-5",
-      image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=900",
-      num: "05",
-      meta: "Bespoke Database & Workflow Automation",
-      lead: "Bespoke software engineered around your exact operational workflows, legacy data migrations, and custom billing rules.",
-      uiTop: "Custom Architecture",
-      uiTitle: "Tailor-Made Operations Suite",
-      row1: ["Integration", "Custom Hardware & Legacy DBs"],
-      row2: ["Codebase", "100% Tailored to Your Business"],
-      row3: ["Support", "Dedicated Engineering Desk"]
-    }
-  ];
+const FALLBACK_PRESETS = [
+  {
+    id: "desktop-dev",
+    tone: "tone-1",
+    image: "/finance-flow-logo.png",
+    isLogo: true,
+    meta: "Windows 10 / 11 · 100% Offline Autonomy",
+    uiTop: "Runtime: Bare-Metal Win32 / Electron",
+    uiTitle: "Finance Flow Desktop Suite",
+    row1: ["Startup Latency", "<0.2 seconds instant"],
+    row2: ["Local Storage", "Encrypted SQLite DB"],
+    row3: ["Hardware Support", "Thermal 2\"/3\" & Laser A4"]
+  },
+  {
+    id: "website-dev",
+    tone: "tone-2",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=900",
+    meta: "Next.js / Vite / Tailwind · 100 Lighthouse",
+    uiTop: "Frontend Architecture",
+    uiTitle: "Modern Responsive Corporate Web",
+    row1: ["Core Web Vitals", "Sub-second LCP & 100 Speed"],
+    row2: ["Search Engine SEO", "Pre-indexed schema & meta"],
+    row3: ["Security", "SSL & static edge protection"]
+  },
+  {
+    id: "web-app-dev",
+    tone: "tone-3",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=900",
+    meta: "Role-Based Portals · Real-time Dashboards",
+    uiTop: "Fullstack Architecture",
+    uiTitle: "Enterprise Management Dashboard",
+    row1: ["Security", "Role-Based Access (RBAC)"],
+    row2: ["Data Sync", "RESTful & GraphQL APIs"],
+    row3: ["Reliability", "99.99% Cloud Uptime"]
+  },
+  {
+    id: "android-dev",
+    tone: "tone-4",
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80&w=900",
+    meta: "Kotlin / Java · Bluetooth Thermal Printers",
+    uiTop: "Mobile Android Jetpack",
+    uiTitle: "Handheld Billing & Field Apps",
+    row1: ["Hardware Connectivity", "Bluetooth Thermal Receipt"],
+    row2: ["Offline Database", "Room SQLite Storage"],
+    row3: ["OS Compatibility", "Android 8.0 through 14+"]
+  },
+  {
+    id: "custom-dev",
+    tone: "tone-5",
+    image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&q=80&w=900",
+    meta: "Bespoke Database & Workflow Automation",
+    uiTop: "Custom Architecture",
+    uiTitle: "Tailor-Made Operations Suite",
+    row1: ["Integration", "Custom Hardware & Legacy DBs"],
+    row2: ["Codebase", "100% Tailored to Your Business"],
+    row3: ["Support", "Dedicated Engineering Desk"]
+  }
+];
+
+export default function Services({ onSelectService, onEnquireService, dataVersion = 0 }) {
+  const srvSec = LANDING_PAGE_SECTIONS?.servicesSection || {};
+
+  // Build live service cards dynamically from SERVICES database array
+  const activeServices = useMemo(() => {
+    return SERVICES.map((srv, idx) => {
+      // Find matching preset by ID or index
+      const matchedPreset = FALLBACK_PRESETS.find(p => p.id === srv.id) ||
+                            FALLBACK_PRESETS[idx % FALLBACK_PRESETS.length];
+
+      const tone = matchedPreset.tone || `tone-${(idx % 5) + 1}`;
+      const num = String(idx + 1).padStart(2, '0');
+      const isLogo = srv.id === 'desktop-dev' || Boolean(matchedPreset.isLogo && !srv.image);
+      const image = srv.image || matchedPreset.image;
+
+      // Extract features for live UI diagnostics box
+      const f = srv.features || [];
+      const row1 = f[0] ? ['Feature 1', f[0].slice(0, 32)] : matchedPreset.row1;
+      const row2 = f[1] ? ['Feature 2', f[1].slice(0, 32)] : matchedPreset.row2;
+      const row3 = f[2] ? ['Feature 3', f[2].slice(0, 32)] : matchedPreset.row3;
+
+      const meta = srv.badge 
+        ? `${srv.badge} · ${(srv.techStack || []).slice(0, 3).join(', ') || matchedPreset.meta}`
+        : matchedPreset.meta;
+
+      return {
+        service: srv,
+        id: srv.id || `service-${idx}`,
+        num,
+        tab: srv.title,
+        tone,
+        image,
+        isLogo,
+        meta,
+        lead: srv.shortDesc || srv.fullDesc || '',
+        uiTop: srv.badge || matchedPreset.uiTop,
+        uiTitle: srv.title || matchedPreset.uiTitle,
+        row1,
+        row2,
+        row3,
+        isComingSoon: Boolean(srv.isComingSoon)
+      };
+    });
+  }, [dataVersion]);
 
   return (
     <section id="services" className="coll" data-kind="collections" data-section="services">
       {/* Section Header */}
-      {(() => {
-        const srvSec = LANDING_PAGE_SECTIONS?.servicesSection || {};
-        return (
-          <div className="wrap sec-head">
-            <h2 className="h2">
-              {srvSec.headline ? srvSec.headline : <>Five ways we engineer <em className="s">business reliability</em></>}
-            </h2>
-            <div className="sec-head__side">
-              <p className="lead">
-                {srvSec.lead || "From offline Windows billing software and thermal receipt printing to cloud enterprise applications, we build robust systems with zero downtime."}
-              </p>
-              <a className="link" href="#applications">
-                Explore our ready-to-use software suite →
-              </a>
-            </div>
-          </div>
-        );
-      })()}
+      <div className="wrap sec-head">
+        <h2 className="h2">
+          {srvSec.headline ? srvSec.headline : <>Five ways we engineer <em className="s">business reliability</em></>}
+        </h2>
+        <div className="sec-head__side">
+          <p className="lead">
+            {srvSec.lead || "From offline Windows billing software and thermal receipt printing to cloud enterprise applications, we build robust systems with zero downtime."}
+          </p>
+          <a className="link" href="#applications">
+            Explore our ready-to-use software suite →
+          </a>
+        </div>
+      </div>
 
-      {/* Stacked Interactive Folders */}
+      {/* Stacked Interactive Folders (100% Database Driven) */}
       <div className="wrap folders" data-folders data-component="service-folders">
-        {serviceFolders.map((item) => {
-          const serviceObj = SERVICES[item.serviceIndex] || SERVICES[0];
+        {activeServices.map((item) => {
+          const srv = item.service;
           return (
             <article
               key={item.id}
@@ -117,8 +136,8 @@ export default function Services({ onSelectService, onEnquireService }) {
               <div className="folder__in">
                 <div className="folder__tab">
                   <span className="folder__tab-num">{item.num}</span>
-                  <span className="folder__tab-title">{serviceObj?.title || item.tab}</span>
-                  {serviceObj?.isComingSoon && (
+                  <span className="folder__tab-title">{item.tab}</span>
+                  {item.isComingSoon && (
                     <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-800 border border-amber-500/30 ml-2">
                       Coming Soon
                     </span>
@@ -129,16 +148,16 @@ export default function Services({ onSelectService, onEnquireService }) {
                   {/* Left Column: Details & Actions */}
                   <div className="folder__copy">
                     <div>
-                      <span className="folder__meta">{serviceObj?.badge ? `${serviceObj.badge} · ${item.meta}` : item.meta}</span>
-                      <h3 className="folder__h3">{serviceObj?.title || item.tab}</h3>
-                      <p className="folder__lead">{serviceObj?.shortDesc || item.lead}</p>
+                      <span className="folder__meta">{item.meta}</span>
+                      <h3 className="folder__h3">{item.tab}</h3>
+                      <p className="folder__lead">{item.lead}</p>
                     </div>
 
                     <div className="folder__actions">
                       <button
                         type="button"
                         className="btn btn--sm"
-                        onClick={() => onSelectService(serviceObj)}
+                        onClick={() => onSelectService(srv)}
                       >
                         <span>View specifications</span>
                         <svg className="btn__arr" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
@@ -146,7 +165,7 @@ export default function Services({ onSelectService, onEnquireService }) {
                         </svg>
                       </button>
 
-                      {serviceObj?.isComingSoon ? (
+                      {item.isComingSoon ? (
                         <div className="coming-soon-btn btn--sm cursor-default opacity-85 select-none inline-flex items-center gap-1.5">
                           <Clock className="w-3.5 h-3.5 shrink-0" />
                           <span>Coming Soon</span>
@@ -155,7 +174,7 @@ export default function Services({ onSelectService, onEnquireService }) {
                         <button
                           type="button"
                           className="btn btn--line btn--sm"
-                          onClick={() => onEnquireService(serviceObj?.title || item.tab)}
+                          onClick={() => onEnquireService(item.tab)}
                         >
                           Enquire for project
                         </button>

@@ -11,7 +11,8 @@ import {
   Smartphone, 
   Sparkles,
   Layers,
-  FileCode2
+  FileCode2,
+  RefreshCw
 } from 'lucide-react';
 import { PRODUCTS, COMPANY_INFO, LANDING_PAGE_SECTIONS } from '../data/companyData';
 

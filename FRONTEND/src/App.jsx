@@ -338,7 +338,7 @@ export default function App() {
             />
 
             {/* Company Statistics */}
-            <CompanyStats dataVersion={dataVersion} />
+            <CompanyStats key={`stats-${dataVersion}`} dataVersion={dataVersion} />
 
             {/* 03. About Us / Company Introduction */}
             <AboutUs

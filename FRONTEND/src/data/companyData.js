@@ -502,15 +502,15 @@ export function applyDynamicData({ brand, services, products, faqs, landingPage 
     if (landingPage.reviewsSection) Object.assign(LANDING_PAGE_SECTIONS.reviewsSection, landingPage.reviewsSection);
     if (landingPage.contact) Object.assign(LANDING_PAGE_SECTIONS.contact, landingPage.contact);
   }
-  if (Array.isArray(services) && services.length > 0) {
+  if (Array.isArray(services)) {
     SERVICES.length = 0;
     SERVICES.push(...services);
   }
-  if (Array.isArray(products) && products.length > 0) {
+  if (Array.isArray(products)) {
     PRODUCTS.length = 0;
     PRODUCTS.push(...products);
   }
-  if (Array.isArray(faqs) && faqs.length > 0) {
+  if (Array.isArray(faqs)) {
     FAQS.length = 0;
     FAQS.push(...faqs);
   }
