@@ -173,7 +173,7 @@ export default function ContactUs({ preselectedSubject, dataVersion = 0 }) {
                     </label>
                     <input
                       type="text"
-                      placeholder="e.g. Milan Mandal"
+                      placeholder="e.g. Sayantan Ghosh"
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"

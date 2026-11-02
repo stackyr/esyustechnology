@@ -206,7 +206,7 @@ export async function getAdminCredentials() {
     username: 'admin',
     password: 'admin',
     role: 'Super Administrator',
-    name: 'Milan Mandal',
+    name: 'Sayantan Ghosh',
     email: 'admin@esyustechnology.com'
   };
 }
@@ -226,7 +226,7 @@ export async function updateAdminCredentials({ currentPassword, newUsername, new
 
   const cleanUser = (newUsername || current?.username || 'admin').trim();
   const cleanPass = (newPassword || current?.password || 'admin').trim();
-  const cleanName = (name !== undefined ? name : current?.name || 'Milan Mandal').trim();
+  const cleanName = (name !== undefined ? name : current?.name || 'Sayantan Ghosh').trim();
   const cleanEmail = (email !== undefined ? email : current?.email || 'admin@esyustechnology.com').trim();
 
   if (!cleanUser || cleanUser.length < 3) {

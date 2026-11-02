@@ -6,13 +6,13 @@
     "domain": "esyustechnology.com",
     "tagline": "Smart Software Solutions for Tomorrow's Businesses",
     "slogan": "High-Performance Desktop, Web & Android Systems Built for Absolute Reliability",
-    "founder": "Milan Mandal",
-    "coFounder": "Suman Raptan",
+    "founder": "Sayantan Ghosh",
+    "coFounder": "Soham Dutta",
     "establishmentDate": "01/01/2027",
     "email": "support@esyustechnology.com",
     "supportEmail": "support@esyustechnology.com",
-    "phone": "xxxxxxxxxxxxx",
-    "address": "Esyus Technology Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
+    "phone": "+91 98765 43210",
+    "address": "Burdwan, WEST BENGAL 70045",
     "stats": [
       {
         "label": "Offline Uptime",
@@ -36,11 +36,11 @@
       }
     ],
     "createdAt": "2026-11-02T07:50:45.568Z",
-    "updatedAt": "2026-11-02T17:11:10.443Z",
+    "updatedAt": "2026-11-02T17:26:38.852Z",
     "__v": 0,
-    "footerAbout": "Esyus Technology builds robust, high-performance desktop suites and tailored mobile applications.",
-    "navBadge": "Verified Suite",
-    "navSubtitle": "Enterprise Software",
+    "footerAbout": "Esyus Technology builds robust, high-performance desktop suites, enterprise web platforms, and tailored Android applications designed to operate with absolute reliability and speed.",
+    "navBadge": "Software",
+    "navSubtitle": "Enterprise Suite",
     "id": "6ae840d5dab853fc6fea6575"
   },
   "landingPage": {
@@ -614,10 +614,10 @@
     }
   ],
   "admin": {
-    "username": "admin",
-    "password": "admin",
+    "username": "AdminPannel",
+    "password": "admin@1234",
     "role": "Super Administrator",
-    "name": "Milan Mandal",
+    "name": "Sayantan Ghosh",
     "email": "admin@esyustechnology.com"
   }
 }

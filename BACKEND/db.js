@@ -15,13 +15,16 @@ const DEFAULT_DATA = {
     domain: "esyustechnology.com",
     tagline: "Smart Software Solutions for Tomorrow's Businesses",
     slogan: "High-Performance Desktop, Web & Android Systems Built for Absolute Reliability",
-    founder: "Milan Mandal",
-    coFounder: "Suman Raptan",
+    founder: "Sayantan Ghosh",
+    coFounder: "Soham Dutta",
     establishmentDate: "01/01/2027",
     email: "contact@esyustechnology.com",
     supportEmail: "support@esyustechnology.com",
     phone: "+91 98765 43210",
-    address: "Esyus Technology Tech Park, Sector V, Bidhannagar, Kolkata, West Bengal 700091",
+    address: "Burdwan, WEST BENGAL 70045",
+    navBadge: "Software",
+    navSubtitle: "Enterprise Suite",
+    footerAbout: "Esyus Technology builds robust, high-performance desktop suites, enterprise web platforms, and tailored Android applications designed to operate with absolute reliability and speed.",
     stats: [
       { label: "Offline Uptime", value: "100%", desc: "Works uninterrupted with local databases" },
       { label: "Software Products", value: "5+", desc: "Finance Flow suite & Bharat Yatra Sathi" },
@@ -374,7 +377,7 @@ const DEFAULT_DATA = {
     username: "admin",
     password: "admin",
     role: "Super Administrator",
-    name: "Milan Mandal",
+    name: "Sayantan Ghosh",
     email: "admin@esyustechnology.com"
   }
 };

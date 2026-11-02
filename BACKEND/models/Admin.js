@@ -19,7 +19,7 @@ const AdminSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    default: 'Milan Mandal'
+    default: 'Sayantan Ghosh'
   },
   email: {
     type: String,

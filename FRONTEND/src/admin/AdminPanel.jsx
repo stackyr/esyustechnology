@@ -287,11 +287,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleResetDefaults = async () => {
     setRefreshingSection('customization');
     try {
-      const res = await api.resetDefaults();
+      // Reload fresh data directly from MongoDB Atlas to discard unsaved edits and restore latest saved version
       await loadAllData();
-      liveSync.emitAdminChange('sync_all', res.data);
-      if (onDataChanged) onDataChanged();
-      showToast('Database reset to original default template.');
+      showToast('Form reset to latest saved version from database.');
     } catch (err) {
       showToast('Reset failed: ' + err.message, 'error');
     } finally {

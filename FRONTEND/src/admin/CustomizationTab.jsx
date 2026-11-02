@@ -349,6 +349,66 @@ export default function CustomizationTab({
     setSaveSuccess(false);
   };
 
+  // Reset form inputs back to latest saved database version
+  const handleResetFormToLatest = () => {
+    if (brand && typeof brand === 'object') {
+      setBrandData({
+        name: brand.name || COMPANY_INFO.name,
+        shortName: brand.shortName || COMPANY_INFO.shortName,
+        domain: brand.domain || COMPANY_INFO.domain,
+        tagline: brand.tagline || COMPANY_INFO.tagline,
+        slogan: brand.slogan || COMPANY_INFO.slogan,
+        founder: brand.founder || COMPANY_INFO.founder,
+        coFounder: brand.coFounder || COMPANY_INFO.coFounder,
+        establishmentDate: brand.establishmentDate || COMPANY_INFO.establishmentDate,
+        email: brand.email || COMPANY_INFO.email,
+        supportEmail: brand.supportEmail || COMPANY_INFO.supportEmail,
+        phone: brand.phone || COMPANY_INFO.phone,
+        address: brand.address || COMPANY_INFO.address,
+        navBadge: brand.navBadge || COMPANY_INFO.navBadge || 'Software',
+        navSubtitle: brand.navSubtitle || COMPANY_INFO.navSubtitle || 'Enterprise Suite',
+        footerAbout: brand.footerAbout || COMPANY_INFO.footerAbout || '',
+        stats: Array.isArray(brand.stats) ? [...brand.stats] : [...COMPANY_INFO.stats]
+      });
+    }
+
+    if (landingPage && typeof landingPage === 'object') {
+      setPageData({
+        hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage.hero || {}) },
+        about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage.about || {}) },
+        team: {
+          headline: landingPage.team?.headline || LANDING_PAGE_SECTIONS?.team?.headline || 'The minds behind the software architecture',
+          lead: landingPage.team?.lead || LANDING_PAGE_SECTIONS?.team?.lead || '',
+          members: Array.isArray(landingPage.team?.members) && landingPage.team.members.length > 0
+            ? [...landingPage.team.members]
+            : (LANDING_PAGE_SECTIONS?.team?.members || TEAM_MEMBERS).map(m => ({ ...m }))
+        },
+        servicesSection: { ...(LANDING_PAGE_SECTIONS?.servicesSection || {}), ...(landingPage.servicesSection || {}) },
+        productsSection: { ...(LANDING_PAGE_SECTIONS?.productsSection || {}), ...(landingPage.productsSection || {}) },
+        featuredProduct: {
+          ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}),
+          ...(landingPage.featuredProduct || {}),
+          steps: Array.isArray(landingPage.featuredProduct?.steps) && landingPage.featuredProduct.steps.length === 4
+            ? [...landingPage.featuredProduct.steps]
+            : (LANDING_PAGE_SECTIONS?.featuredProduct?.steps || DEFAULT_WORKFLOW_STEPS).map(s => ({ ...s }))
+        },
+        whyChooseUs: {
+          headline: landingPage.whyChooseUs?.headline || LANDING_PAGE_SECTIONS?.whyChooseUs?.headline || '',
+          lead: landingPage.whyChooseUs?.lead || LANDING_PAGE_SECTIONS?.whyChooseUs?.lead || '',
+          pillarImages: Array.isArray(landingPage.whyChooseUs?.pillarImages) && landingPage.whyChooseUs.pillarImages.length === 5
+            ? [...landingPage.whyChooseUs.pillarImages]
+            : [...(LANDING_PAGE_SECTIONS?.whyChooseUs?.pillarImages || [])]
+        },
+        reviewsSection: { ...(LANDING_PAGE_SECTIONS?.reviewsSection || {}), ...(landingPage.reviewsSection || {}) },
+        downloadSection: { ...(LANDING_PAGE_SECTIONS?.downloadSection || {}), ...(landingPage.downloadSection || {}) },
+        contact: { ...(LANDING_PAGE_SECTIONS?.contact || {}), ...(landingPage.contact || {}) }
+      });
+    }
+
+    if (onResetDefaults) onResetDefaults();
+    else if (onRefresh) onRefresh();
+  };
+
   // Master Save handler
   const handleSaveAll = async (e) => {
     if (e) e.preventDefault();
@@ -413,16 +473,15 @@ export default function CustomizationTab({
               <span>{isRefreshing ? 'Syncing...' : 'Refresh'}</span>
             </button>
           )}
-          {onResetDefaults && (
-            <button
+          <button
               type="button"
-              onClick={onResetDefaults}
+              onClick={handleResetFormToLatest}
               className="px-4 py-2.5 rounded-xl border border-white/20 text-stone-200 hover:text-white hover:bg-white/10 text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5"
+              title="Discard unsaved edits and reload latest saved version from database"
             >
               <Undo2 className="w-4 h-4" />
-              <span>Reset</span>
+              <span>Reset to Saved</span>
             </button>
-          )}
 
           <button
             type="button"
@@ -1826,16 +1885,15 @@ export default function CustomizationTab({
           </div>
 
           <div className="flex items-center gap-2.5 shrink-0 w-full sm:w-auto justify-end">
-            {onResetDefaults && (
-              <button
+            <button
                 type="button"
-                onClick={onResetDefaults}
+                onClick={handleResetFormToLatest}
                 className="px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] hover:bg-stone-200 text-xs font-semibold text-[var(--ink)] transition-colors cursor-pointer flex items-center gap-1.5"
+                title="Discard unsaved edits and reload latest saved version from database"
               >
                 <Undo2 className="w-3.5 h-3.5" />
-                <span>Reset</span>
+                <span>Reset to Saved</span>
               </button>
-            )}
 
             <button
               type="button"

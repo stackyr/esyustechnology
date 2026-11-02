@@ -257,7 +257,7 @@ export default function AdminSecurityModal({ isOpen, onClose, onCredentialsUpdat
                     type="text"
                     value={newUsername}
                     onChange={(e) => setNewUsername(e.target.value)}
-                    placeholder="e.g. admin or milan"
+                    placeholder="e.g. admin or sayantan"
                     required
                     className="w-full pl-9 pr-3 py-2 rounded-xl bg-[var(--soft)] border border-[var(--line)] text-xs text-[var(--ink)] placeholder:text-stone-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-[var(--c1)]/20 focus:border-[var(--c1)] transition-all font-mono"
                   />

@@ -364,7 +364,7 @@ app.get('/api/admin/credentials', requireAdminAuth, async (req, res) => {
       data: {
         username: admin.username,
         role: admin.role || 'Super Administrator',
-        name: admin.name || 'Milan Mandal',
+        name: admin.name || 'Sayantan Ghosh',
         email: admin.email || 'admin@esyustechnology.com'
       }
     });
