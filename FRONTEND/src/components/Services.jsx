@@ -147,8 +147,14 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
 
       {/* Stacked Interactive Folders (100% Database Driven) */}
       <div className="wrap folders" data-folders data-component="service-folders">
-        {activeServices.map((item, idx) => {
-          const srv = item.service;
+        {activeServices.length === 0 ? (
+          <div className="p-16 rounded-3xl bg-[var(--soft)] border border-[var(--line)] text-center space-y-3.5 my-8">
+            <div className="w-8 h-8 rounded-full border-2 border-[var(--c1)] border-t-transparent animate-spin mx-auto" />
+            <p className="text-xs text-[var(--muted)] font-mono">Synchronizing App Services live from database...</p>
+          </div>
+        ) : (
+          activeServices.map((item, idx) => {
+            const srv = item.service;
           return (
             <article
               key={item.id}
@@ -288,7 +294,7 @@ export default function Services({ onSelectService, onEnquireService, dataVersio
               </div>
             </article>
           );
-        })}
+        }))}
       </div>
     </section>
   );

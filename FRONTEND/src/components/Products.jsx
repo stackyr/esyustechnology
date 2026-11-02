@@ -110,7 +110,13 @@ export default function Products({ onSelectProduct, onDownloadProduct, onViewAll
 
         {/* Software Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
-          {filteredItems.map((item) => {
+          {filteredItems.length === 0 ? (
+            <div className="col-span-full p-16 rounded-3xl bg-[var(--soft)] border border-[var(--line)] text-center space-y-3.5 my-8">
+              <div className="w-8 h-8 rounded-full border-2 border-[var(--c1)] border-t-transparent animate-spin mx-auto" />
+              <p className="text-xs text-[var(--muted)] font-mono">Synchronizing software applications live from database...</p>
+            </div>
+          ) : (
+            filteredItems.map((item) => {
             const hasProduct = Boolean(item.product);
 
             return (
@@ -213,7 +219,7 @@ export default function Products({ onSelectProduct, onDownloadProduct, onViewAll
                 </div>
               </article>
             );
-          })}
+          }))}
         </div>
 
         {/* Bottom CTA to Software Releases Center */}

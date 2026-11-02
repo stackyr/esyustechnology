@@ -211,7 +211,12 @@ export default function DownloadsPage({
         </div>
 
         {/* Software Cards Grid */}
-        {filteredProducts.length > 0 ? (
+        {currentProducts.length === 0 ? (
+          <div className="py-20 text-center rounded-3xl bg-white border border-[var(--line)] p-8 my-6 space-y-3 shadow-xs">
+            <div className="w-9 h-9 rounded-full border-2 border-[var(--c1)] border-t-transparent animate-spin mx-auto" />
+            <p className="text-xs text-[var(--muted)] font-mono">Loading verified software packages live from database...</p>
+          </div>
+        ) : filteredProducts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 items-stretch">
             {filteredProducts.map((product) => {
               const isWindows = (product.platform || '').toLowerCase().includes('windows');

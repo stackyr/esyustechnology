@@ -103,7 +103,12 @@ export default function DownloadSection({ onDownloadApp, onOpenDownloadsPage, da
         </div>
 
         {/* Download Plans Grid */}
-        {filteredApps.length > 0 ? (
+        {currentApps.length === 0 ? (
+          <div className="py-16 text-center rounded-2xl bg-[var(--soft)] border border-[var(--line)] p-8 my-6 space-y-3">
+            <div className="w-8 h-8 rounded-full border-2 border-[var(--c1)] border-t-transparent animate-spin mx-auto" />
+            <p className="text-xs text-[var(--muted)] font-mono">Loading installer packages live from database...</p>
+          </div>
+        ) : filteredApps.length > 0 ? (
           <div className="plans">
           {filteredApps.map((app) => {
             const isFeatured = app.id === 'finance-flow';

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import api from '../utils/api';
-import liveSync from '../utils/liveSync';
+import { AlertCircle, CheckCircle2, X, RefreshCw, Database } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
 import AdminTopBar from './AdminTopBar';
 import InquiriesTab from './InquiriesTab';
@@ -9,34 +8,38 @@ import ServicesTab from './ServicesTab';
 import ProductsTab from './ProductsTab';
 import FaqsTab from './FaqsTab';
 import AdminSecurityModal from './AdminSecurityModal';
-import { CheckCircle2, AlertCircle, X } from 'lucide-react';
+import api from '../utils/api';
+import liveSync from '../utils/liveSync';
 
 class AdminErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null };
   }
+
   static getDerivedStateFromError(error) {
     return { hasError: true, error };
   }
+
   componentDidCatch(error, errorInfo) {
-    console.error('[AdminErrorBoundary] Caught component error:', error, errorInfo);
+    console.error('Admin Panel tab rendering error:', error, errorInfo);
   }
+
   render() {
     if (this.state.hasError) {
       return (
-        <div className="p-8 max-w-xl mx-auto my-12 text-center bg-white rounded-2xl border border-red-200 shadow-sm">
-          <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center text-red-600">
-            <AlertCircle className="w-6 h-6" />
+        <div className="p-8 rounded-2xl bg-red-50 border border-red-200 text-red-900 space-y-3">
+          <div className="flex items-center gap-2 font-bold text-base text-red-800">
+            <AlertCircle className="w-5 h-5 text-red-600 shrink-0" />
+            <span>Tab Rendering Notice</span>
           </div>
-          <h3 className="text-base font-bold text-stone-900 mb-2">Something went wrong in this tab</h3>
-          <p className="text-xs text-stone-600 font-mono mb-6 bg-stone-50 p-3 rounded-lg border border-stone-200 text-left overflow-auto">
-            {this.state.error?.message || 'Component failed to render'}
+          <p className="text-xs text-red-700 leading-relaxed font-mono">
+            {this.state.error?.message || 'An unexpected rendering error occurred in this view.'}
           </p>
           <button
             type="button"
             onClick={() => this.setState({ hasError: false, error: null })}
-            className="px-4 py-2 bg-[var(--c1)] text-white text-xs font-bold rounded-xl hover:opacity-90 transition-opacity cursor-pointer"
+            className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
           >
             Retry Tab
           </button>
@@ -48,7 +51,26 @@ class AdminErrorBoundary extends React.Component {
 }
 
 export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
-  const [activeTab, setActiveTab] = useState('inquiries'); // Default to Inquiries (MAIN FOCUS)
+  // Parse initial tab from URL hash (e.g. #admin/services) or localStorage
+  const getInitialTab = () => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.toLowerCase();
+      const match = hash.match(/#admin[/?]([a-z0-9_-]+)/i);
+      if (match && match[1]) {
+        const tab = match[1].toLowerCase();
+        if (['inquiries', 'customization', 'services', 'products', 'faqs'].includes(tab)) {
+          return tab;
+        }
+      }
+      const saved = localStorage.getItem('esyus_admin_active_tab');
+      if (saved && ['inquiries', 'customization', 'services', 'products', 'faqs'].includes(saved)) {
+        return saved;
+      }
+    }
+    return 'inquiries';
+  };
+
+  const [activeTab, setActiveTabState] = useState(getInitialTab);
   const [isOpenMobile, setIsOpenMobile] = useState(false);
   const [isSecurityOpen, setIsSecurityOpen] = useState(false);
   
@@ -60,7 +82,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const [products, setProducts] = useState([]);
   const [faqs, setFaqs] = useState([]);
 
-  // System State
+  // System & Loading State
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [refreshingSection, setRefreshingSection] = useState(null); // 'services' | 'products' | 'faqs' | 'inquiries' | 'customization' | null
   const [isBackendConnected, setIsBackendConnected] = useState(true);
   const [isMongoConnected, setIsMongoConnected] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -71,6 +95,32 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3500);
   };
+
+  // Persistent Tab Switcher: updates state, localStorage, and URL hash
+  const setActiveTab = (tab) => {
+    setActiveTabState(tab);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('esyus_admin_active_tab', tab);
+      window.location.hash = `#admin/${tab}`;
+    }
+  };
+
+  // Sync tab if user navigates with browser forward/backward buttons
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.toLowerCase();
+      const match = hash.match(/#admin[/?]([a-z0-9_-]+)/i);
+      if (match && match[1]) {
+        const tab = match[1].toLowerCase();
+        if (['inquiries', 'customization', 'services', 'products', 'faqs'].includes(tab)) {
+          setActiveTabState(tab);
+          localStorage.setItem('esyus_admin_active_tab', tab);
+        }
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
 
   // Fetch all data from backend
   const loadAllData = useCallback(async (isInitial = false) => {
@@ -137,6 +187,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       setIsBackendConnected(false);
     } finally {
       setIsRefreshing(false);
+      if (isInitial) {
+        setIsInitialLoading(false);
+      }
     }
   }, []);
 
@@ -193,35 +246,42 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   }, []);
 
   // ----------------------------------------------------
-  // Inquiries Handlers (MAIN FOCUS)
+  // Inquiries Handlers
   // ----------------------------------------------------
   const handleUpdateInquiryStatus = async (id, status) => {
+    setRefreshingSection('inquiries');
     try {
       await api.updateInquiry(id, { status });
-      setInquiries((prev) =>
-        prev.map((i) => (i.id === id ? { ...i, status } : i))
-      );
+      const inqRes = await api.getInquiries();
+      if (inqRes && inqRes.data) setInquiries(inqRes.data);
       showToast(`Inquiry marked as ${status.replace('_', ' ')}`);
     } catch (err) {
       showToast('Failed to update status', 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 300);
     }
   };
 
   const handleDeleteInquiry = async (id) => {
+    setRefreshingSection('inquiries');
     try {
       await api.deleteInquiry(id);
-      setInquiries((prev) => prev.filter((i) => i.id !== id));
+      const inqRes = await api.getInquiries();
+      if (inqRes && inqRes.data) setInquiries(inqRes.data);
       showToast('Inquiry deleted successfully');
     } catch (err) {
       showToast('Failed to delete inquiry', 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 300);
     }
   };
 
   // ----------------------------------------------------
-  // Brand Handlers
+  // Brand & Landing Page Handlers
   // ----------------------------------------------------
   const handleSaveBrand = async (brandData) => {
     setIsSaving(true);
+    setRefreshingSection('customization');
     try {
       const res = await api.updateBrand(brandData);
       setBrand(res.data);
@@ -232,11 +292,13 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       showToast('Failed to save brand settings: ' + err.message, 'error');
     } finally {
       setIsSaving(false);
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   const handleSaveLandingPage = async (pageData) => {
     setIsSaving(true);
+    setRefreshingSection('customization');
     try {
       const res = await api.updateLandingPage(pageData);
       setLandingPage(res.data);
@@ -247,10 +309,12 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       showToast('Failed to save landing page: ' + err.message, 'error');
     } finally {
       setIsSaving(false);
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   const handleResetDefaults = async () => {
+    setRefreshingSection('customization');
     try {
       const res = await api.resetDefaults();
       await loadAllData();
@@ -259,132 +323,179 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       showToast('Database reset to original default template.');
     } catch (err) {
       showToast('Reset failed: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   // ----------------------------------------------------
-  // Services Handlers
+  // Services Handlers (Reloads section cleanly)
   // ----------------------------------------------------
   const handleAddService = async (serviceData) => {
+    setRefreshingSection('services');
     try {
-      const res = await api.createService(serviceData);
-      const updatedList = [...services, res.data];
-      setServices(updatedList);
-      liveSync.emitAdminChange('services_updated', updatedList);
+      await api.createService(serviceData);
+      const srvRes = await api.getServices();
+      if (srvRes && srvRes.data) {
+        setServices(srvRes.data);
+        liveSync.emitAdminChange('services_updated', srvRes.data);
+      }
       if (onDataChanged) onDataChanged();
       showToast('New service added successfully!');
     } catch (err) {
       showToast('Failed to add service: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   const handleUpdateService = async (id, serviceData) => {
+    setRefreshingSection('services');
     try {
-      const res = await api.updateService(id, serviceData);
-      const updatedList = services.map((s) => (s.id === id ? res.data : s));
-      setServices(updatedList);
-      liveSync.emitAdminChange('services_updated', updatedList);
+      await api.updateService(id, serviceData);
+      const srvRes = await api.getServices();
+      if (srvRes && srvRes.data) {
+        setServices(srvRes.data);
+        liveSync.emitAdminChange('services_updated', srvRes.data);
+      }
       if (onDataChanged) onDataChanged();
       showToast('Service updated successfully!');
     } catch (err) {
       showToast('Failed to update service: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   const handleDeleteService = async (id) => {
+    setRefreshingSection('services');
     try {
       await api.deleteService(id);
-      const updatedList = services.filter((s) => s.id !== id);
-      setServices(updatedList);
-      liveSync.emitAdminChange('services_updated', updatedList);
+      const srvRes = await api.getServices();
+      if (srvRes && srvRes.data) {
+        setServices(srvRes.data);
+        liveSync.emitAdminChange('services_updated', srvRes.data);
+      }
       if (onDataChanged) onDataChanged();
       showToast('Service deleted successfully!');
     } catch (err) {
       showToast('Failed to delete service: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   // ----------------------------------------------------
-  // Products & Specs Handlers
+  // Products & Specs Handlers (Reloads section cleanly)
   // ----------------------------------------------------
   const handleAddProduct = async (productData) => {
+    setRefreshingSection('products');
     try {
-      const res = await api.createProduct(productData);
-      const updatedList = [...products, res.data];
-      setProducts(updatedList);
-      liveSync.emitAdminChange('products_updated', updatedList);
+      await api.createProduct(productData);
+      const prodRes = await api.getProducts();
+      if (prodRes && prodRes.data) {
+        setProducts(prodRes.data);
+        liveSync.emitAdminChange('products_updated', prodRes.data);
+      }
       if (onDataChanged) onDataChanged();
       showToast('New application added successfully!');
     } catch (err) {
       showToast('Failed to add application: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   const handleUpdateProduct = async (id, productData) => {
+    setRefreshingSection('products');
     try {
-      const res = await api.updateProduct(id, productData);
-      const updatedList = products.map((p) => (p.id === id ? res.data : p));
-      setProducts(updatedList);
-      liveSync.emitAdminChange('products_updated', updatedList);
+      await api.updateProduct(id, productData);
+      const prodRes = await api.getProducts();
+      if (prodRes && prodRes.data) {
+        setProducts(prodRes.data);
+        liveSync.emitAdminChange('products_updated', prodRes.data);
+      }
       if (onDataChanged) onDataChanged();
       showToast('Application & specs updated successfully!');
     } catch (err) {
       showToast('Failed to update application: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   const handleDeleteProduct = async (id) => {
+    setRefreshingSection('products');
     try {
       await api.deleteProduct(id);
-      const updatedList = products.filter((p) => p.id !== id);
-      setProducts(updatedList);
-      liveSync.emitAdminChange('products_updated', updatedList);
+      const prodRes = await api.getProducts();
+      if (prodRes && prodRes.data) {
+        setProducts(prodRes.data);
+        liveSync.emitAdminChange('products_updated', prodRes.data);
+      }
       if (onDataChanged) onDataChanged();
       showToast('Application deleted successfully!');
     } catch (err) {
       showToast('Failed to delete application: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   // ----------------------------------------------------
-  // FAQs Handlers
+  // FAQs Handlers (Reloads section cleanly)
   // ----------------------------------------------------
   const handleAddFaq = async (faqData) => {
+    setRefreshingSection('faqs');
     try {
-      const res = await api.createFaq(faqData);
-      const updatedList = [...faqs, res.data];
-      setFaqs(updatedList);
-      liveSync.emitAdminChange('faqs_updated', updatedList);
+      await api.createFaq(faqData);
+      const faqsRes = await api.getFaqs();
+      if (faqsRes && faqsRes.data) {
+        setFaqs(faqsRes.data);
+        liveSync.emitAdminChange('faqs_updated', faqsRes.data);
+      }
       if (onDataChanged) onDataChanged();
       showToast('New FAQ added successfully!');
     } catch (err) {
       showToast('Failed to add FAQ: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   const handleUpdateFaq = async (id, faqData) => {
+    setRefreshingSection('faqs');
     try {
-      const res = await api.updateFaq(id, faqData);
-      const updatedList = faqs.map((f, idx) => (f.id === id || idx === id ? res.data : f));
-      setFaqs(updatedList);
-      liveSync.emitAdminChange('faqs_updated', updatedList);
+      await api.updateFaq(id, faqData);
+      const faqsRes = await api.getFaqs();
+      if (faqsRes && faqsRes.data) {
+        setFaqs(faqsRes.data);
+        liveSync.emitAdminChange('faqs_updated', faqsRes.data);
+      }
       if (onDataChanged) onDataChanged();
       showToast('FAQ updated successfully!');
     } catch (err) {
       showToast('Failed to update FAQ: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   const handleDeleteFaq = async (id) => {
+    setRefreshingSection('faqs');
     try {
       await api.deleteFaq(id);
-      const updatedList = faqs.filter((f, idx) => f.id !== id && idx !== id);
-      setFaqs(updatedList);
-      liveSync.emitAdminChange('faqs_updated', updatedList);
+      const faqsRes = await api.getFaqs();
+      if (faqsRes && faqsRes.data) {
+        setFaqs(faqsRes.data);
+        liveSync.emitAdminChange('faqs_updated', faqsRes.data);
+      }
       if (onDataChanged) onDataChanged();
       showToast('FAQ deleted successfully!');
     } catch (err) {
       showToast('Failed to delete FAQ: ' + err.message, 'error');
+    } finally {
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
@@ -417,7 +528,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
         </div>
       )}
 
-      {/* 1. Responsive Sidebar Navigation */}
+      {/* 1. Responsive Sidebar Navigation with Loading Skeleton Prevention */}
       <AdminSidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -435,6 +546,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
         isOpenMobile={isOpenMobile}
         onCloseMobile={() => setIsOpenMobile(false)}
         onOpenSecurity={() => setIsSecurityOpen(true)}
+        isInitialLoading={isInitialLoading}
       />
 
       {/* 2. Main Content Viewport */}
@@ -454,55 +566,81 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
 
         {/* Tab Content Body */}
         <main className="flex-1 p-3 sm:p-5 lg:p-6 max-w-7xl w-full min-w-0 mx-auto space-y-5">
-          <AdminErrorBoundary key={activeTab}>
-          {activeTab === 'inquiries' && (
-            <InquiriesTab
-              inquiries={inquiries}
-              onUpdateStatus={handleUpdateInquiryStatus}
-              onDeleteInquiry={handleDeleteInquiry}
-              onRefresh={() => loadAllData()}
-              isRefreshing={isRefreshing}
-            />
-          )}
+          {isInitialLoading ? (
+            <div className="p-8 sm:p-12 rounded-3xl bg-white border border-[var(--line)] shadow-xs flex flex-col items-center justify-center text-center space-y-4 min-h-[420px]">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-[var(--c1)] animate-spin">
+                <RefreshCw className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-[var(--ink)]">Loading Live Database Records...</h3>
+                <p className="text-xs text-[var(--muted)] font-mono">Synchronizing with MongoDB Atlas cloud database. Zero local cache.</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              {refreshingSection === activeTab && (
+                <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-mono flex items-center justify-between animate-pulse">
+                  <span className="flex items-center gap-2">
+                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-[var(--c1)]" />
+                    <span>Reloading section live from MongoDB Atlas cloud database...</span>
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--c1)] px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300">
+                    Live Reload
+                  </span>
+                </div>
+              )}
 
-          {activeTab === 'customization' && (
-            <CustomizationTab
-              brand={brand}
-              landingPage={landingPage}
-              onSaveBrand={handleSaveBrand}
-              onSaveLandingPage={handleSaveLandingPage}
-              onResetDefaults={handleResetDefaults}
-              isSaving={isSaving}
-            />
-          )}
+              <AdminErrorBoundary key={activeTab}>
+                {activeTab === 'inquiries' && (
+                  <InquiriesTab
+                    inquiries={inquiries}
+                    onUpdateStatus={handleUpdateInquiryStatus}
+                    onDeleteInquiry={handleDeleteInquiry}
+                    onRefresh={() => loadAllData()}
+                    isRefreshing={isRefreshing || refreshingSection === 'inquiries'}
+                  />
+                )}
 
-          {activeTab === 'services' && (
-            <ServicesTab
-              services={services}
-              onAddService={handleAddService}
-              onUpdateService={handleUpdateService}
-              onDeleteService={handleDeleteService}
-            />
-          )}
+                {activeTab === 'customization' && (
+                  <CustomizationTab
+                    brand={brand}
+                    landingPage={landingPage}
+                    onSaveBrand={handleSaveBrand}
+                    onSaveLandingPage={handleSaveLandingPage}
+                    onResetDefaults={handleResetDefaults}
+                    isSaving={isSaving || refreshingSection === 'customization'}
+                  />
+                )}
 
-          {activeTab === 'products' && (
-            <ProductsTab
-              products={products}
-              onAddProduct={handleAddProduct}
-              onUpdateProduct={handleUpdateProduct}
-              onDeleteProduct={handleDeleteProduct}
-            />
-          )}
+                {activeTab === 'services' && (
+                  <ServicesTab
+                    services={services}
+                    onAddService={handleAddService}
+                    onUpdateService={handleUpdateService}
+                    onDeleteService={handleDeleteService}
+                  />
+                )}
 
-          {activeTab === 'faqs' && (
-            <FaqsTab
-              faqs={faqs}
-              onAddFaq={handleAddFaq}
-              onUpdateFaq={handleUpdateFaq}
-              onDeleteFaq={handleDeleteFaq}
-            />
+                {activeTab === 'products' && (
+                  <ProductsTab
+                    products={products}
+                    onAddProduct={handleAddProduct}
+                    onUpdateProduct={handleUpdateProduct}
+                    onDeleteProduct={handleDeleteProduct}
+                  />
+                )}
+
+                {activeTab === 'faqs' && (
+                  <FaqsTab
+                    faqs={faqs}
+                    onAddFaq={handleAddFaq}
+                    onUpdateFaq={handleUpdateFaq}
+                    onDeleteFaq={handleDeleteFaq}
+                  />
+                )}
+              </AdminErrorBoundary>
+            </>
           )}
-          </AdminErrorBoundary>
         </main>
 
       </div>
