@@ -1,5 +1,4 @@
 {
-  "buildCommand": "npm --prefix FRONTEND run build",
   "outputDirectory": "FRONTEND/dist",
   "cleanUrls": true,
   "rewrites": [
