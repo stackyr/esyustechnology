@@ -731,7 +731,41 @@ em.s {
 }
 
 .menu-btn {
+  position: relative;
   display: none;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1.5px 5px -1px rgba(0, 0, 0, 0.06);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.25s var(--ease);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.menu-btn:hover {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.16);
+  box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.1);
+}
+
+.menu-btn:active {
+  transform: scale(0.92);
+}
+
+.menu-btn[aria-expanded="true"],
+.menu-btn.is-open {
+  background: var(--ink) !important;
+  border-color: var(--ink) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18) !important;
 }
 
 @media (max-width: 1220px) {
@@ -740,20 +774,8 @@ em.s {
   }
 
   .menu-btn {
-    display: inline-grid !important;
+    display: inline-flex !important;
   }
-}
-
-.menu-btn .i-close {
-  display: none;
-}
-
-.menu-btn[aria-expanded="true"] .i-close {
-  display: block;
-}
-
-.menu-btn[aria-expanded="true"] .i-open {
-  display: none;
 }
 
 .nav__extra {
@@ -1206,14 +1228,62 @@ em.s {
 
 @media (max-width: 768px) {
 
-  /* Mobile Header: Strictly Logo on left, Animated Hamburger on right */
-  .hdr__tools a:not(.menu-btn),
-  .hdr__tools button:not(.menu-btn) {
+  /* Mobile Header Enhancement: Frosted glass, subtle ambient shadow, compact height */
+  .hdr {
+    background: rgba(247, 245, 240, 0.92) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07) !important;
+    box-shadow: 0 2px 14px -2px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  .hdr.is-solid {
+    background: rgba(247, 245, 240, 0.98) !important;
+    box-shadow: 0 4px 20px -3px rgba(0, 0, 0, 0.08), 0 1px 0 rgba(0, 0, 0, 0.06) !important;
+  }
+
+  .hdr__in {
+    height: 62px !important;
+  }
+
+  .hdr__wrap {
+    width: min(100% - 24px, 1420px) !important;
+  }
+
+  .hdr__tools {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  /* Mobile Header Tools: Display Call desk button and modern Hamburger button */
+  .hdr__tools a:not(.menu-btn):not(.hdr__call-btn),
+  .hdr__tools button:not(.menu-btn):not(.hdr__call-btn) {
     display: none !important;
   }
 
+  .hdr__tools .hdr__call-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 12px !important;
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 1.5px 5px -1px rgba(0, 0, 0, 0.05) !important;
+    color: var(--c1) !important;
+    transition: all 0.25s var(--ease) !important;
+    text-decoration: none !important;
+  }
+
+  .hdr__tools .hdr__call-btn:active {
+    transform: scale(0.92) !important;
+    background: var(--soft) !important;
+  }
+
   .hdr__tools .menu-btn {
-    display: inline-grid !important;
+    display: inline-flex !important;
   }
 
   /* Exact Hearthly Mobile Hero Configuration */

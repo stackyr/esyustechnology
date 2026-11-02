@@ -105,7 +105,7 @@ export default function Navbar({
         <div className="hdr__wrap hdr__in">
           {/* Brand Logo */}
           <a
-            className="logo group flex items-center gap-2.5 py-1 cursor-pointer transition-opacity hover:opacity-95 shrink-0"
+            className="logo group flex items-center gap-2 sm:gap-2.5 py-1 cursor-pointer transition-opacity hover:opacity-95 shrink-0"
             href="#home"
             onClick={(e) => {
               e.preventDefault();
@@ -120,8 +120,13 @@ export default function Navbar({
             <img
               src="/logo-horizontal.png"
               alt={COMPANY_INFO.name}
-              className="h-9 sm:h-10 w-auto object-contain shrink-0 transition-transform duration-300 group-hover:scale-[1.02]"
+              className="h-8 sm:h-10 w-auto object-contain shrink-0 transition-transform duration-300 group-hover:scale-[1.02]"
             />
+            {/* Mobile / Tablet Status Pill */}
+            <span className="inline-flex xl:hidden items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9.5px] font-mono font-bold text-emerald-800 tracking-tight shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              {isDownloadsPage ? 'Apps' : 'Offline'}
+            </span>
             <span className="hidden xl:inline-flex items-center text-[9.5px] tracking-widest uppercase text-[var(--muted)] font-mono border-l border-[var(--line)] pl-2.5 ml-0.5 whitespace-nowrap">
               {isDownloadsPage ? 'Software Center' : 'Offline First'}
             </span>
@@ -153,6 +158,18 @@ export default function Navbar({
 
           {/* Header Action Tools */}
           <div className="hdr__tools">
+            {/* Quick Call Button (Mobile) */}
+            <a
+              className="hdr__call-btn inline-flex md:hidden items-center justify-center"
+              href={`tel:${COMPANY_INFO.phone}`}
+              aria-label={`Call ${COMPANY_INFO.phone}`}
+              title={`Call Desk: ${COMPANY_INFO.phone}`}
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+              </svg>
+            </a>
+
             {/* Quick Call Button (Desktop Only) */}
             <a
               className="ibtn ibtn--bare hdr__tool-btn hidden md:inline-grid"
@@ -212,36 +229,60 @@ export default function Navbar({
               </button>
             )}
 
-            {/* Mobile / Tablet Menu Button with animated hamburger */}
+            {/* Mobile / Tablet Menu Button with modern 3-line animated hamburger */}
             <button
-              className="ibtn menu-btn"
+              className={`menu-btn ${mobileMenuOpen ? 'is-open' : ''}`}
               type="button"
               aria-expanded={mobileMenuOpen}
               aria-controls="mobile-nav"
               aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+              <svg
+                className="w-5 h-5 transition-transform duration-300"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                {/* Top Bar */}
                 <line
                   x1="4"
-                  y1={mobileMenuOpen ? '12' : '8'}
+                  y1={mobileMenuOpen ? '12' : '6.5'}
                   x2="20"
-                  y2={mobileMenuOpen ? '12' : '8'}
+                  y2={mobileMenuOpen ? '12' : '6.5'}
                   style={{
-                    transformOrigin: 'center',
+                    transformOrigin: '12px 12px',
                     transform: mobileMenuOpen ? 'rotate(45deg)' : 'none',
-                    transition: 'transform .35s var(--ease), y1 .35s var(--ease), y2 .35s var(--ease)'
+                    transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), y1 0.3s, y2 0.3s'
                   }}
                 />
+                {/* Middle Bar */}
                 <line
                   x1="4"
-                  y1={mobileMenuOpen ? '12' : '16'}
+                  y1="12"
                   x2="20"
-                  y2={mobileMenuOpen ? '12' : '16'}
+                  y2="12"
                   style={{
-                    transformOrigin: 'center',
+                    opacity: mobileMenuOpen ? 0 : 1,
+                    transformOrigin: '12px 12px',
+                    transform: mobileMenuOpen ? 'scaleX(0)' : 'scaleX(1)',
+                    transition: 'opacity 0.2s ease, transform 0.2s ease'
+                  }}
+                />
+                {/* Bottom Bar */}
+                <line
+                  x1="4"
+                  y1={mobileMenuOpen ? '12' : '17.5'}
+                  x2="20"
+                  y2={mobileMenuOpen ? '12' : '17.5'}
+                  style={{
+                    transformOrigin: '12px 12px',
                     transform: mobileMenuOpen ? 'rotate(-45deg)' : 'none',
-                    transition: 'transform .35s var(--ease), y1 .35s var(--ease), y2 .35s var(--ease)'
+                    transition: 'transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), y1 0.3s, y2 0.3s'
                   }}
                 />
               </svg>
