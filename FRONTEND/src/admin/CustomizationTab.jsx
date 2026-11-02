@@ -463,7 +463,7 @@ export default function CustomizationTab({
                 <h3 className="text-base font-bold text-[var(--ink)]">Hero Stage Headlines &amp; Motion</h3>
                 <p className="text-xs text-[var(--muted)]">Main opening banner headline, rotating ring, and background demo video</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 01</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Hero Banner</span>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -552,9 +552,9 @@ export default function CustomizationTab({
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
                 <h3 className="text-base font-bold text-[var(--ink)]">About Us Story &amp; Motive</h3>
-                <p className="text-xs text-[var(--muted)]">Section 03 company introduction, mission statement, and quote</p>
+                <p className="text-xs text-[var(--muted)]">Company introduction, mission statement, and quote</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 03</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">About Us</span>
             </div>
 
             <div>
@@ -630,10 +630,10 @@ export default function CustomizationTab({
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Section 04 • App Services Copy</h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">App Services Copy</h3>
                 <p className="text-xs text-[var(--muted)]">Headline and lead paragraph introducing engineering capabilities</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 04</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Services</span>
             </div>
 
             <div>
@@ -673,10 +673,10 @@ export default function CustomizationTab({
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Section 05 • Software Ecosystem Blueprint</h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">Software Ecosystem Blueprint</h3>
                 <p className="text-xs text-[var(--muted)]">Section eyebrow, title and introduction copy for 5 proprietary systems</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 05</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Applications</span>
             </div>
 
             <div>
@@ -727,10 +727,10 @@ export default function CustomizationTab({
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Section 06 • Featured Product (Finance Flow)</h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">Featured Product (Finance Flow)</h3>
                 <p className="text-xs text-[var(--muted)]">Interactive terminal calculator headline, lead, and station background image</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 06</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Featured Product</span>
             </div>
 
             <div>
@@ -779,10 +779,10 @@ export default function CustomizationTab({
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Section 07 • Why Choose Us (5 Pillars)</h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">Why Choose Us (5 Pillars)</h3>
                 <p className="text-xs text-[var(--muted)]">Five core engineering pillars and high-resolution card photo links</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 07</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Why Choose Us</span>
             </div>
 
             <div>
@@ -852,10 +852,10 @@ export default function CustomizationTab({
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Section 09 • Customer Reviews &amp; Testimonial Quote</h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">Customer Reviews &amp; Testimonial Quote</h3>
                 <p className="text-xs text-[var(--muted)]">Featured pull-quote and verified merchant endorsement</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 09</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Reviews</span>
             </div>
 
             <div>
@@ -904,10 +904,10 @@ export default function CustomizationTab({
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Section 10 • Application Releases Center</h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">Application Releases Center</h3>
                 <p className="text-xs text-[var(--muted)]">Section title, lead, and digital safety guarantee notice</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 10</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Downloads</span>
             </div>
 
             <div>
@@ -916,7 +916,7 @@ export default function CustomizationTab({
                 type="text"
                 value={pageData.downloadSection?.eyebrow || ''}
                 onChange={(e) => handlePageChange('downloadSection', 'eyebrow', e.target.value)}
-                placeholder="Section 10 • Application Releases"
+                placeholder="Application Releases"
                 className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-[var(--soft)] text-xs text-[var(--ink)] focus:bg-white focus:outline-none focus:border-[var(--c1)]"
               />
             </div>
@@ -965,10 +965,10 @@ export default function CustomizationTab({
           <div className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[var(--line)]">
               <div>
-                <h3 className="text-base font-bold text-[var(--ink)]">Section 11 • Contact Desk &amp; Hardware Mockup</h3>
+                <h3 className="text-base font-bold text-[var(--ink)]">Contact Desk &amp; Hardware Mockup</h3>
                 <p className="text-xs text-[var(--muted)]">Lead text, hardware counter photo, and footer floating orb call-to-action</p>
               </div>
-              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Section 11</span>
+              <span className="text-[10px] font-mono font-bold text-[var(--c1)] uppercase">Contact &amp; Footer</span>
             </div>
 
             <div>

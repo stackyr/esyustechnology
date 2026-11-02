@@ -11,11 +11,11 @@ export default function AdminTopBar({
   isRefreshing
 }) {
   const titles = {
-    inquiries: { title: 'Inquiries & Customer Leads', sub: 'Section 11 Management • Real-time visitor proposals' },
+    inquiries: { title: 'Inquiries & Customer Leads', sub: 'Visitor inquiries & client leads' },
     customization: { title: 'Website Customization & Brand Settings', sub: 'Master control for brand identity, copy & visual image links' },
-    services: { title: 'Engineering & Software Services', sub: 'Section 04 Management • Core service catalog & tech stack' },
-    products: { title: 'Software Applications & System Specs', sub: 'Section 05 & 10 Management • Installers & offline specs' },
-    faqs: { title: 'FAQ & Knowledge Base Management', sub: 'Section 12 Management • Customer clarification accordion' },
+    services: { title: 'Engineering & Software Services', sub: 'Core service catalog & tech stack' },
+    products: { title: 'Software Applications & System Specs', sub: 'Installers, packages & offline specs' },
+    faqs: { title: 'FAQ & Knowledge Base Management', sub: 'Customer clarification accordion' },
   };
 
   const current = titles[activeTab] || titles.inquiries;

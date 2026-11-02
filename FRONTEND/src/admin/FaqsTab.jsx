@@ -50,7 +50,7 @@ export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq 
             Knowledge Base & Clarifications
           </h2>
           <p className="text-xs text-[var(--muted)]">
-            Add, update, or remove question & answer pairs displayed in Section 12 on the website.
+            Add, update, or remove question & answer pairs displayed in the FAQ accordion on the website.
           </p>
         </div>
 

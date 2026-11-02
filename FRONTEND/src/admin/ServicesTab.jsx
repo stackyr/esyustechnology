@@ -84,7 +84,7 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
             Engineering &amp; Software Services
           </h2>
           <p className="text-xs text-[var(--muted)]">
-            Configure capabilities, technology stacks, feature lists, and Coming Soon flags for Section 04.
+            Configure capabilities, technology stacks, feature lists, and Coming Soon flags.
           </p>
         </div>
 

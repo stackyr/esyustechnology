@@ -625,7 +625,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
                   className="w-4 h-4 rounded text-[var(--c1)] focus:ring-0 cursor-pointer"
                 />
                 <label htmlFor="isFeatured" className="text-xs font-bold text-[var(--ink)] cursor-pointer">
-                  Mark as Featured Flagship Application (Highlighted in Section 06)
+                  Mark as Featured Flagship Application (Highlighted on Homepage)
                 </label>
               </div>
 

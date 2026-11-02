@@ -85,7 +85,7 @@ export default function ContactUs({ preselectedSubject }) {
         {/* Left Column: Contact Copy & Form */}
         <div className="contact__copy">
           <div>
-            <span className="eyebrow">Section 11 • Get In Touch</span>
+            <span className="eyebrow">Get In Touch</span>
             <h2 className="contact__title" style={{ marginTop: '16px' }}>
               {contactSec.headline ? (
                 contactSec.headline

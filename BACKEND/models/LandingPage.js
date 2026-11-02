@@ -47,7 +47,7 @@ const LandingPageSchema = new mongoose.Schema({
     lead: { type: String, default: "Five proprietary systems engineered for retail counters, distributors, travel consultancies, and enterprises requiring 100% offline resilience." }
   },
   downloadSection: {
-    eyebrow: { type: String, default: "Section 10 • Application Releases" },
+    eyebrow: { type: String, default: "Application Releases" },
     headline: { type: String, default: "Installers built for offline endurance." },
     lead: { type: String, default: "Direct access to official installers and production releases. Public download links are currently in preparation — packages will be enabled for direct download as soon as release links go live." },
     notice: { type: String, default: "Every installer is scanned and clean of malware. Windows packages include all runtime SQLite drivers for isolated offline operation. No internet connection or cloud account setup is ever required." }

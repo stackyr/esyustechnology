@@ -8,7 +8,7 @@ export default function FAQSection({ onContactClick }) {
         
         {/* Left Column: Heading and Support Direct CTA */}
         <div className="faq__head">
-          <span className="eyebrow">Section 12 • Frequently Asked Questions</span>
+          <span className="eyebrow">Frequently Asked Questions</span>
           <h2 className="h2">
             Straightforward <em className="s">answers.</em>
           </h2>

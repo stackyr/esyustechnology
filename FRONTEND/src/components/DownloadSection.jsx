@@ -29,7 +29,7 @@ export default function DownloadSection({ _onDownloadApp, onOpenDownloadsPage })
         {/* Section Header */}
         <div className="sec-head">
           <div>
-            <span className="eyebrow">{sec.eyebrow || "Section 10 • Application Releases"}</span>
+            <span className="eyebrow">{(sec.eyebrow ? sec.eyebrow.replace(/^Section\s+\d+\s*•?\s*/i, '') : '') || "Application Releases"}</span>
             <h2 className="h2" style={{ marginTop: '16px' }}>
               {sec.headline ? (
                 sec.headline
