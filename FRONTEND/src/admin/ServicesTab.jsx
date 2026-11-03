@@ -156,7 +156,7 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
                     type="button"
                     onClick={() => {
                       if (window.confirm(`Delete service "${srv.title}"?`)) {
-                        onDeleteService(srv.id);
+                        onDeleteService(srv.id || srv._id, srv.title);
                       }
                     }}
                     className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"

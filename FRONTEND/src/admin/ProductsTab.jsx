@@ -219,7 +219,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
                       type="button"
                       onClick={() => {
                         if (window.confirm(`Delete product "${prod.name}"?`)) {
-                          onDeleteProduct(prod.id);
+                          onDeleteProduct(prod.id || prod._id, prod.name);
                         }
                       }}
                       className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"

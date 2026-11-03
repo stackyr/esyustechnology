@@ -90,6 +90,13 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState(null); // { message, type: 'success' | 'error' }
+  const [actionModal, setActionModal] = useState({
+    isOpen: false,
+    status: 'loading', // 'loading' | 'error'
+    title: '',
+    subtitle: '',
+    onRetry: null
+  });
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -294,9 +301,16 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   };
 
   // ----------------------------------------------------
-  // Services Handlers (Reloads section cleanly)
+  // Services Handlers (With animated action overlay & error retry)
   // ----------------------------------------------------
   const handleAddService = async (serviceData) => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Adding New Service...',
+      subtitle: 'Saving service details to MongoDB Atlas & broadcasting live...',
+      onRetry: null
+    });
     setRefreshingSection('services');
     try {
       await api.createService(serviceData);
@@ -307,7 +321,15 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
       if (onDataChanged) onDataChanged();
       showToast('New service added successfully!');
+      setTimeout(() => setActionModal(prev => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Add Service',
+        subtitle: err.message || 'Could not save service to database. Please check your connection and retry.',
+        onRetry: () => handleAddService(serviceData)
+      });
       showToast('Failed to add service: ' + err.message, 'error');
     } finally {
       setTimeout(() => setRefreshingSection(null), 350);
@@ -315,6 +337,13 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   };
 
   const handleUpdateService = async (id, serviceData) => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Updating Service Changes...',
+      subtitle: 'Saving modifications to MongoDB Atlas & broadcasting live...',
+      onRetry: null
+    });
     setRefreshingSection('services');
     try {
       const res = await api.updateService(id, serviceData);
@@ -328,18 +357,34 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
       if (onDataChanged) onDataChanged();
       showToast('Service updated successfully!');
+      setTimeout(() => setActionModal(prev => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Update Service',
+        subtitle: err.message || 'Could not update service in database. Please retry.',
+        onRetry: () => handleUpdateService(id, serviceData)
+      });
       showToast('Failed to update service: ' + err.message, 'error');
     } finally {
       setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
-  const handleDeleteService = async (id) => {
+  const handleDeleteService = async (id, serviceTitle = 'Service') => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Deleting Service...',
+      subtitle: `Removing "${serviceTitle}" from MongoDB Atlas & synchronizing...`,
+      onRetry: null
+    });
     setRefreshingSection('services');
     try {
-      setServices((prev) => prev.filter((s) => s.id !== id && s._id !== id && String(s._id) !== String(id)));
       await api.deleteService(id);
+      // ONLY remove from local state AFTER successful backend confirmation!
+      setServices((prev) => prev.filter((s) => s.id !== id && s._id !== id && String(s._id) !== String(id)));
       const srvRes = await api.getServices();
       if (srvRes && srvRes.data) {
         setServices(srvRes.data);
@@ -347,7 +392,16 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
       if (onDataChanged) onDataChanged();
       showToast('Service deleted successfully!');
+      setTimeout(() => setActionModal(prev => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
+      // Keep item in state! Never delete locally if backend fails!
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Delete Service',
+        subtitle: err.message || 'Could not delete service from database. Item has been preserved.',
+        onRetry: () => handleDeleteService(id, serviceTitle)
+      });
       showToast('Failed to delete service: ' + err.message, 'error');
     } finally {
       setTimeout(() => setRefreshingSection(null), 350);
@@ -355,9 +409,16 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   };
 
   // ----------------------------------------------------
-  // Products & Specs Handlers (Reloads section cleanly)
+  // Products & Specs Handlers (With animated action overlay & error retry)
   // ----------------------------------------------------
   const handleAddProduct = async (productData) => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Adding New Application...',
+      subtitle: 'Saving application specs to MongoDB Atlas & broadcasting live...',
+      onRetry: null
+    });
     setRefreshingSection('products');
     try {
       await api.createProduct(productData);
@@ -368,7 +429,15 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
       if (onDataChanged) onDataChanged();
       showToast('New application added successfully!');
+      setTimeout(() => setActionModal(prev => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Add Application',
+        subtitle: err.message || 'Could not save application to database. Please retry.',
+        onRetry: () => handleAddProduct(productData)
+      });
       showToast('Failed to add application: ' + err.message, 'error');
     } finally {
       setTimeout(() => setRefreshingSection(null), 350);
@@ -376,6 +445,13 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   };
 
   const handleUpdateProduct = async (id, productData) => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Updating Application Specs...',
+      subtitle: 'Saving specification changes to MongoDB Atlas & broadcasting live...',
+      onRetry: null
+    });
     setRefreshingSection('products');
     try {
       const res = await api.updateProduct(id, productData);
@@ -389,18 +465,34 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
       if (onDataChanged) onDataChanged();
       showToast('Application & specs updated successfully!');
+      setTimeout(() => setActionModal(prev => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Update Application',
+        subtitle: err.message || 'Could not update application in database. Please retry.',
+        onRetry: () => handleUpdateProduct(id, productData)
+      });
       showToast('Failed to update application: ' + err.message, 'error');
     } finally {
       setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
-  const handleDeleteProduct = async (id) => {
+  const handleDeleteProduct = async (id, productTitle = 'Application') => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Deleting Application...',
+      subtitle: `Removing "${productTitle}" from MongoDB Atlas & synchronizing...`,
+      onRetry: null
+    });
     setRefreshingSection('products');
     try {
-      setProducts((prev) => prev.filter((p) => p.id !== id && p._id !== id && String(p._id) !== String(id)));
       await api.deleteProduct(id);
+      // ONLY remove from local state AFTER successful backend confirmation!
+      setProducts((prev) => prev.filter((p) => p.id !== id && p._id !== id && String(p._id) !== String(id)));
       const prodRes = await api.getProducts();
       if (prodRes && prodRes.data) {
         setProducts(prodRes.data);
@@ -408,7 +500,16 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
       if (onDataChanged) onDataChanged();
       showToast('Application deleted successfully!');
+      setTimeout(() => setActionModal(prev => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
+      // Keep item in state! Never delete locally if backend fails!
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Delete Application',
+        subtitle: err.message || 'Could not delete application from database. Item has been preserved.',
+        onRetry: () => handleDeleteProduct(id, productTitle)
+      });
       showToast('Failed to delete application: ' + err.message, 'error');
     } finally {
       setTimeout(() => setRefreshingSection(null), 350);
@@ -416,9 +517,16 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   };
 
   // ----------------------------------------------------
-  // FAQs Handlers (Reloads section cleanly)
+  // FAQs Handlers (With animated action overlay & error retry)
   // ----------------------------------------------------
   const handleAddFaq = async (faqData) => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Adding New FAQ...',
+      subtitle: 'Saving question & answer to MongoDB Atlas & broadcasting live...',
+      onRetry: null
+    });
     setRefreshingSection('faqs');
     try {
       await api.createFaq(faqData);
@@ -429,7 +537,15 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
       if (onDataChanged) onDataChanged();
       showToast('New FAQ added successfully!');
+      setTimeout(() => setActionModal(prev => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Add FAQ',
+        subtitle: err.message || 'Could not save FAQ to database. Please retry.',
+        onRetry: () => handleAddFaq(faqData)
+      });
       showToast('Failed to add FAQ: ' + err.message, 'error');
     } finally {
       setTimeout(() => setRefreshingSection(null), 350);
@@ -437,6 +553,13 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   };
 
   const handleUpdateFaq = async (id, faqData) => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Updating FAQ...',
+      subtitle: 'Saving FAQ changes to MongoDB Atlas & broadcasting live...',
+      onRetry: null
+    });
     setRefreshingSection('faqs');
     try {
       const res = await api.updateFaq(id, faqData);
@@ -450,18 +573,34 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
       if (onDataChanged) onDataChanged();
       showToast('FAQ updated successfully!');
+      setTimeout(() => setActionModal(prev => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Update FAQ',
+        subtitle: err.message || 'Could not update FAQ in database. Please retry.',
+        onRetry: () => handleUpdateFaq(id, faqData)
+      });
       showToast('Failed to update FAQ: ' + err.message, 'error');
     } finally {
       setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
-  const handleDeleteFaq = async (id) => {
+  const handleDeleteFaq = async (id, faqQuestion = 'FAQ') => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Deleting FAQ...',
+      subtitle: `Removing FAQ from MongoDB Atlas & synchronizing...`,
+      onRetry: null
+    });
     setRefreshingSection('faqs');
     try {
-      setFaqs((prev) => prev.filter((f, idx) => f.id !== id && f._id !== id && String(f._id) !== String(id) && idx !== id));
       await api.deleteFaq(id);
+      // ONLY remove from local state AFTER successful backend confirmation!
+      setFaqs((prev) => prev.filter((f, idx) => f.id !== id && f._id !== id && String(f._id) !== String(id) && idx !== id));
       const faqsRes = await api.getFaqs();
       if (faqsRes && faqsRes.data) {
         setFaqs(faqsRes.data);
@@ -469,7 +608,16 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
       if (onDataChanged) onDataChanged();
       showToast('FAQ deleted successfully!');
+      setTimeout(() => setActionModal(prev => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
+      // Keep item in state! Never delete locally if backend fails!
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Delete FAQ',
+        subtitle: err.message || 'Could not delete FAQ from database. Item has been preserved.',
+        onRetry: () => handleDeleteFaq(id, faqQuestion)
+      });
       showToast('Failed to delete FAQ: ' + err.message, 'error');
     } finally {
       setTimeout(() => setRefreshingSection(null), 350);
@@ -619,6 +767,69 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
           showToast(`Admin credentials successfully updated (${updated?.username || 'admin'})!`, 'success');
         }}
       />
+
+      {/* Universal Action Modal Overlay with Retry */}
+      {actionModal.isOpen && (
+        <div className="fixed inset-0 z-[99999] bg-stone-900/40 backdrop-blur-xs flex items-center justify-center p-4 select-none animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-stone-200/90 flex flex-col items-center gap-4 max-w-sm w-full text-center">
+            {actionModal.status === 'loading' ? (
+              <>
+                <div className="relative flex items-center justify-center w-14 h-14">
+                  <div className="absolute inset-0 rounded-full border-4 border-stone-200/70" />
+                  <div className="absolute inset-0 rounded-full border-4 border-[var(--c1)] border-t-transparent animate-spin" />
+                </div>
+                <div className="space-y-1.5 mt-1">
+                  <h4 className="text-base sm:text-lg font-bold text-[var(--ink)] tracking-tight">
+                    {actionModal.title}
+                  </h4>
+                  <p className="text-xs text-[var(--muted)] font-mono leading-relaxed">
+                    {actionModal.subtitle}
+                  </p>
+                </div>
+                <div className="w-full bg-stone-100 rounded-full h-1.5 overflow-hidden mt-1">
+                  <div className="h-full bg-[var(--c1)] rounded-full animate-pulse w-full" />
+                </div>
+              </>
+            ) : actionModal.status === 'error' ? (
+              <>
+                <div className="w-14 h-14 rounded-2xl bg-red-50 border border-red-200/80 flex items-center justify-center text-red-600 shadow-xs">
+                  <AlertCircle className="w-7 h-7" />
+                </div>
+                <div className="space-y-1.5">
+                  <h4 className="text-base sm:text-lg font-bold text-red-950 tracking-tight">
+                    {actionModal.title}
+                  </h4>
+                  <p className="text-xs text-red-700/90 leading-relaxed font-mono px-1">
+                    {actionModal.subtitle}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2.5 w-full mt-2">
+                  {actionModal.onRetry && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const retryFn = actionModal.onRetry;
+                        if (retryFn) retryFn();
+                      }}
+                      className="flex-1 px-4 py-2.5 bg-[var(--c1)] hover:bg-[var(--c2)] text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      <span>Retry Now</span>
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setActionModal({ isOpen: false, status: 'loading', title: '', subtitle: '', onRetry: null })}
+                    className="flex-1 px-4 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold rounded-xl transition-all cursor-pointer"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              </>
+            ) : null}
+          </div>
+        </div>
+      )}
 
     </div>
   );

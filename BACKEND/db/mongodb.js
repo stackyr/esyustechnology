@@ -503,19 +503,43 @@ export async function createServiceData(srv) {
   return srv;
 }
 
+function buildIdQuery(id) {
+  if (!id && id !== 0) return null;
+  const strId = String(id).trim();
+  const conditions = [{ id: strId }];
+  if (mongoose.Types.ObjectId.isValid(strId)) {
+    try {
+      conditions.push({ _id: new mongoose.Types.ObjectId(strId) });
+    } catch (e) {}
+  }
+  return { $or: conditions };
+}
+
+function buildFaqIdQuery(id) {
+  if (!id && id !== 0) return null;
+  const strId = String(id).trim();
+  const conditions = [{ id: strId }, { id: `faq-${strId}` }];
+  if (mongoose.Types.ObjectId.isValid(strId)) {
+    try {
+      conditions.push({ _id: new mongoose.Types.ObjectId(strId) });
+    } catch (e) {}
+  }
+  return { $or: conditions };
+}
+
 export async function updateServiceData(id, updates) {
+  if (!id && id !== 0) return null;
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    let query = { id };
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      query = { $or: [{ id }, { _id: id }] };
-    }
-    const updated = await Service.findOneAndUpdate(query, updates, { new: true }).lean();
-    if (updated) {
-      const db = getDB();
-      db.services = (db.services || []).map(s => (s.id === id || s._id === id || String(s._id) === String(id)) ? { ...s, ...updates } : s);
-      saveDB(db);
-      return updated;
+    const query = buildIdQuery(id);
+    if (query) {
+      const updated = await Service.findOneAndUpdate(query, updates, { new: true }).lean();
+      if (updated) {
+        const db = getDB();
+        db.services = (db.services || []).map(s => (s.id === id || s._id === id || String(s._id) === String(id)) ? { ...s, ...updates } : s);
+        saveDB(db);
+        return updated;
+      }
     }
   }
   const db = getDB();
@@ -527,13 +551,13 @@ export async function updateServiceData(id, updates) {
 }
 
 export async function deleteServiceData(id) {
+  if (!id && id !== 0) return false;
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    let query = { id };
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      query = { $or: [{ id }, { _id: id }] };
+    const query = buildIdQuery(id);
+    if (query) {
+      await Service.deleteOne(query);
     }
-    await Service.deleteOne(query);
   }
   const db = getDB();
   db.services = (db.services || []).filter(s => s.id !== id && s._id !== id && String(s._id) !== String(id));
@@ -566,18 +590,18 @@ export async function createProductData(prod) {
 }
 
 export async function updateProductData(id, updates) {
+  if (!id && id !== 0) return null;
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    let query = { id };
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      query = { $or: [{ id }, { _id: id }] };
-    }
-    const updated = await Product.findOneAndUpdate(query, updates, { new: true }).lean();
-    if (updated) {
-      const db = getDB();
-      db.products = (db.products || []).map(p => (p.id === id || p._id === id || String(p._id) === String(id)) ? { ...p, ...updates } : p);
-      saveDB(db);
-      return updated;
+    const query = buildIdQuery(id);
+    if (query) {
+      const updated = await Product.findOneAndUpdate(query, updates, { new: true }).lean();
+      if (updated) {
+        const db = getDB();
+        db.products = (db.products || []).map(p => (p.id === id || p._id === id || String(p._id) === String(id)) ? { ...p, ...updates } : p);
+        saveDB(db);
+        return updated;
+      }
     }
   }
   const db = getDB();
@@ -589,13 +613,13 @@ export async function updateProductData(id, updates) {
 }
 
 export async function deleteProductData(id) {
+  if (!id && id !== 0) return false;
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    let query = { id };
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      query = { $or: [{ id }, { _id: id }] };
+    const query = buildIdQuery(id);
+    if (query) {
+      await Product.deleteOne(query);
     }
-    await Product.deleteOne(query);
   }
   const db = getDB();
   db.products = (db.products || []).filter(p => p.id !== id && p._id !== id && String(p._id) !== String(id));
@@ -628,18 +652,18 @@ export async function createFaqData(faq) {
 }
 
 export async function updateFaqData(id, updates) {
+  if (!id && id !== 0) return null;
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    let query = { id };
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      query = { $or: [{ id }, { _id: id }] };
-    }
-    const updated = await Faq.findOneAndUpdate(query, updates, { new: true }).lean();
-    if (updated) {
-      const db = getDB();
-      db.faqs = (db.faqs || []).map(f => (f.id === id || f._id === id || String(f._id) === String(id) || f.id === `faq-${id}`) ? { ...f, ...updates } : f);
-      saveDB(db);
-      return updated;
+    const query = buildFaqIdQuery(id);
+    if (query) {
+      const updated = await Faq.findOneAndUpdate(query, updates, { new: true }).lean();
+      if (updated) {
+        const db = getDB();
+        db.faqs = (db.faqs || []).map(f => (f.id === id || f._id === id || String(f._id) === String(id) || f.id === `faq-${id}`) ? { ...f, ...updates } : f);
+        saveDB(db);
+        return updated;
+      }
     }
   }
   const db = getDB();
@@ -651,13 +675,13 @@ export async function updateFaqData(id, updates) {
 }
 
 export async function deleteFaqData(id) {
+  if (!id && id !== 0) return false;
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    let query = { id };
-    if (mongoose.Types.ObjectId.isValid(id)) {
-      query = { $or: [{ id }, { _id: id }] };
+    const query = buildFaqIdQuery(id);
+    if (query) {
+      await Faq.deleteOne(query);
     }
-    await Faq.deleteOne(query);
   }
   const db = getDB();
   db.faqs = (db.faqs || []).filter(f => f.id !== id && f._id !== id && String(f._id) !== String(id) && f.id !== `faq-${id}`);

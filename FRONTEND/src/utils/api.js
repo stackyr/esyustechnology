@@ -57,7 +57,7 @@ async function request(path, options = {}) {
   } catch (e) {}
 
   const controller = new AbortController();
-  const timeoutMs = options.timeout || ((options.method === 'POST' || options.method === 'PUT') ? 25000 : 8000);
+  const timeoutMs = options.timeout || ((options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE') ? 25000 : 10000);
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {

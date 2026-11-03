@@ -24,6 +24,9 @@ export function getSocketUrl() {
   if (envUrl && !envUrl.includes('localhost')) {
     try {
       const parsed = new URL(envUrl);
+      if (parsed.hostname.includes('vercel.app') || parsed.hostname.includes('esyustechnology')) {
+        return null;
+      }
       // Only return if it points to a dedicated backend host (not the current frontend host)
       if (typeof window === 'undefined' || parsed.hostname !== window.location.hostname) {
         return parsed.origin;
@@ -153,7 +156,10 @@ class LiveSyncEngine {
 
   // 3. Server-Sent Events Fallback (for environments where WebSockets are closed)
   initSseFallback(baseUrl) {
-    if (this.eventSource || typeof window === 'undefined' || !('EventSource' in window)) return;
+    if (!baseUrl || typeof baseUrl !== 'string' || this.eventSource || typeof window === 'undefined' || !('EventSource' in window)) return;
+    if (baseUrl.includes('vercel.app') || window.location.hostname.includes('vercel.app') || window.location.hostname.includes('esyustechnology')) {
+      return;
+    }
     try {
       const sseUrl = `${baseUrl.replace(/\/+$/, '')}/api/live-stream`;
       this.eventSource = new EventSource(sseUrl);
