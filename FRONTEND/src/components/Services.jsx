@@ -232,7 +232,7 @@ export default function Services({ onSelectService, onEnquireService, onViewAllS
                   {/* Right Column: High-Res Real Photography & Floating Live Diagnostics UI */}
                   <figure className={`folder__photo overflow-hidden relative group ${item.isLogo ? 'folder__photo--logo' : ''}`}>
                     {item.isLogo ? (
-                      <div className="w-full h-auto sm:h-full flex flex-col justify-between p-2.5 sm:p-3.5 bg-white relative">
+                      <div className="w-full h-full flex flex-col justify-between p-2.5 sm:p-3.5 bg-white relative">
                         {/* Top: Crisp Finance Flow Brand Logo Card */}
                         <div className="flex-1 flex flex-col items-center justify-center p-2 sm:p-2.5 bg-gradient-to-b from-stone-50/90 to-white rounded-xl border border-stone-200/70 mb-1.5 sm:mb-2 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)]">
                           <div className="w-full flex items-center justify-between mb-1 sm:mb-1.5 px-0.5">

@@ -1583,7 +1583,7 @@ em.s {
 
 .folder {
   position: sticky;
-  top: calc(max(92px, (100svh - 480px) / 2) + var(--i, 0) * var(--tab-peek));
+  top: calc(max(92px, (100svh - 460px) / 2));
   z-index: calc(var(--i, 0) + 1);
   --plate: var(--c1);
   --on: var(--ink);
@@ -1667,13 +1667,15 @@ em.s {
 
 .folder__body {
   position: relative;
-  overflow: visible;
+  overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   gap: clamp(24px, 3.2vw, 56px);
-  align-items: center;
-  min-height: clamp(380px, 48vh, 460px);
-  padding: clamp(24px, 3.2vw, 44px);
+  align-items: stretch;
+  height: clamp(390px, 46vh, 450px);
+  min-height: clamp(390px, 46vh, 450px);
+  max-height: clamp(390px, 46vh, 450px);
+  padding: clamp(22px, 2.8vw, 38px);
   border-radius: var(--fr);
   background: var(--plate);
   color: var(--on);
@@ -1696,9 +1698,9 @@ em.s {
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  gap: clamp(16px, 2.2vh, 26px);
+  gap: 16px;
   height: 100%;
-  min-height: 280px;
+  min-height: 100%;
 }
 
 .folder__meta {
@@ -1744,10 +1746,16 @@ em.s {
   overflow: hidden;
   border-radius: calc(var(--fr) * .7);
   width: 100%;
-  aspect-ratio: 4/3;
-  min-height: 260px;
-  max-height: 380px;
+  height: 100%;
+  min-height: 100%;
+  max-height: 100%;
   box-shadow: 0 16px 36px -12px rgba(0, 0, 0, .25);
+}
+
+.folder__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .folder__photo .art>.ico {
@@ -1778,8 +1786,9 @@ em.s {
 
 .folder__photo--logo {
   background: #ffffff !important;
-  max-height: clamp(230px, 34vh, 310px) !important;
-  height: auto;
+  height: 100% !important;
+  min-height: 100% !important;
+  max-height: 100% !important;
 }
 
 .ui--inline {
