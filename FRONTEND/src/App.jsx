@@ -346,6 +346,11 @@ export default function App() {
             window.location.hash = '#admin';
             setIsAdmin(true);
           }}
+          onComplete={() => {
+            if (typeof window !== 'undefined' && window.ScrollTrigger) {
+              window.ScrollTrigger.refresh();
+            }
+          }}
         />
       )}
 

@@ -97,26 +97,24 @@ export function DataProvider({ children }) {
         setConnectionError(null);
         setLoadingStage('ready');
         setLoadingStatusText('All records live from MongoDB Atlas');
+        if (isInitial) {
+          // Leave a brief 300ms moment so user perceives verified connection, then dismiss loading gate
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 350);
+        }
         return true;
       } else {
         throw new Error('Unable to verify live database response from MongoDB backend.');
       }
     } catch (err) {
-      console.warn('[DataContext] Database sync notice (using cached/preset data):', err.message);
-      if (isInitial) {
-        setIsDatabaseConnected(true);
-        setConnectionError(null);
-        setLoadingStage('ready');
-        setLoadingStatusText('Ready');
-      }
+      console.warn('[DataContext] Database sync error:', err.message);
+      setIsDatabaseConnected(false);
+      setConnectionError(err.message || 'Unable to connect to MongoDB Atlas backend. Server unreachable or connection timed out.');
+      setLoadingStage('error');
+      setLoadingStatusText('Connection failed. Website cannot be opened without database records.');
+      // Keep isLoading true so the loading screen stays closed and presents the error with Retry button
       return false;
-    } finally {
-      if (isInitial) {
-        // Leave a brief 300ms moment so user perceives verified connection, then dismiss loading gate
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 350);
-      }
     }
   }, [syncToMemory]);
 

@@ -44,7 +44,7 @@ export default function CustomizationTab({
   isRefreshing,
   isInitialLoading = false
 }) {
-  const isLoading = isInitialLoading || isRefreshing;
+  const isLoading = isInitialLoading || (isRefreshing && !brand);
   const [activeSubTab, setActiveSubTab] = useState('brand');
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isLocalSaving, setIsLocalSaving] = useState(false);

@@ -20,17 +20,25 @@ export function getSocketUrl() {
     }
   }
 
-  const envUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL;
+  const envUrl = import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL;
   if (envUrl && !envUrl.includes('localhost')) {
     try {
       const parsed = new URL(envUrl);
-      return parsed.origin;
+      // Only return if it points to a dedicated backend host (not the current frontend host)
+      if (typeof window === 'undefined' || parsed.hostname !== window.location.hostname) {
+        return parsed.origin;
+      }
     } catch (e) {
       // ignore
     }
   }
 
+  // Vercel serverless hosting does not support persistent WebSockets without an external backend.
+  // Suppress raw WebSocket attempts to Vercel domains to avoid red console errors.
   if (typeof window !== 'undefined') {
+    if (window.location.hostname.includes('vercel.app') || window.location.hostname.includes('esyustechnology')) {
+      return null;
+    }
     return window.location.origin;
   }
 
@@ -86,14 +94,21 @@ class LiveSyncEngine {
     if (this.socket) return;
     const socketUrl = getSocketUrl();
 
+    // If on Vercel without a dedicated external socket backend, rely seamlessly on SSE and cross-tab storage
+    if (!socketUrl) {
+      console.log('[LiveSync] Real-time engine active: using SSE fallback + cross-tab synchronization');
+      this.initSseFallback('/api/events');
+      return;
+    }
+
     try {
       this.socket = io(socketUrl, {
-        transports: ['websocket', 'polling'],
+        transports: ['polling', 'websocket'],
         reconnection: true,
-        reconnectionAttempts: 4,
-        reconnectionDelay: 1500,
-        reconnectionDelayMax: 5000,
-        timeout: 8000
+        reconnectionAttempts: 2,
+        reconnectionDelay: 2000,
+        reconnectionDelayMax: 6000,
+        timeout: 6000
       });
 
       this.socket.on('connect', () => {

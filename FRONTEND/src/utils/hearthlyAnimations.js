@@ -293,6 +293,15 @@ export function initHearthlyAnimations() {
     };
 
     const videoEl = flood.querySelector('video');
+    if (videoEl) {
+      videoEl.addEventListener('loadeddata', () => ScrollTrigger.refresh(), { once: true });
+    }
+    hero.querySelectorAll('img').forEach((img) => {
+      if (!img.complete) {
+        img.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+      }
+    });
+
     const resumeVideo = () => {
       if (!videoEl) return;
       if (videoEl.ended || (videoEl.duration && videoEl.currentTime >= videoEl.duration - 0.2)) {
