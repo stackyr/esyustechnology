@@ -135,13 +135,13 @@ export function initHearthlyAnimations() {
     );
 
     lenis = new Lenis({
-      duration: isTouchDevice ? 0.6 : 0.85, // Ultra-responsive, snappy buttery-smooth glide
+      duration: 1.2, // Signature Hearthly buttery-smooth momentum glide
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.0, // Natural 1:1 touch response without dragging or sticking
+      touchMultiplier: 1.2,
       infinite: false,
       autoResize: true,
       syncTouch: false,
@@ -159,7 +159,8 @@ export function initHearthlyAnimations() {
     lenis.on('scroll', ScrollTrigger.update);
     tickerCb = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tickerCb);
-    gsap.ticker.lagSmoothing(1000, 16);
+    gsap.ticker.lagSmoothing(0); // MUST be 0 with Lenis to eliminate scroll stutter and frame-drops
+    lenis.start();
     globalLenis = lenis;
     if (typeof window !== 'undefined') {
       window.__lenis = lenis;
@@ -309,7 +310,7 @@ export function initHearthlyAnimations() {
         trigger: hero,
         start: 'top top',
         end: 'bottom bottom',
-        scrub: 0.6,
+        scrub: true,
         invalidateOnRefresh: true,
         onEnter: resumeVideo,
         onEnterBack: resumeVideo,
@@ -410,7 +411,7 @@ export function initHearthlyAnimations() {
             trigger: list,
             start: 'top 82%',
             end: 'bottom 40%',
-            scrub: 0.5,
+            scrub: true,
             invalidateOnRefresh: true,
           },
         });
@@ -423,7 +424,7 @@ export function initHearthlyAnimations() {
               trigger: li,
               start: 'top 88%',
               end: 'top 30%',
-              scrub: 0.5,
+              scrub: true,
               invalidateOnRefresh: true,
             },
           }), 0);
@@ -455,7 +456,7 @@ export function initHearthlyAnimations() {
           trigger: list,
           start: down ? 'top 75%' : 'top 80%',
           end: down ? 'bottom 60%' : 'top 35%',
-          scrub: 0.4,
+          scrub: true,
           onRefresh: measure,
           onUpdate: (self) => {
             steps.forEach((s, i) => s.classList.toggle('is-on', self.progress >= (marks[i] || 0) - 0.001));
@@ -555,7 +556,7 @@ export function initHearthlyAnimations() {
         trigger: list,
         start: 'top 85%',
         end: 'bottom 70%',
-        scrub: 0.5,
+        scrub: true,
       },
     });
   });
@@ -588,6 +589,7 @@ export function initHearthlyAnimations() {
     if (tickerCb) {
       gsap.ticker.remove(tickerCb);
     }
+    gsap.ticker.lagSmoothing(500, 33);
     ScrollTrigger.getAll().forEach((st) => st.kill());
     if (lenis && typeof lenis.destroy === 'function') {
       lenis.destroy();

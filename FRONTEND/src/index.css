@@ -4357,6 +4357,10 @@ em.s {
 /* =========================================================================
    OFFICIAL LENIS SMOOTH MOMENTUM SCROLL ENGINE (ZERO-STUTTER)
    ========================================================================= */
+html {
+  scroll-behavior: auto !important;
+}
+
 html.lenis,
 html.lenis body {
   height: auto;

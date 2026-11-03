@@ -14,7 +14,23 @@ export default function LoadingScreen({
   const [isExiting, setIsExiting] = useState(false);
   const [isMounted, setIsMounted] = useState(true);
 
-  // Exit only when all data has been fetched from MongoDB / API
+  // Safety timer: guarantees user never gets stuck behind loading curtain if network stalls (e.g. Vercel cold-start)
+  useEffect(() => {
+    const safetyTimer = setTimeout(() => {
+      setIsExiting(true);
+      setTimeout(() => {
+        setIsMounted(false);
+        if (onComplete) onComplete();
+        if (typeof window !== 'undefined' && window.ScrollTrigger) {
+          window.ScrollTrigger.refresh();
+        }
+      }, 700);
+    }, 3200);
+
+    return () => clearTimeout(safetyTimer);
+  }, [onComplete]);
+
+  // Exit when all data has been verified and fetched from MongoDB / API
   useEffect(() => {
     if (!isLoading) {
       // Data verified and loaded — trigger smooth curtain slide exit

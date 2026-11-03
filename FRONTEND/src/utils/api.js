@@ -56,15 +56,21 @@ async function request(path, options = {}) {
     }
   } catch (e) {}
 
+  const controller = new AbortController();
+  const timeoutMs = options.timeout || ((options.method === 'POST' || options.method === 'PUT') ? 25000 : 8000);
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
   try {
     const res = await fetch(url, {
       cache: 'no-store',
+      signal: options.signal || controller.signal,
       ...options,
       headers: {
         ...defaultHeaders,
         ...options.headers,
       },
     });
+    clearTimeout(timeoutId);
 
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
@@ -72,6 +78,7 @@ async function request(path, options = {}) {
     }
     return data;
   } catch (err) {
+    clearTimeout(timeoutId);
     console.warn(`[API] Request to ${path} failed:`, err.message);
     throw err;
   }
