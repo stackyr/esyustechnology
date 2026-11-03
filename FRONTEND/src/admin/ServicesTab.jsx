@@ -117,25 +117,9 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
 
       {/* Services Grid */}
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {[1, 2, 3, 4, 5, 6].map((n) => (
-            <div key={n} className="p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4 animate-pulse">
-              <div className="flex items-center justify-between">
-                <div className="w-24 h-5 rounded-full bg-stone-200" />
-                <div className="w-12 h-4 rounded bg-stone-100" />
-              </div>
-              <div className="w-48 h-6 rounded bg-stone-200" />
-              <div className="space-y-2">
-                <div className="w-full h-3.5 rounded bg-stone-100" />
-                <div className="w-5/6 h-3.5 rounded bg-stone-100" />
-              </div>
-              <div className="flex gap-2 pt-2">
-                <div className="w-16 h-6 rounded-md bg-stone-100" />
-                <div className="w-16 h-6 rounded-md bg-stone-100" />
-                <div className="w-16 h-6 rounded-md bg-stone-100" />
-              </div>
-            </div>
-          ))}
+        <div className="py-20 flex flex-col items-center justify-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-[var(--c1)] animate-spin" />
+          <span className="text-xs font-mono text-[var(--muted)]">Loading services from database...</span>
         </div>
       ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

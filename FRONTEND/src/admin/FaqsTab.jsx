@@ -83,17 +83,9 @@ export default function FaqsTab({ faqs = [], onAddFaq, onUpdateFaq, onDeleteFaq,
 
       {/* FAQ Items List */}
       {isLoading ? (
-        <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map((n) => (
-            <div key={n} className="p-5 sm:p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-3 animate-pulse">
-              <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg bg-stone-200" />
-                <div className="w-3/4 h-5 rounded bg-stone-200" />
-              </div>
-              <div className="w-full h-3.5 rounded bg-stone-100" />
-              <div className="w-5/6 h-3.5 rounded bg-stone-100" />
-            </div>
-          ))}
+        <div className="py-20 flex flex-col items-center justify-center gap-3">
+          <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-[var(--c1)] animate-spin" />
+          <span className="text-xs font-mono text-[var(--muted)]">Loading FAQs from database...</span>
         </div>
       ) : (
       <div className="space-y-3">

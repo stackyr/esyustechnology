@@ -6,12 +6,12 @@
     "domain": "esyustechnology.com",
     "tagline": "Smart Software Solutions for Tomorrow's Businesses",
     "slogan": "High-Performance Desktop, Web & Android Systems Built for Absolute Reliability",
-    "founder": "Sayantan Ghosh",
-    "coFounder": "Soham Dutta",
+    "founder": "Milan Mandal",
+    "coFounder": "suman Raptan",
     "establishmentDate": "01/01/2027",
     "email": "support@esyustechnology.com",
     "supportEmail": "support@esyustechnology.com",
-    "phone": "+91 98765 43210",
+    "phone": "xxxxxxxxxxxx",
     "address": "Burdwan, WEST BENGAL 70045",
     "stats": [
       {
@@ -36,7 +36,7 @@
       }
     ],
     "createdAt": "2026-11-02T07:50:45.568Z",
-    "updatedAt": "2026-11-02T17:26:38.852Z",
+    "updatedAt": "2026-11-03T05:20:54.761Z",
     "__v": 0,
     "footerAbout": "Esyus Technology builds robust, high-performance desktop suites, enterprise web platforms, and tailored Android applications designed to operate with absolute reliability and speed.",
     "navBadge": "Software",
@@ -47,9 +47,9 @@
     "_id": "6ae840e5dab853fc6fea6587",
     "hero": {
       "title": "Engineered for speed, built for reliability",
-      "ringText": "Customized application · Website ·",
+      "ringText": "High Performance Software Suite · Fast & Dependable ·",
       "floodTitle": "Built for Indian business counters.",
-      "floodLead": "Local SQLite databases, instant 0.2s keystrokes, and plug-and-play thermal printer drivers.",
+      "floodLead": "Local SQLite databases, instant 0.2s keystrokes, and plug-and-play thermal printer drivers. Total operational autonomy, no matter what happens to the internet.",
       "videoUrl": "/demo-video.mp4?v=2",
       "collageA1": "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&q=80&w=800",
       "collageA2": "https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=800",
@@ -89,34 +89,34 @@
           "desc": "Robust Windows software built for offline resilience, high-speed point of sale, and instant invoice printing.",
           "badge1": "Enterprise Grade",
           "badge2": "Production Ready",
-          "_id": "6ae8bf3ce2f8607dbb403138"
+          "_id": "6ae8dfb3b972798f365463aa"
         },
         {
           "num": "02",
           "tag": "Domain 02",
           "title": "Website & Web Applications",
-          "desc": "Modern corporate websites.",
+          "desc": "Modern corporate websites, cloud web apps, customer portals, and internal management platforms.",
           "badge1": "Enterprise Grade",
           "badge2": "Production Ready",
-          "_id": "6ae8bf3ce2f8607dbb403139"
+          "_id": "6ae8dfb3b972798f365463ab"
         },
         {
           "num": "03",
           "tag": "Domain 03",
           "title": "Android Mobile Development",
-          "desc": "Native Android apps.",
+          "desc": "Native Android applications optimized for mobility, offline SQLite caching, and handheld hardware support.",
           "badge1": "Enterprise Grade",
           "badge2": "Production Ready",
-          "_id": "6ae8bf3ce2f8607dbb40313a"
+          "_id": "6ae8dfb3b972798f365463ac"
         },
         {
           "num": "04",
           "tag": "Domain 04",
           "title": "Custom Software Solutions",
-          "desc": "Bespoke DB.",
+          "desc": "Bespoke database architectures, automated workflows, and tailored enterprise software engineered to your exact requirements.",
           "badge1": "Enterprise Grade",
           "badge2": "Production Ready",
-          "_id": "6ae8bf3ce2f8607dbb40313b"
+          "_id": "6ae8dfb3b972798f365463ad"
         }
       ]
     },
@@ -135,22 +135,22 @@
         {
           "time": "Step 01 · 0.0s",
           "title": "Instant Item Entry",
-          "text": "Keyboard-first rapid shortcut lookup"
+          "text": "Keyboard-first rapid shortcut lookup and instant item code entry without touching a mouse."
         },
         {
           "time": "Step 02 · 0.1s",
           "title": "Automatic GST Calculation",
-          "text": "Compliant with current Indian tax slabs"
+          "text": "Compliant with current Indian tax slabs (CGST, SGST, IGST) and automated HSN code reporting."
         },
         {
           "time": "Step 03 · 0.2s",
           "title": "Direct Hardware Printing",
-          "text": "One-click output to thermal roll or laser invoices"
+          "text": "One-click output to 2\" or 3\" thermal receipt roll or laser A4/A5 tax invoices."
         },
         {
           "time": "Step 04 · Day End",
           "title": "Encrypted Local Backup",
-          "text": "Automated daily sales tally and SQLite backup"
+          "text": "Automated daily sales tally and encrypted SQLite database snapshot stored safely on your drive."
         }
       ]
     },
@@ -189,35 +189,35 @@
       "footerCtaTitle": "Bring calm, offline precision to your billing counter."
     },
     "createdAt": "2026-11-02T07:51:01.116Z",
-    "updatedAt": "2026-11-02T17:11:10.780Z",
+    "updatedAt": "2026-11-03T05:20:59.712Z",
     "__v": 0,
     "team": {
       "headline": "The minds behind the software architecture",
-      "lead": "Led by founder Sayantan Ghosh and co-founder Soham Dutta",
+      "lead": "Led by founder Sayantan Ghosh and co-founder Soham Dutta, our engineers build robust offline and cloud-connected software solutions with high performance.",
       "members": [
         {
-          "name": "Sayantan Ghosh",
+          "name": "Milan Mandal",
           "role": "Founder & Chief Executive Officer",
           "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
-          "bio": "Visionary founder"
+          "bio": "Visionary founder driving Esyus Technology. Passionate about creating software solutions that solve real-world operational challenges for Indian businesses with reliability and speed."
         },
         {
-          "name": "Soham Dutta",
+          "name": "Suman",
           "role": "Co-Founder & Chief Technology Officer",
           "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
-          "bio": "Technical standard lead"
+          "bio": "Co-founder leading core technology and engineering standards. Specializes in low-latency offline systems, desktop application runtime, and database performance optimization."
         },
         {
           "name": "Ayan Banerjee",
           "role": "Lead Full-Stack Web Engineer",
           "avatar": "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80",
-          "bio": "React & web portal lead"
+          "bio": "Expert web developer focused on responsive React platforms, enterprise web portals, and REST API integration with modern web security practices."
         },
         {
           "name": "Priya Mukherjee",
           "role": "Senior Android & Mobile Developer",
           "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
-          "bio": "Native Android and offline sync"
+          "bio": "Specializes in native Android architecture, offline caching, Bluetooth hardware interfacing (thermal printers/scanners), and high-retention UX."
         }
       ]
     }

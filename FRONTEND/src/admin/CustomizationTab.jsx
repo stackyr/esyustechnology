@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Save,
   Building,
@@ -46,6 +46,10 @@ export default function CustomizationTab({
 }) {
   const [activeSubTab, setActiveSubTab] = useState('brand');
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isLocalSaving, setIsLocalSaving] = useState(false);
+  const brandInitializedRef = useRef(false);
+  const pageInitializedRef = useRef(false);
+  const isDirtyRef = useRef(false);
 
   // Brand state
   const [brandData, setBrandData] = useState(() => ({
@@ -117,9 +121,10 @@ export default function CustomizationTab({
   const [credsSuccess, setCredsSuccess] = useState('');
   const [credsError, setCredsError] = useState('');
 
-  // Synchronize when fresh database props arrive from MongoDB Atlas
+  // Synchronize ONLY ONCE on initial load or when explicit reset is called
   useEffect(() => {
-    if (brand && typeof brand === 'object') {
+    if (!brandInitializedRef.current && brand && typeof brand === 'object' && Object.keys(brand).length > 0) {
+      brandInitializedRef.current = true;
       setBrandData({
         name: brand.name || COMPANY_INFO.name,
         shortName: brand.shortName || COMPANY_INFO.shortName,
@@ -142,7 +147,8 @@ export default function CustomizationTab({
   }, [brand]);
 
   useEffect(() => {
-    if (landingPage && typeof landingPage === 'object') {
+    if (!pageInitializedRef.current && landingPage && typeof landingPage === 'object' && Object.keys(landingPage).length > 0) {
+      pageInitializedRef.current = true;
       setPageData({
         hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage.hero || {}) },
         about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage.about || {}) },
@@ -351,6 +357,7 @@ export default function CustomizationTab({
 
   // Reset form inputs back to latest saved database version
   const handleResetFormToLatest = () => {
+    isDirtyRef.current = false;
     if (brand && typeof brand === 'object') {
       setBrandData({
         name: brand.name || COMPANY_INFO.name,
@@ -412,15 +419,17 @@ export default function CustomizationTab({
   // Master Save handler
   const handleSaveAll = async (e) => {
     if (e) e.preventDefault();
+    setIsLocalSaving(true);
     try {
-      const promises = [];
-      if (onSaveBrand) promises.push(onSaveBrand(brandData));
-      if (onSaveLandingPage) promises.push(onSaveLandingPage(pageData));
-      await Promise.all(promises);
+      if (onSaveBrand) await onSaveBrand(brandData);
+      if (onSaveLandingPage) await onSaveLandingPage(pageData);
+      isDirtyRef.current = false;
       setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3500);
+      setTimeout(() => setSaveSuccess(false), 3000);
     } catch (err) {
       console.error('Failed to save master customization:', err);
+    } finally {
+      setIsLocalSaving(false);
     }
   };
 
@@ -486,14 +495,14 @@ export default function CustomizationTab({
           <button
             type="button"
             onClick={handleSaveAll}
-            disabled={isSaving}
+            disabled={isSaving || isLocalSaving}
             className={`px-5 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer ${
               saveSuccess
                 ? 'bg-emerald-600 text-white'
                 : 'bg-[var(--c1)] hover:bg-[#d64b22] text-white'
             }`}
           >
-            {isSaving ? (
+            {(isSaving || isLocalSaving) ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
                 <span>Saving to MongoDB...</span>
@@ -1898,14 +1907,14 @@ export default function CustomizationTab({
             <button
               type="button"
               onClick={handleSaveAll}
-              disabled={isSaving}
+              disabled={isSaving || isLocalSaving}
               className={`px-6 py-2 rounded-xl font-bold text-xs shadow-md transition-all flex items-center gap-2 cursor-pointer ${
                 saveSuccess
                   ? 'bg-emerald-600 text-white'
                   : 'bg-[var(--c1)] hover:bg-[#d64b22] text-white'
               }`}
             >
-              {isSaving ? (
+              {(isSaving || isLocalSaving) ? (
                 <>
                   <RefreshCw className="w-3.5 h-3.5 animate-spin" />
                   <span>Saving...</span>

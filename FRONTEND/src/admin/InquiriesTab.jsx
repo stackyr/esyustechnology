@@ -96,7 +96,7 @@ export default function InquiriesTab({
             </span>
             <Mail className="w-4 h-4 text-[var(--muted)]" />
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-[var(--ink)] mt-2">{isLoading ? <span className="inline-block w-10 h-7 rounded-lg bg-stone-200/80 animate-pulse align-middle" /> : totalCount}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-[var(--ink)] mt-2">{totalCount}</p>
           <span className="text-[10px] text-[var(--muted)]">Received from all website forms</span>
         </div>
 
@@ -108,7 +108,7 @@ export default function InquiriesTab({
             </span>
             <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-amber-900 mt-2">{isLoading ? <span className="inline-block w-10 h-7 rounded-lg bg-amber-200/60 animate-pulse align-middle" /> : newCount}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-amber-900 mt-2">{newCount}</p>
           <span className="text-[10px] text-amber-800 font-medium">Awaiting merchant callback</span>
         </div>
 
@@ -120,7 +120,7 @@ export default function InquiriesTab({
             </span>
             <Clock className="w-4 h-4 text-blue-700" />
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-blue-900 mt-2">{isLoading ? <span className="inline-block w-10 h-7 rounded-lg bg-blue-200/60 animate-pulse align-middle" /> : inProgressCount}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-blue-900 mt-2">{inProgressCount}</p>
           <span className="text-[10px] text-blue-800 font-medium">Under discussion / quotation</span>
         </div>
 
@@ -132,7 +132,7 @@ export default function InquiriesTab({
             </span>
             <CheckCircle2 className="w-4 h-4 text-emerald-700" />
           </div>
-          <p className="text-2xl sm:text-3xl font-bold text-emerald-900 mt-2">{isLoading ? <span className="inline-block w-10 h-7 rounded-lg bg-emerald-200/60 animate-pulse align-middle" /> : resolvedCount}</p>
+          <p className="text-2xl sm:text-3xl font-bold text-emerald-900 mt-2">{resolvedCount}</p>
           <span className="text-[10px] text-emerald-800 font-medium">Completed deals & installations</span>
         </div>
       </div>
@@ -142,34 +142,26 @@ export default function InquiriesTab({
         
         {/* Status Filter Tabs */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          {isLoading ? (
-            <div className="flex items-center gap-2">
-              <div className="w-16 h-7 rounded-xl bg-stone-200/80 animate-pulse" />
-              <div className="w-16 h-7 rounded-xl bg-stone-200/80 animate-pulse" />
-              <div className="w-20 h-7 rounded-xl bg-stone-200/80 animate-pulse" />
-              <div className="w-20 h-7 rounded-xl bg-stone-200/80 animate-pulse" />
-            </div>
-          ) : (
-            [
-              { id: 'all', label: `All (${totalCount})` },
-              { id: 'new', label: `New (${newCount})` },
-              { id: 'in_progress', label: `In Progress (${inProgressCount})` },
-              { id: 'resolved', label: `Resolved (${resolvedCount})` }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setFilterStatus(tab.id)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                  filterStatus === tab.id
-                    ? 'bg-[var(--ink)] text-white shadow-xs'
-                    : 'bg-[var(--soft)] text-[var(--ink)] hover:bg-[var(--line)]'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))
-          )}
+          {[
+            { id: 'all', label: `All (${totalCount})` },
+            { id: 'new', label: `New (${newCount})` },
+            { id: 'in_progress', label: `In Progress (${inProgressCount})` },
+            { id: 'resolved', label: `Resolved (${resolvedCount})` }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setFilterStatus(tab.id)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                filterStatus === tab.id
+                  ? 'bg-[var(--ink)] text-white shadow-xs'
+                  : 'bg-[var(--soft)] text-[var(--ink)] hover:bg-[var(--line)]'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
+
 
         {/* Search & Actions */}
         <div className="flex items-center gap-2 flex-wrap w-full md:w-auto">
@@ -201,39 +193,9 @@ export default function InquiriesTab({
       {/* Inquiries Cards List */}
       <div className="space-y-4">
         {isLoading ? (
-          <div className="space-y-4">
-            {[1, 2, 3, 4].map((n) => (
-              <div key={n} className="p-5 sm:p-6 rounded-2xl bg-white border border-[var(--line)] shadow-xs space-y-4 animate-pulse">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-stone-200" />
-                    <div className="space-y-1.5">
-                      <div className="w-36 h-4 rounded bg-stone-200" />
-                      <div className="w-24 h-3 rounded bg-stone-100" />
-                    </div>
-                  </div>
-                  <div className="w-24 h-6 rounded-full bg-stone-200" />
-                </div>
-                <div className="space-y-2 pt-2 border-t border-[var(--line)]">
-                  <div className="w-3/4 h-3.5 rounded bg-stone-200" />
-                  <div className="w-1/2 h-3 rounded bg-stone-100" />
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : filteredInquiries.length === 0 ? (
-          <div className="text-center py-16 px-4 rounded-3xl bg-white border border-[var(--line)] space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-[var(--soft)] text-[var(--muted)] flex items-center justify-center mx-auto">
-              <Mail className="w-7 h-7" />
-            </div>
-            <div>
-              <h3 className="text-base font-bold text-[var(--ink)]">No inquiries found</h3>
-              <p className="text-xs text-[var(--muted)] max-w-sm mx-auto mt-1">
-                {searchQuery || filterStatus !== 'all'
-                  ? 'No inquiries match your current search or status filter.'
-                  : 'No customer inquiries received yet. Any submissions from website forms will appear here live in real-time.'}
-              </p>
-            </div>
+          <div className="py-20 flex flex-col items-center justify-center gap-3">
+            <div className="w-8 h-8 rounded-full border-2 border-stone-300 border-t-[var(--c1)] animate-spin" />
+            <span className="text-xs font-mono text-[var(--muted)]">Loading inquiries from database...</span>
           </div>
         ) : (
           filteredInquiries.map((inq) => {

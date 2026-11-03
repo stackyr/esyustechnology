@@ -206,15 +206,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     return () => unsub();
   }, []);
 
-  // Continuous automatic periodic background refresh (every 5 seconds)
-  // Ensures new inquiries, customer updates, services, and apps are ALWAYS fresh across all sections
-  useEffect(() => {
-    const interval = setInterval(() => {
-      loadAllData(false, /* isSilent */ true);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [loadAllData]);
+  // Real-time updates delivered via WebSockets
 
   // ----------------------------------------------------
   // Inquiries Handlers
@@ -252,35 +244,37 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   // ----------------------------------------------------
   const handleSaveBrand = async (brandData) => {
     setIsSaving(true);
-    setRefreshingSection('customization');
     try {
       const res = await api.updateBrand(brandData);
-      setBrand(res.data);
-      liveSync.emitAdminChange('brand_updated', res.data);
-      if (onDataChanged) onDataChanged();
+      if (res && res.data) {
+        setBrand(res.data);
+        liveSync.emitAdminChange('brand_updated', res.data);
+      }
       showToast('Brand details and contact settings saved!');
+      return res?.data;
     } catch (err) {
       showToast('Failed to save brand settings: ' + err.message, 'error');
+      throw err;
     } finally {
       setIsSaving(false);
-      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
   const handleSaveLandingPage = async (pageData) => {
     setIsSaving(true);
-    setRefreshingSection('customization');
     try {
       const res = await api.updateLandingPage(pageData);
-      setLandingPage(res.data);
-      liveSync.emitAdminChange('landing_page_updated', res.data);
-      if (onDataChanged) onDataChanged();
+      if (res && res.data) {
+        setLandingPage(res.data);
+        liveSync.emitAdminChange('landing_page_updated', res.data);
+      }
       showToast('Landing page sections and image links updated successfully!');
+      return res?.data;
     } catch (err) {
       showToast('Failed to save landing page: ' + err.message, 'error');
+      throw err;
     } finally {
       setIsSaving(false);
-      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 
@@ -547,17 +541,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
 
         {/* Tab Content Body */}
         <main className="flex-1 p-3 sm:p-5 lg:p-6 max-w-7xl w-full min-w-0 mx-auto space-y-5">
-          {refreshingSection === activeTab && (
-                <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-mono flex items-center justify-between animate-pulse">
-                  <span className="flex items-center gap-2">
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin text-[var(--c1)]" />
-                    <span>Reloading section live from MongoDB Atlas cloud database...</span>
-                  </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--c1)] px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300">
-                    Live Reload
-                  </span>
-                </div>
-              )}
+
 
               <AdminErrorBoundary key={activeTab}>
                 {activeTab === 'inquiries' && (
@@ -578,9 +562,9 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onSaveBrand={handleSaveBrand}
                     onSaveLandingPage={handleSaveLandingPage}
                     onResetDefaults={handleResetDefaults}
-                    isSaving={isSaving || refreshingSection === 'customization'}
+                    isSaving={isSaving}
                     onRefresh={() => loadAllData()}
-                    isRefreshing={isRefreshing || refreshingSection === 'customization'}
+                    isRefreshing={isRefreshing}
                     isInitialLoading={isInitialLoading}
                   />
                 )}
