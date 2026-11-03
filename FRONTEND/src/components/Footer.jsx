@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import api from '../utils/api';
+import liveSync from '../utils/liveSync';
 
 export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, onSelectProduct, onOpenAdmin, onOpenDownloadsPage, dataVersion = 0 , onOpenServicesPage}) {
   const [subscribed, setSubscribed] = useState(false);
@@ -28,6 +29,10 @@ export default function Footer({ onOpenPrivacy, onOpenTerms, onSelectService, on
         subject: 'Product Release Subscription',
         message: 'Visitor subscribed to offline billing updates, GST tariffs, and release notifications.',
         type: 'subscription'
+      }).then(res => {
+        if (res && res.data) {
+          liveSync.emitAdminChange('inquiry_received', res.data);
+        }
       }).catch(err => console.warn('Newsletter sync error:', err));
     }
   };

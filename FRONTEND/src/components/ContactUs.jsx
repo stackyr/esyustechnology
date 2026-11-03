@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useData } from '../context/DataContext';
 import api from '../utils/api';
+import liveSync from '../utils/liveSync';
 
 export default function ContactUs({ preselectedSubject, dataVersion = 0 }) {
   const { brand, services: liveServices, products: liveProducts, landingPage } = useData();
@@ -50,7 +51,7 @@ export default function ContactUs({ preselectedSubject, dataVersion = 0 }) {
 
     setIsSubmitting(true);
     try {
-      await api.submitInquiry({
+      const res = await api.submitInquiry({
         name: formData.name,
         mobile: formData.mobile,
         email: formData.email,
@@ -59,6 +60,9 @@ export default function ContactUs({ preselectedSubject, dataVersion = 0 }) {
         message: formData.message,
         type: 'enquiry',
       });
+      if (res && res.data) {
+        liveSync.emitAdminChange('inquiry_received', res.data);
+      }
       setIsSubmitted(true);
     } catch (err) {
       console.warn('API submission error, showing confirmation anyway:', err);

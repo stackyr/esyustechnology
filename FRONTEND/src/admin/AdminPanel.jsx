@@ -214,8 +214,54 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
 
   // Real-time updates delivered via WebSockets
 
+  // 5-Second Real-Time Auto-Sync Engine for Inquiries & Leads (Guarantees live arrival on serverless)
+  useEffect(() => {
+    let isSubscribed = true;
+
+    const pollInquiries = async () => {
+      try {
+        const inqRes = await api.getInquiries();
+        if (!isSubscribed || !inqRes?.data || !Array.isArray(inqRes.data)) return;
+
+        setInquiries((prevInquiries) => {
+          const fresh = inqRes.data;
+          const prevIds = new Set(prevInquiries.map((i) => i.id || i._id));
+          const newArrivals = fresh.filter((i) => !prevIds.has(i.id || i._id));
+
+          if (newArrivals.length > 0 && prevInquiries.length > 0) {
+            const latest = newArrivals[0];
+            showToast(`🔔 New lead received from ${latest.name || 'Visitor'} (${latest.subject || 'Inquiry'})!`);
+            try {
+              const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+              audio.volume = 0.5;
+              audio.play().catch(() => {});
+            } catch (e) {}
+          }
+
+          const isDifferent =
+            fresh.length !== prevInquiries.length ||
+            fresh.some(
+              (item, idx) =>
+                (item.id || item._id) !== (prevInquiries[idx]?.id || prevInquiries[idx]?._id) ||
+                item.status !== prevInquiries[idx]?.status
+            );
+
+          return isDifferent ? fresh : prevInquiries;
+        });
+      } catch (err) {
+        // Silent catch for background poll
+      }
+    };
+
+    const intervalId = setInterval(pollInquiries, 5000);
+    return () => {
+      isSubscribed = false;
+      clearInterval(intervalId);
+    };
+  }, []);
+
   // ----------------------------------------------------
-  // Inquiries Handlers
+  // Inquiries Handlers (With animated action overlay & error retry)
   // ----------------------------------------------------
   const handleUpdateInquiryStatus = async (id, status) => {
     setRefreshingSection('inquiries');
@@ -231,17 +277,35 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     }
   };
 
-  const handleDeleteInquiry = async (id) => {
+  const handleDeleteInquiry = async (id, customerName = 'Inquiry') => {
+    setActionModal({
+      isOpen: true,
+      status: 'loading',
+      title: 'Deleting Inquiry...',
+      subtitle: `Removing inquiry from "${customerName}" & synchronizing MongoDB Atlas...`,
+      onRetry: null
+    });
     setRefreshingSection('inquiries');
     try {
       await api.deleteInquiry(id);
+      // ONLY remove from local state AFTER successful backend confirmation!
+      setInquiries((prev) => prev.filter((i) => i.id !== id && i._id !== id && String(i._id) !== String(id)));
       const inqRes = await api.getInquiries();
       if (inqRes && inqRes.data) setInquiries(inqRes.data);
-      showToast('Inquiry deleted successfully');
+      showToast('Inquiry deleted successfully!');
+      setTimeout(() => setActionModal((prev) => ({ ...prev, isOpen: false })), 350);
     } catch (err) {
-      showToast('Failed to delete inquiry', 'error');
+      // Keep item in state! Never delete locally if backend fails!
+      setActionModal({
+        isOpen: true,
+        status: 'error',
+        title: 'Failed to Delete Inquiry',
+        subtitle: err.message || 'Could not delete inquiry from database. Item has been preserved.',
+        onRetry: () => handleDeleteInquiry(id, customerName)
+      });
+      showToast('Failed to delete inquiry: ' + err.message, 'error');
     } finally {
-      setTimeout(() => setRefreshingSection(null), 300);
+      setTimeout(() => setRefreshingSection(null), 350);
     }
   };
 

@@ -458,19 +458,23 @@ export async function createInquiryData(inq) {
 }
 
 export async function updateInquiryData(id, updates) {
+  if (!id && id !== 0) return null;
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    const updated = await Inquiry.findOneAndUpdate({ id }, { ...updates, updatedAt: new Date() }, { new: true }).lean();
-    if (updated) {
-      const db = getDB();
-      db.inquiries = (db.inquiries || []).map(i => i.id === id ? { ...i, ...updates } : i);
-      saveDB(db);
-      return updated;
+    const query = buildIdQuery(id);
+    if (query) {
+      const updated = await Inquiry.findOneAndUpdate(query, { ...updates, updatedAt: new Date() }, { new: true }).lean();
+      if (updated) {
+        const db = getDB();
+        db.inquiries = (db.inquiries || []).map(i => (i.id === id || i._id === id || String(i._id) === String(id)) ? { ...i, ...updates } : i);
+        saveDB(db);
+        return updated;
+      }
     }
   }
 
   const db = getDB();
-  const idx = (db.inquiries || []).findIndex(i => i.id === id);
+  const idx = (db.inquiries || []).findIndex(i => i.id === id || i._id === id || String(i._id) === String(id));
   if (idx === -1) return null;
   db.inquiries[idx] = { ...db.inquiries[idx], ...updates, updatedAt: new Date().toISOString() };
   saveDB(db);
@@ -478,12 +482,16 @@ export async function updateInquiryData(id, updates) {
 }
 
 export async function deleteInquiryData(id) {
+  if (!id && id !== 0) return false;
   await ensureMongoConnection();
   if (isMongoConnected()) {
-    await Inquiry.deleteOne({ id });
+    const query = buildIdQuery(id);
+    if (query) {
+      await Inquiry.deleteOne(query);
+    }
   }
   const db = getDB();
-  db.inquiries = (db.inquiries || []).filter(i => i.id !== id);
+  db.inquiries = (db.inquiries || []).filter(i => i.id !== id && i._id !== id && String(i._id) !== String(id));
   saveDB(db);
   return true;
 }

@@ -374,8 +374,8 @@ export default function InquiriesTab({
                     <button
                       type="button"
                       onClick={() => {
-                        if (window.confirm(`Delete inquiry from ${inq.name}?`)) {
-                          onDeleteInquiry(inq.id);
+                        if (window.confirm(`Delete inquiry from ${inq.name || 'visitor'}?`)) {
+                          onDeleteInquiry(inq.id || inq._id, inq.name);
                         }
                       }}
                       className="p-1.5 rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
