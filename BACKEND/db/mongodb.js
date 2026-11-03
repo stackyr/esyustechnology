@@ -10,6 +10,7 @@ import { Inquiry } from '../models/Inquiry.js';
 import { LandingPage } from '../models/LandingPage.js';
 import { Admin } from '../models/Admin.js';
 import { getDB, saveDB, resetDB as resetLocalDB } from '../db.js';
+export { getDB };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,16 +38,18 @@ if (!cached) {
 }
 
 const MONGO_OPTIONS = {
-  maxPoolSize: 15,
-  minPoolSize: 2,
-  serverSelectionTimeoutMS: 10000,
-  socketTimeoutMS: 45000,
+  maxPoolSize: 10,
+  minPoolSize: 0,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 30000,
   heartbeatFrequencyMS: 10000,
-  connectTimeoutMS: 10000,
-  autoIndex: true
+  connectTimeoutMS: 5000,
+  autoIndex: false
 };
 
 let listenersRegistered = false;
+let hasSeededOnce = false;
+let isSeeding = false;
 
 function setupConnectionListeners() {
   if (listenersRegistered) return;
@@ -82,7 +85,9 @@ export async function connectMongoDB() {
     const uri = getMongoUri();
     cached.promise = mongoose.connect(uri, MONGO_OPTIONS).then(async (conn) => {
       console.log(`[MERN: MongoDB Atlas] Successfully connected to database: ${conn.connection.name}`);
-      await seedMongoDefaults();
+      seedMongoDefaults().catch((err) => {
+        console.warn('[MERN: MongoDB] Background seed notice:', err.message);
+      });
       return conn;
     }).catch((err) => {
       cached.promise = null;
@@ -100,12 +105,25 @@ export async function connectMongoDB() {
   }
 }
 
-export async function ensureMongoConnection() {
+export async function ensureMongoConnection(timeoutMs = 4000) {
   if (mongoose.connection.readyState === 1) {
     return true;
   }
   try {
-    await connectMongoDB();
+    const connPromise = connectMongoDB();
+    if (timeoutMs > 0) {
+      let timer;
+      const timeoutPromise = new Promise((resolve) => {
+        timer = setTimeout(() => resolve(false), timeoutMs);
+      });
+      const ok = await Promise.race([connPromise, timeoutPromise]);
+      clearTimeout(timer);
+      if (!ok) {
+        console.warn('[MERN: MongoDB Atlas] Connection handshake exceeded ' + timeoutMs + 'ms. Using local fallback.');
+      }
+    } else {
+      await connPromise;
+    }
     return mongoose.connection.readyState === 1;
   } catch (e) {
     return false;
@@ -118,7 +136,8 @@ export function isMongoConnected() {
 
 // Seed default data into MongoDB from local defaults
 async function seedMongoDefaults() {
-  if (!isMongoConnected()) return;
+  if (!isMongoConnected() || isSeeding || hasSeededOnce) return;
+  isSeeding = true;
 
   try {
     const local = getDB();
@@ -207,6 +226,9 @@ async function seedMongoDefaults() {
     }
   } catch (e) {
     console.error('[MERN: MongoDB] Seed error:', e.message);
+  } finally {
+    hasSeededOnce = true;
+    isSeeding = false;
   }
 }
 

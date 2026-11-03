@@ -57,8 +57,10 @@ async function request(path, options = {}) {
   } catch (e) {}
 
   const controller = new AbortController();
-  const timeoutMs = options.timeout || ((options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE') ? 25000 : 10000);
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  const timeoutMs = options.timeout || ((options.method === 'POST' || options.method === 'PUT' || options.method === 'DELETE') ? 25000 : 18000);
+  const timeoutId = setTimeout(() => {
+    controller.abort(new Error(`Request to ${path} timed out after ${timeoutMs}ms`));
+  }, timeoutMs);
 
   try {
     const res = await fetch(url, {
@@ -85,6 +87,9 @@ async function request(path, options = {}) {
 }
 
 export const api = {
+  // Unified Catalog Bootstrap (Ultra-Fast 1-Shot Load)
+  getBootstrap: () => request('/bootstrap'),
+
   // Admin Authentication
   loginAdmin: (credentials) => request('/admin/login', {
     method: 'POST',

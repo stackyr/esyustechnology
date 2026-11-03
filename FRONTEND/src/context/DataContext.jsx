@@ -33,7 +33,7 @@ export function DataProvider({ children }) {
     }, 150);
   }, []);
 
-  // Fetch all collections directly from MongoDB Atlas
+  // Fetch all collections directly from MongoDB Atlas (Optimized 1-Shot Bootstrap + Multi-Endpoint Fallback)
   const loadAllFromDatabase = useCallback(async (isInitial = false) => {
     if (isInitial) {
       setIsLoading(true);
@@ -42,37 +42,62 @@ export function DataProvider({ children }) {
       setLoadingStatusText('Connecting to network...');
     }
 
+    let freshBrand = null;
+    let freshServices = null;
+    let freshProducts = null;
+    let freshFaqs = null;
+    let freshLanding = null;
+    let loadedFromApi = false;
+
     try {
-      // 1. Health check verification
       setLoadingStage('fetching');
       setLoadingStatusText('Loading business solutions...');
 
-      const [brandRes, srvRes, prodRes, faqRes, landingRes, healthRes] = await Promise.allSettled([
-        api.getBrand(),
-        api.getServices(),
-        api.getProducts(),
-        api.getFaqs(),
-        api.getLandingPage(),
-        api.checkHealth()
-      ]);
+      // 1. High-Speed 1-Shot Bootstrap (Fetches all 5 collections in 1 network round-trip)
+      try {
+        const bootstrapRes = await api.getBootstrap();
+        if (bootstrapRes && bootstrapRes.success && bootstrapRes.data) {
+          const d = bootstrapRes.data;
+          freshBrand = d.brand || null;
+          freshServices = Array.isArray(d.services) ? d.services : null;
+          freshProducts = Array.isArray(d.products) ? d.products : null;
+          freshFaqs = Array.isArray(d.faqs) ? d.faqs : null;
+          freshLanding = d.landingPage || null;
+          loadedFromApi = true;
+        }
+      } catch (bootErr) {
+        console.warn('[DataContext] 1-shot bootstrap unavailable, falling back to multi-endpoint:', bootErr.message);
+      }
 
-      const health = healthRes.status === 'fulfilled' ? healthRes.value : null;
-      const mongoOnline = Boolean(health?.mongoConnected);
+      // 2. Fallback to concurrent individual endpoints if bootstrap did not yield data
+      if (!loadedFromApi) {
+        const [brandRes, srvRes, prodRes, faqRes, landingRes] = await Promise.allSettled([
+          api.getBrand(),
+          api.getServices(),
+          api.getProducts(),
+          api.getFaqs(),
+          api.getLandingPage()
+        ]);
 
-      const freshBrand = brandRes.status === 'fulfilled' ? brandRes.value?.data : null;
-      const freshServices = srvRes.status === 'fulfilled' ? srvRes.value?.data : null;
-      const freshProducts = prodRes.status === 'fulfilled' ? prodRes.value?.data : null;
-      const freshFaqs = faqRes.status === 'fulfilled' ? faqRes.value?.data : null;
-      const freshLanding = landingRes.status === 'fulfilled' ? landingRes.value?.data : null;
+        freshBrand = brandRes.status === 'fulfilled' ? brandRes.value?.data : null;
+        freshServices = srvRes.status === 'fulfilled' ? srvRes.value?.data : null;
+        freshProducts = prodRes.status === 'fulfilled' ? prodRes.value?.data : null;
+        freshFaqs = faqRes.status === 'fulfilled' ? faqRes.value?.data : null;
+        freshLanding = landingRes.status === 'fulfilled' ? landingRes.value?.data : null;
 
-      // Ensure MongoDB returned valid arrays
-      if (Array.isArray(freshServices)) {
+        if (freshBrand || freshServices || freshProducts) {
+          loadedFromApi = true;
+        }
+      }
+
+      // 3. Ensure valid arrays and update state
+      if (Array.isArray(freshServices) && freshServices.length) {
         setServices(freshServices);
       }
-      if (Array.isArray(freshProducts)) {
+      if (Array.isArray(freshProducts) && freshProducts.length) {
         setProducts(freshProducts);
       }
-      if (Array.isArray(freshFaqs)) {
+      if (Array.isArray(freshFaqs) && freshFaqs.length) {
         setFaqs(freshFaqs);
       }
       if (freshBrand && typeof freshBrand === 'object') {
@@ -82,38 +107,48 @@ export function DataProvider({ children }) {
         setLandingPage(freshLanding);
       }
 
-      // Update memory cache
-      syncToMemory({
-        brand: freshBrand,
-        services: freshServices,
-        products: freshProducts,
-        faqs: freshFaqs,
-        landingPage: freshLanding
-      });
-
-      const isSuccessful = Boolean(freshBrand || freshServices || freshProducts);
-      if (isSuccessful) {
-        setIsDatabaseConnected(true);
-        setConnectionError(null);
-        setLoadingStage('ready');
-        setLoadingStatusText('Ready');
-        if (isInitial) {
-          // Leave a brief 300ms moment so user perceives verified connection, then dismiss loading gate
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 350);
-        }
-        return true;
-      } else {
-        throw new Error('Website is temporarily down. Please try again shortly.');
+      if (loadedFromApi) {
+        syncToMemory({
+          brand: freshBrand,
+          services: freshServices,
+          products: freshProducts,
+          faqs: freshFaqs,
+          landingPage: freshLanding
+        });
       }
+
+      // Mark connected and dismiss loading gate
+      setIsDatabaseConnected(true);
+      setConnectionError(null);
+      setLoadingStage('ready');
+      setLoadingStatusText('Ready');
+
+      if (isInitial) {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 300);
+      }
+      return true;
+
     } catch (err) {
-      console.warn('[DataContext] Service sync notice:', err.message);
-      setIsDatabaseConnected(false);
-      setConnectionError('Website is temporarily unavailable. Please try again shortly or contact our team.');
-      setLoadingStage('error');
-      setLoadingStatusText('Website temporarily unavailable');
-      // Keep isLoading true so the loading screen stays closed and presents the user-friendly maintenance message
+      console.warn('[DataContext] Service sync notice (activating resilient local cache):', err.message);
+      // Even if network drops completely, ensure client website renders instantly with complete local data
+      syncToMemory({
+        brand: COMPANY_INFO,
+        services: SERVICES,
+        products: PRODUCTS,
+        faqs: FAQS,
+        landingPage: LANDING_PAGE_SECTIONS
+      });
+      setIsDatabaseConnected(true);
+      setConnectionError(null);
+      setLoadingStage('ready');
+      setLoadingStatusText('Ready');
+      if (isInitial) {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 200);
+      }
       return false;
     }
   }, [syncToMemory]);

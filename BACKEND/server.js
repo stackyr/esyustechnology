@@ -30,7 +30,8 @@ import {
   createFaqData,
   updateFaqData,
   deleteFaqData,
-  resetAllData
+  resetAllData,
+  getDB
 } from './db/mongodb.js';
 
 dotenv.config();
@@ -52,7 +53,7 @@ app.use('/api', async (req, res, next) => {
   res.set('Pragma', 'no-cache');
   res.set('Expires', '0');
   try {
-    await ensureMongoConnection();
+    await ensureMongoConnection(3500);
   } catch (e) {
     // continue
   }
@@ -266,6 +267,47 @@ app.get('/api/health', async (req, res) => {
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
   });
+});
+
+// ==========================================
+// UNIFIED BOOTSTRAP ENDPOINT (Ultra-Fast 1-Shot Catalog Load)
+// ==========================================
+app.get('/api/bootstrap', async (req, res) => {
+  try {
+    const [brand, landingPage, services, products, faqs] = await Promise.all([
+      getBrandData(),
+      getLandingPageData(),
+      getServicesData(),
+      getProductsData(),
+      getFaqsData()
+    ]);
+    res.json({
+      success: true,
+      data: {
+        brand,
+        landingPage,
+        services,
+        products,
+        faqs,
+        mongoConnected: isMongoConnected()
+      }
+    });
+  } catch (err) {
+    console.warn('[Bootstrap Fallback] Serving local DB defaults due to:', err.message);
+    const local = getDB();
+    res.json({
+      success: true,
+      data: {
+        brand: local.brand,
+        landingPage: local.landingPage,
+        services: local.services || [],
+        products: local.products || [],
+        faqs: local.faqs || [],
+        mongoConnected: false,
+        fallback: true
+      }
+    });
+  }
 });
 
 // Overview Metrics
