@@ -143,6 +143,15 @@ async function seedMongoDefaults() {
     if (serviceCount === 0 && local.services?.length) {
       await Service.insertMany(local.services);
       console.log(`[MERN: MongoDB] Seeded ${local.services.length} services.`);
+    } else if (serviceCount > 0 && local.services?.length) {
+      for (const s of local.services) {
+        if (s.id && s.category) {
+          await Service.updateOne(
+            { id: s.id, $or: [{ category: { $exists: false } }, { category: null }, { category: '' }] },
+            { $set: { category: s.category } }
+          );
+        }
+      }
     }
 
     // 3. Products

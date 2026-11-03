@@ -570,15 +570,20 @@ app.get('/api/services', async (req, res) => {
 
 app.post('/api/services', requireAdminAuth, async (req, res) => {
   try {
-    const { title, shortDesc, fullDesc, badge, iconName, features, techStack, isComingSoon, actionUrl, image } = req.body;
+    const { title, category, shortDesc, fullDesc, badge, iconName, features, techStack, isComingSoon, actionUrl, image } = req.body;
     if (!title) {
       return res.status(400).json({ success: false, error: 'Service title is required' });
     }
+
+    const validCategories = ['web', 'desktop', 'android', 'custom'];
+    const cleanCategory = (category || 'web').toLowerCase().trim();
+    const finalCategory = validCategories.includes(cleanCategory) ? cleanCategory : 'web';
 
     const id = req.body.id || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `srv-${Date.now()}`;
     const newService = {
       id,
       title: title.trim(),
+      category: finalCategory,
       shortDesc: (shortDesc || '').trim(),
       fullDesc: (fullDesc || '').trim(),
       badge: badge || 'Core Service',

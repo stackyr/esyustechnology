@@ -245,7 +245,8 @@
         "Tailwind CSS",
         "Next.js",
         "Vite"
-      ]
+      ],
+      "category": "web"
     },
     {
       "id": "web-app-dev",
@@ -269,7 +270,8 @@
         "Express",
         "PostgreSQL",
         "REST APIs"
-      ]
+      ],
+      "category": "web"
     },
     {
       "id": "mobile-app-dev",
@@ -292,7 +294,8 @@
         "Flutter",
         "Android SDK",
         "Firebase"
-      ]
+      ],
+      "category": "android"
     },
     {
       "id": "android-dev",
@@ -316,7 +319,8 @@
         "Android Jetpack",
         "SQLite",
         "Room DB"
-      ]
+      ],
+      "category": "android"
     },
     {
       "id": "desktop-dev",
@@ -326,7 +330,8 @@
       "badge": "Official Flagship Software",
       "iconName": "Monitor",
       "isComingSoon": false,
-      "actionUrl": ""
+      "actionUrl": "",
+      "category": "desktop"
     },
     {
       "id": "custom-dev",
@@ -349,7 +354,8 @@
         "Microservices",
         "RESTful APIs",
         "SQL"
-      ]
+      ],
+      "category": "custom"
     }
   ],
   "products": [

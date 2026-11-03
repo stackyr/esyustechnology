@@ -40,34 +40,36 @@ export default function ServicesPage({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
+  // Authoritative helper to determine service category
+  const getServiceCategory = (srv) => {
+    if (srv && srv.category) {
+      const cat = String(srv.category).toLowerCase().trim();
+      if (['desktop', 'web', 'android', 'custom'].includes(cat)) return cat;
+    }
+    const text = `${srv?.id || ''} ${srv?.title || ''} ${srv?.badge || ''}`.toLowerCase();
+    if (text.includes('desktop')) return 'desktop';
+    if (text.includes('android') || text.includes('mobile')) return 'android';
+    if (text.includes('custom') || text.includes('bespoke') || text.includes('tailor')) return 'custom';
+    return 'web';
+  };
+
   // Filter services based on live search and category tabs
   const filteredServices = useMemo(() => {
     return currentServices.filter((srv) => {
-      // Category filter matching
-      const titleLower = (srv.title || '').toLowerCase();
-      const badgeLower = (srv.badge || '').toLowerCase();
-      const idLower = (srv.id || '').toLowerCase();
-      const descLower = (srv.shortDesc || srv.fullDesc || '').toLowerCase();
-      const techLower = (srv.techStack || []).join(' ').toLowerCase();
-
-      if (categoryFilter === 'desktop') {
-        const isDesktop = titleLower.includes('desktop') || badgeLower.includes('desktop') || idLower.includes('desktop') || techLower.includes('electron') || techLower.includes('sqlite');
-        if (!isDesktop) return false;
-      } else if (categoryFilter === 'web') {
-        const isWeb = titleLower.includes('web') || titleLower.includes('website') || badgeLower.includes('web') || techLower.includes('react') || techLower.includes('node');
-        if (!isWeb) return false;
-      } else if (categoryFilter === 'android') {
-        const isAndroid = titleLower.includes('android') || titleLower.includes('mobile') || badgeLower.includes('android') || techLower.includes('kotlin');
-        if (!isAndroid) return false;
-      } else if (categoryFilter === 'custom') {
-        const isCustom = titleLower.includes('custom') || badgeLower.includes('custom') || idLower.includes('custom') || descLower.includes('bespoke') || descLower.includes('tailor');
-        if (!isCustom) return false;
+      // 1. Authoritative Category matching
+      const srvCat = getServiceCategory(srv);
+      if (categoryFilter !== 'all' && srvCat !== categoryFilter) {
+        return false;
       }
 
-      // Search query matching
+      // 2. Search query matching
       if (!searchQuery.trim()) return true;
 
       const q = searchQuery.toLowerCase().trim();
+      const titleLower = (srv.title || '').toLowerCase();
+      const badgeLower = (srv.badge || '').toLowerCase();
+      const descLower = (srv.shortDesc || srv.fullDesc || '').toLowerCase();
+      const techLower = (srv.techStack || []).join(' ').toLowerCase();
       const features = (srv.features || []).join(' ').toLowerCase();
 
       return (
@@ -82,33 +84,10 @@ export default function ServicesPage({
 
   // Counts for filter pills
   const totalCount = useMemo(() => currentServices.length, [currentServices, dataVersion]);
-  const desktopCount = useMemo(() => {
-    return currentServices.filter(s => {
-      const text = `${s.title} ${s.badge} ${s.id} ${(s.techStack || []).join(' ')}`.toLowerCase();
-      return text.includes('desktop') || text.includes('electron') || text.includes('sqlite');
-    }).length;
-  }, [currentServices, dataVersion]);
-
-  const webCount = useMemo(() => {
-    return currentServices.filter(s => {
-      const text = `${s.title} ${s.badge} ${(s.techStack || []).join(' ')}`.toLowerCase();
-      return text.includes('web') || text.includes('website') || text.includes('react') || text.includes('cloud');
-    }).length;
-  }, [currentServices, dataVersion]);
-
-  const androidCount = useMemo(() => {
-    return currentServices.filter(s => {
-      const text = `${s.title} ${s.badge} ${(s.techStack || []).join(' ')}`.toLowerCase();
-      return text.includes('android') || text.includes('mobile') || text.includes('kotlin');
-    }).length;
-  }, [currentServices, dataVersion]);
-
-  const customCount = useMemo(() => {
-    return currentServices.filter(s => {
-      const text = `${s.title} ${s.badge} ${s.id} ${s.shortDesc || ''}`.toLowerCase();
-      return text.includes('custom') || text.includes('bespoke') || text.includes('tailor');
-    }).length;
-  }, [currentServices, dataVersion]);
+  const desktopCount = useMemo(() => currentServices.filter(s => getServiceCategory(s) === 'desktop').length, [currentServices, dataVersion]);
+  const webCount = useMemo(() => currentServices.filter(s => getServiceCategory(s) === 'web').length, [currentServices, dataVersion]);
+  const androidCount = useMemo(() => currentServices.filter(s => getServiceCategory(s) === 'android').length, [currentServices, dataVersion]);
+  const customCount = useMemo(() => currentServices.filter(s => getServiceCategory(s) === 'custom').length, [currentServices, dataVersion]);
 
   return (
     <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] pt-28 sm:pt-36 pb-20">
@@ -319,7 +298,24 @@ export default function ServicesPage({
                   <div className="p-6 sm:p-7 space-y-4">
                     {/* Header meta badge & service number */}
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {/* Distinct Category Tag */}
+                        {(() => {
+                          const cat = getServiceCategory(srv);
+                          const metaMap = {
+                            web: { label: 'Web', color: 'bg-blue-50 text-blue-700 border-blue-200' },
+                            desktop: { label: 'Desktop', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+                            android: { label: 'Android', color: 'bg-amber-50 text-amber-700 border-amber-200' },
+                            custom: { label: 'Custom', color: 'bg-purple-50 text-purple-700 border-purple-200' },
+                          };
+                          const meta = metaMap[cat] || metaMap.web;
+                          return (
+                            <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${meta.color}`}>
+                              {meta.label}
+                            </span>
+                          );
+                        })()}
+
                         <span className="text-[11px] font-mono uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full bg-[var(--soft)] text-[var(--c1)] border border-[var(--line)]">
                           {srv.badge || 'Engineering'}
                         </span>

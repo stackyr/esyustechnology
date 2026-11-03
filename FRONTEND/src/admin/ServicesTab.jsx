@@ -1,5 +1,28 @@
 import React, { useState } from 'react';
-import { Plus, Edit2, Trash2, RefreshCw, CheckCircle2, Wrench, X, Layers, Code, Clock, Link as LinkIcon } from 'lucide-react';
+import { Plus, Edit2, Trash2, RefreshCw, CheckCircle2, Wrench, X, Layers, Code, Clock, Globe, Monitor, Smartphone, Cpu, Link as LinkIcon } from 'lucide-react';
+
+export function getServiceCategoryMeta(catId, title = '') {
+  let cat = (catId || '').toLowerCase().trim();
+  if (!cat) {
+    const t = title.toLowerCase();
+    if (t.includes('desktop')) cat = 'desktop';
+    else if (t.includes('android') || t.includes('mobile')) cat = 'android';
+    else if (t.includes('custom') || t.includes('tailor') || t.includes('bespoke')) cat = 'custom';
+    else cat = 'web';
+  }
+
+  switch (cat) {
+    case 'desktop':
+      return { id: 'desktop', label: 'Desktop App', badgeColor: 'bg-emerald-50 text-emerald-800 border-emerald-200/80', icon: Monitor };
+    case 'android':
+      return { id: 'android', label: 'Android / Mobile', badgeColor: 'bg-amber-50 text-amber-800 border-amber-200/80', icon: Smartphone };
+    case 'custom':
+      return { id: 'custom', label: 'Custom Software', badgeColor: 'bg-purple-50 text-purple-800 border-purple-200/80', icon: Cpu };
+    case 'web':
+    default:
+      return { id: 'web', label: 'Web & Cloud', badgeColor: 'bg-blue-50 text-blue-800 border-blue-200/80', icon: Globe };
+  }
+}
 
 export default function ServicesTab({ services = [], onAddService, onUpdateService, onDeleteService, onRefresh, isRefreshing, isInitialLoading = false }) {
   const isLoading = isInitialLoading || (isRefreshing && services.length === 0);
@@ -8,6 +31,7 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
 
   const [form, setForm] = useState({
     title: '',
+    category: 'web',
     badge: 'Core Service',
     iconName: 'Globe',
     shortDesc: '',
@@ -22,22 +46,25 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
     setEditingService(null);
     setForm({
       title: '',
+      category: 'web',
       badge: 'Core Service',
       iconName: 'Globe',
       shortDesc: '',
       fullDesc: '',
       isComingSoon: false,
       actionUrl: '',
-      featuresText: 'High-speed offline runtime\nOptimized database synchronization\nEnd-to-end technical support',
-      techStackText: 'React, Node.js, SQLite'
+      featuresText: 'Mobile-First Responsive Layouts\nSEO & Core Web Vitals Optimization\nModern UI/UX with Sleek Typography',
+      techStackText: 'React, Tailwind CSS, Next.js, Vite'
     });
     setModalOpen(true);
   };
 
   const openEditModal = (srv) => {
     setEditingService(srv);
+    const catMeta = getServiceCategoryMeta(srv.category, srv.title || '');
     setForm({
       title: srv.title || '',
+      category: srv.category || catMeta.id,
       badge: srv.badge || 'Core Service',
       iconName: srv.iconName || 'Globe',
       shortDesc: srv.shortDesc || '',
@@ -54,6 +81,7 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
     e.preventDefault();
     const serviceData = {
       title: form.title,
+      category: form.category || 'web',
       badge: form.badge,
       iconName: form.iconName,
       shortDesc: form.shortDesc,
@@ -131,13 +159,25 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
             <div className="space-y-3">
               {/* Badge & Actions */}
               <div className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[var(--soft)] text-[var(--c1)] border border-[var(--line)]">
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {/* Category Pill Tag */}
+                  {(() => {
+                    const catMeta = getServiceCategoryMeta(srv.category, srv.title || '');
+                    const IconComp = catMeta.icon;
+                    return (
+                      <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border flex items-center gap-1 ${catMeta.badgeColor}`}>
+                        <IconComp className="w-3 h-3 shrink-0" />
+                        <span>{catMeta.label}</span>
+                      </span>
+                    );
+                  })()}
+
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[var(--soft)] text-[var(--c1)] border border-[var(--line)]">
                     {srv.badge}
                   </span>
 
                   {srv.isComingSoon && (
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-800 border border-amber-500/20 flex items-center gap-1">
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-800 border border-amber-500/20 flex items-center gap-1">
                       <Clock className="w-3 h-3 text-amber-600" /> Coming Soon
                     </span>
                   )}
@@ -230,7 +270,44 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
             {/* Form */}
             <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto flex-1 min-h-0 modal-scroll">
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Category Selection */}
+                <div>
+                  <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
+                    Category *
+                  </label>
+                  <select
+                    value={form.category}
+                    onChange={(e) => {
+                      const newCat = e.target.value;
+                      let newTech = form.techStackText;
+                      let newBadge = form.badge;
+                      if (!editingService) {
+                        if (newCat === 'desktop') {
+                          newTech = 'Electron, SQLite, C#, Windows API';
+                          newBadge = 'Flagship Software';
+                        } else if (newCat === 'android') {
+                          newTech = 'Kotlin, Java, Android Jetpack, Room DB';
+                          newBadge = 'Specialized Mobile';
+                        } else if (newCat === 'custom') {
+                          newTech = 'Node.js, PostgreSQL, Python, Docker';
+                          newBadge = 'Tailor-Made';
+                        } else {
+                          newTech = 'React, Tailwind CSS, Next.js, Vite';
+                          newBadge = 'Core Service';
+                        }
+                      }
+                      setForm({ ...form, category: newCat, techStackText: newTech, badge: newBadge });
+                    }}
+                    className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-white text-xs font-semibold text-[var(--ink)] focus:outline-none focus:border-[var(--c1)] cursor-pointer"
+                  >
+                    <option value="web">🌐 Web &amp; Website</option>
+                    <option value="desktop">🖥️ Desktop Software</option>
+                    <option value="android">📱 Android &amp; Mobile</option>
+                    <option value="custom">⚙️ Custom Software</option>
+                  </select>
+                </div>
+
                 {/* Title */}
                 <div>
                   <label className="block text-xs font-semibold text-[var(--ink)] mb-1">
@@ -253,7 +330,7 @@ export default function ServicesTab({ services = [], onAddService, onUpdateServi
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g. Core Service, Flagship, Cross-Platform"
+                    placeholder="e.g. Core Service, Flagship"
                     value={form.badge}
                     onChange={(e) => setForm({ ...form, badge: e.target.value })}
                     className="w-full px-3.5 py-2 rounded-xl border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"

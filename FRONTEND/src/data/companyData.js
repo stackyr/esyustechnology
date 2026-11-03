@@ -25,6 +25,7 @@ export const COMPANY_INFO = {
 export const SERVICES = [
   {
     id: "website-dev",
+    category: "web",
     title: "Website Development",
     shortDesc: "High-speed, modern, SEO-optimized business websites that establish brand credibility.",
     fullDesc: "We build modern, pixel-perfect, and ultra-responsive corporate websites. Utilizing contemporary web technologies, our websites ensure fast loading speeds, complete mobile responsiveness, accessible navigation, and search engine optimization from day one.",
@@ -41,6 +42,7 @@ export const SERVICES = [
   },
   {
     id: "web-app-dev",
+    category: "web",
     title: "Web Application Development",
     shortDesc: "Scalable, dynamic cloud web apps and enterprise portals tailored to business workflows.",
     fullDesc: "From custom customer management portals to sophisticated SaaS platforms, we architect scalable web applications with rich frontends and robust API integrations. Designed for data integrity, security, and exceptional user experience.",
@@ -57,6 +59,7 @@ export const SERVICES = [
   },
   {
     id: "mobile-app-dev",
+    category: "android",
     title: "Mobile Application Development",
     shortDesc: "Cross-platform and multi-device smartphone apps built for high retention and speed.",
     fullDesc: "We design and develop modern mobile applications that deliver native-grade fluidity across iOS and Android ecosystems. Our solutions prioritize fast load times, intuitive touch gestures, and seamless offline data caching.",
@@ -73,6 +76,7 @@ export const SERVICES = [
   },
   {
     id: "android-dev",
+    category: "android",
     title: "Android Application Development",
     shortDesc: "Specialized native Android applications optimized for hardware, sensors, and offline utility.",
     fullDesc: "With deep expertise in the Android ecosystem, we build high-performance applications designed specifically for Android smartphones, tablets, and handheld devices. Engineered with Room SQLite databases for robust offline data preservation.",
@@ -89,6 +93,7 @@ export const SERVICES = [
   },
   {
     id: "desktop-dev",
+    category: "desktop",
     title: "Desktop Application Development",
     shortDesc: "High-performance Windows billing, inventory, and management software that works 100% offline.",
     fullDesc: "Our flagship expertise lies in building rock-solid desktop software. Designed for businesses that cannot afford to halt operations due to poor internet connectivity, our desktop solutions feature instant startup, lightning-fast keystroke navigation, and zero cloud dependency.",
@@ -105,6 +110,7 @@ export const SERVICES = [
   },
   {
     id: "custom-dev",
+    category: "custom",
     title: "Custom Software Development",
     shortDesc: "Bespoke software engineered around your specific operational workflows and legacy tools.",
     fullDesc: "Every business has unique requirements. We craft tailor-made software solutions from the ground up—automating tedious operational tasks, unifying scattered spreadsheets, and connecting disparate hardware devices into a cohesive system.",
