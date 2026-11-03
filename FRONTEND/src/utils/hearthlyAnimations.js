@@ -275,10 +275,14 @@ export function initHearthlyAnimations() {
       const s = stage.getBoundingClientRect();
       const f = from.getBoundingClientRect();
       const r = parseFloat(getComputedStyle(from).borderTopLeftRadius) || 16;
-      if (f.width === 0 || f.height === 0) {
+      if (f.width === 0 || f.height === 0 || s.width === 0 || s.height === 0) {
         return `inset(35% 35% 35% 35% round ${r}px)`;
       }
-      return `inset(${(f.top - s.top).toFixed(1)}px ${(s.right - f.right).toFixed(1)}px ${(s.bottom - f.bottom).toFixed(1)}px ${(f.left - s.left).toFixed(1)}px round ${r}px)`;
+      const top = Math.max(0, f.top - s.top);
+      const right = Math.max(0, s.right - f.right);
+      const bottom = Math.max(0, s.bottom - f.bottom);
+      const left = Math.max(0, f.left - s.left);
+      return `inset(${top.toFixed(1)}px ${right.toFixed(1)}px ${bottom.toFixed(1)}px ${left.toFixed(1)}px round ${r}px)`;
     };
 
     const drift = (el) => {
@@ -289,7 +293,11 @@ export function initHearthlyAnimations() {
 
     const videoEl = flood.querySelector('video');
     const resumeVideo = () => {
-      if (videoEl && videoEl.paused) {
+      if (!videoEl) return;
+      if (videoEl.ended || (videoEl.duration && videoEl.currentTime >= videoEl.duration - 0.2)) {
+        try { videoEl.currentTime = 0; } catch (e) {}
+      }
+      if (videoEl.paused) {
         const p = videoEl.play();
         if (p && typeof p.catch === 'function') p.catch(() => {});
       }
@@ -304,7 +312,10 @@ export function initHearthlyAnimations() {
         scrub: 0.6,
         invalidateOnRefresh: true,
         onEnter: resumeVideo,
-        onEnterBack: resumeVideo
+        onEnterBack: resumeVideo,
+        onUpdate: (self) => {
+          if (self.isActive) resumeVideo();
+        }
       },
     });
 
@@ -336,7 +347,7 @@ export function initHearthlyAnimations() {
 
     if (text) {
       [...text.children].forEach((el, i) => {
-        tl.fromTo(el, { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, ease: 'power2.out' }, 0.5 + i * 0.06);
+        tl.fromTo(el, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, ease: 'power2.out' }, 0.25 + i * 0.06);
       });
     }
 

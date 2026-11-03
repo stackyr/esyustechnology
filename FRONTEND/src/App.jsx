@@ -149,7 +149,7 @@ export default function App() {
 
   // Initialize Hearthly GSAP & Lenis smooth scroll engine (only on landing page)
   useEffect(() => {
-    if (isAdmin || isDownloadsPage || isServicesPage || isLoading || !isDatabaseConnected) return;
+    if (isAdmin || isDownloadsPage || isServicesPage || isLoading) return;
     let cleanup = null;
     const timeout = setTimeout(() => {
       cleanup = initHearthlyAnimations();
@@ -159,7 +159,7 @@ export default function App() {
       clearTimeout(timeout);
       if (typeof cleanup === 'function') cleanup();
     };
-  }, [isAdmin, isDownloadsPage, isServicesPage, isLoading, isDatabaseConnected]);
+  }, [isAdmin, isDownloadsPage, isServicesPage, isLoading]);
 
   // Refresh ScrollTrigger whenever live data changes so triggers adjust to content heights
   useEffect(() => {

@@ -7,7 +7,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
   const hero = landingPage?.hero || {};
   const videoRef = useRef(null);
 
-  // Rock-solid, continuous video playback controller with concurrency guard
+  // Rock-solid, continuous video playback controller with concurrency guard & auto-loop recovery
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -21,6 +21,10 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
 
     const safePlay = () => {
       if (!video) return;
+      // If video has finished or is near end, rewind seamlessly to start
+      if (video.ended || (video.duration && video.currentTime >= video.duration - 0.2)) {
+        try { video.currentTime = 0; } catch (e) {}
+      }
       if (!video.paused) return;
       if (playPromise) return; // Promise already in-flight, avoid AbortError
 
@@ -37,7 +41,43 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
       }
     };
 
+    // Immediate attempt
     safePlay();
+
+    // Event listeners to guarantee uninterrupted continuous loop
+    const onEnded = () => {
+      try { video.currentTime = 0; } catch (e) {}
+      safePlay();
+    };
+
+    const onPause = () => {
+      if (document.visibilityState === 'visible') {
+        setTimeout(safePlay, 50);
+      }
+    };
+
+    const onTimeUpdate = () => {
+      // Loop protection before Chromium video engine pause
+      if (video.duration && video.currentTime >= video.duration - 0.25) {
+        try { video.currentTime = 0; } catch (e) {}
+        safePlay();
+      }
+    };
+
+    const onStalled = () => {
+      try {
+        video.load();
+        safePlay();
+      } catch (e) {}
+    };
+
+    video.addEventListener('ended', onEnded);
+    video.addEventListener('pause', onPause);
+    video.addEventListener('timeupdate', onTimeUpdate);
+    video.addEventListener('stalled', onStalled);
+    video.addEventListener('waiting', safePlay);
+    video.addEventListener('loadeddata', safePlay);
+    video.addEventListener('canplay', safePlay);
 
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') {
@@ -49,7 +89,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
       if (entry.isIntersecting) {
         safePlay();
       }
-    }, { threshold: [0, 0.15] });
+    }, { threshold: [0, 0.1, 0.25] });
 
     observer.observe(video);
 
@@ -57,15 +97,24 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
       safePlay();
     };
 
-    window.addEventListener('click', onUserInteraction, { passive: true, once: true });
-    window.addEventListener('touchstart', onUserInteraction, { passive: true, once: true });
+    window.addEventListener('click', onUserInteraction, { passive: true });
+    window.addEventListener('touchstart', onUserInteraction, { passive: true });
+    window.addEventListener('scroll', onUserInteraction, { passive: true });
     document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
       observer.disconnect();
+      video.removeEventListener('ended', onEnded);
+      video.removeEventListener('pause', onPause);
+      video.removeEventListener('timeupdate', onTimeUpdate);
+      video.removeEventListener('stalled', onStalled);
+      video.removeEventListener('waiting', safePlay);
+      video.removeEventListener('loadeddata', safePlay);
+      video.removeEventListener('canplay', safePlay);
       document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('click', onUserInteraction);
       window.removeEventListener('touchstart', onUserInteraction);
+      window.removeEventListener('scroll', onUserInteraction);
     };
   }, [hero.videoUrl]);
 
@@ -289,9 +338,17 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
         {/* Full-Screen Pin Flood Scene */}
         <div className="flood" data-flood>
           <div className="art g-night" role="img" aria-label={`${COMPANY_INFO.name} software video demonstration`}>
+            {/* Fallback preview image ensuring the surface is never blank/black */}
+            <img
+              src="/video-thumb.png"
+              alt={`${COMPANY_INFO.name} software preview`}
+              className="full object-cover pointer-events-none"
+              style={{ filter: 'brightness(0.75)' }}
+            />
             <video
               ref={videoRef}
               src={hero.videoUrl || "/demo-video.mp4?v=2"}
+              poster="/video-thumb.png"
               autoPlay
               muted
               loop
@@ -300,7 +357,7 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
               disablePictureInPicture
               disableRemotePlayback
               className="full object-cover"
-              style={{ filter: 'brightness(0.65)' }}
+              style={{ filter: 'brightness(0.75)' }}
             />
           </div>
           <div className="wrap flood__text">

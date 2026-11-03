@@ -1209,12 +1209,14 @@ em.s {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 2;
+  pointer-events: none;
   background: linear-gradient(to top, color-mix(in oklab, #05080b 82%, transparent), transparent 62%);
 }
 
 .flood__text {
   position: absolute;
-  z-index: 1;
+  z-index: 10;
   left: 0;
   right: 0;
   bottom: clamp(28px, 5vw, 72px);
@@ -1222,6 +1224,7 @@ em.s {
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   gap: 20px clamp(24px, 5vw, 80px);
   align-items: end;
+  pointer-events: none;
 }
 
 .flood__title {
@@ -1229,13 +1232,15 @@ em.s {
   line-height: 1.02;
   letter-spacing: -.035em;
   font-weight: 700;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.75);
 }
 
 .flood__lead {
   font-size: clamp(15px, 1.2vw, 18px);
   line-height: 1.5;
-  color: color-mix(in oklab, var(--bg) 82%, transparent);
+  color: color-mix(in oklab, var(--bg) 92%, transparent);
   max-width: 30em;
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.75);
 }
 
 .motion .flood {
@@ -1436,6 +1441,8 @@ em.s {
     left: 0 !important;
     right: 0 !important;
     gap: 6px !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
   }
 
   .motion .flood__text {
@@ -1443,6 +1450,8 @@ em.s {
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
+    z-index: 10 !important;
+    pointer-events: none !important;
   }
 
   .flood__title {
