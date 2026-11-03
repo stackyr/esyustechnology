@@ -15,7 +15,8 @@ import {
   Link as LinkIcon,
   Image as ImageIcon,
   Tag,
-  ExternalLink
+  ExternalLink,
+  RefreshCw
 } from 'lucide-react';
 
 export default function ProductsTab({ products = [], onAddProduct, onUpdateProduct, onDeleteProduct, onRefresh, isRefreshing, isInitialLoading = false }) {
