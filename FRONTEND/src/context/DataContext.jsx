@@ -133,36 +133,41 @@ export function DataProvider({ children }) {
         setIsSocketConnected(Boolean(payload?.connected));
       } else if (event === 'services_updated') {
         if (Array.isArray(payload)) {
-          setServices(payload);
-          syncToMemory({ services: payload });
+          const fresh = [...payload];
+          setServices(fresh);
+          syncToMemory({ services: fresh });
         }
       } else if (event === 'products_updated') {
         if (Array.isArray(payload)) {
-          setProducts(payload);
-          syncToMemory({ products: payload });
+          const fresh = [...payload];
+          setProducts(fresh);
+          syncToMemory({ products: fresh });
         }
       } else if (event === 'brand_updated') {
         if (payload && typeof payload === 'object') {
-          setBrand(payload);
-          syncToMemory({ brand: payload });
+          const fresh = { ...payload };
+          setBrand(fresh);
+          syncToMemory({ brand: fresh });
         }
       } else if (event === 'landing_page_updated') {
         if (payload && typeof payload === 'object') {
-          setLandingPage(payload);
-          syncToMemory({ landingPage: payload });
+          const fresh = { ...payload };
+          setLandingPage(fresh);
+          syncToMemory({ landingPage: fresh });
         }
       } else if (event === 'faqs_updated') {
         if (Array.isArray(payload)) {
-          setFaqs(payload);
-          syncToMemory({ faqs: payload });
+          const fresh = [...payload];
+          setFaqs(fresh);
+          syncToMemory({ faqs: fresh });
         }
       } else if (event === 'sync_all') {
         if (payload) {
-          if (Array.isArray(payload.services)) setServices(payload.services);
-          if (Array.isArray(payload.products)) setProducts(payload.products);
-          if (Array.isArray(payload.faqs)) setFaqs(payload.faqs);
-          if (payload.brand) setBrand(payload.brand);
-          if (payload.landingPage) setLandingPage(payload.landingPage);
+          if (Array.isArray(payload.services)) setServices([...payload.services]);
+          if (Array.isArray(payload.products)) setProducts([...payload.products]);
+          if (Array.isArray(payload.faqs)) setFaqs([...payload.faqs]);
+          if (payload.brand) setBrand({ ...payload.brand });
+          if (payload.landingPage) setLandingPage({ ...payload.landingPage });
           syncToMemory(payload);
         }
       }
@@ -182,6 +187,8 @@ export function DataProvider({ children }) {
     };
   }, [loadAllFromDatabase, syncToMemory]);
 
+  const reloadAll = useCallback(() => loadAllFromDatabase(false), [loadAllFromDatabase]);
+
   const value = {
     brand,
     landingPage,
@@ -195,7 +202,7 @@ export function DataProvider({ children }) {
     loadingStatusText,
     connectionError,
     dataVersion,
-    reloadAll: () => loadAllFromDatabase(false)
+    reloadAll
   };
 
   return (

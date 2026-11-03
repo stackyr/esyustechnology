@@ -122,7 +122,13 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.toLowerCase();
-      setIsAdmin(hash.includes('admin'));
+      const nextIsAdmin = hash.includes('admin');
+      setIsAdmin((prevAdmin) => {
+        if (prevAdmin && !nextIsAdmin) {
+          reloadAll();
+        }
+        return nextIsAdmin;
+      });
       setIsDownloadsPage(hash.includes('downloads'));
       setIsServicesPage(hash.includes('services-catalog') || hash === '#services-all' || hash === '#all-services');
     };

@@ -46,6 +46,7 @@ class LiveSyncEngine {
     this.isConnected = false;
     this.lastSyncTime = 0;
     this.initBroadcastChannel();
+    this.initStorageListener();
   }
 
   // 1. Cross-Tab Browser Communication (0ms instant sync across local tabs)
@@ -64,20 +65,35 @@ class LiveSyncEngine {
     }
   }
 
+  // Universal Cross-Tab Storage Event (100% reliable across all browsers & windows)
+  initStorageListener() {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', (e) => {
+        if (e.key === 'esyus_live_sync_msg' && e.newValue) {
+          try {
+            const data = JSON.parse(e.newValue);
+            if (data && data.event) {
+              this.handleIncomingUpdate(data.event, data.payload, 'storage-event');
+            }
+          } catch (err) {}
+        }
+      });
+    }
+  }
+
   // 2. Initialize Real-Time WebSocket Connection
   initSocket() {
     if (this.socket) return;
     const socketUrl = getSocketUrl();
-    console.log('[LiveSync] Connecting WebSocket to:', socketUrl);
 
     try {
       this.socket = io(socketUrl, {
         transports: ['websocket', 'polling'],
         reconnection: true,
-        reconnectionAttempts: Infinity,
-        reconnectionDelay: 1000,
+        reconnectionAttempts: 4,
+        reconnectionDelay: 1500,
         reconnectionDelayMax: 5000,
-        timeout: 10000
+        timeout: 8000
       });
 
       this.socket.on('connect', () => {
@@ -87,13 +103,11 @@ class LiveSyncEngine {
       });
 
       this.socket.on('disconnect', () => {
-        console.log('[LiveSync] WebSocket disconnected. Attempting reconnect...');
         this.isConnected = false;
         this.notifyStatus(false);
       });
 
-      this.socket.on('connect_error', (err) => {
-        console.warn('[LiveSync] WebSocket connection error:', err.message);
+      this.socket.on('connect_error', () => {
         this.isConnected = false;
         this.notifyStatus(false);
         this.initSseFallback(socketUrl);
@@ -187,7 +201,18 @@ class LiveSyncEngine {
     // 1. Immediately apply to local memory
     this.handleIncomingUpdate(event, payload, 'admin-local');
 
-    // 2. Broadcast to other open tabs in the same browser
+    // 2. Broadcast across tabs via localStorage (100% universal across all browser tabs & windows)
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) {
+        window.localStorage.setItem('esyus_live_sync_msg', JSON.stringify({
+          event,
+          payload,
+          timestamp: Date.now()
+        }));
+      }
+    } catch (e) {}
+
+    // 3. Broadcast to other open tabs in the same browser via BroadcastChannel
     if (this.broadcastChannel) {
       try {
         this.broadcastChannel.postMessage({
@@ -200,7 +225,7 @@ class LiveSyncEngine {
       }
     }
 
-    // 3. Relay through WebSocket to all other connected browsers and devices
+    // 4. Relay through WebSocket to all other connected browsers and devices
     if (this.socket && this.socket.connected) {
       this.socket.emit('admin_broadcast', {
         event,

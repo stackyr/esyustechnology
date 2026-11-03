@@ -160,7 +160,6 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       }
 
       setIsBackendConnected(true);
-      if (onDataChanged) onDataChanged();
     } catch (err) {
       console.warn('Backend sync warning:', err.message);
       setIsBackendConnected(false);
@@ -170,7 +169,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
         setIsInitialLoading(false);
       }
     }
-  }, [onDataChanged]);
+  }, []);
 
   // Initial load
   useEffect(() => {
@@ -249,6 +248,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       if (res && res.data) {
         setBrand(res.data);
         liveSync.emitAdminChange('brand_updated', res.data);
+        if (onDataChanged) onDataChanged();
       }
       showToast('Brand details and contact settings saved!');
       return res?.data;
@@ -267,6 +267,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
       if (res && res.data) {
         setLandingPage(res.data);
         liveSync.emitAdminChange('landing_page_updated', res.data);
+        if (onDataChanged) onDataChanged();
       }
       showToast('Landing page sections and image links updated successfully!');
       return res?.data;
@@ -282,12 +283,13 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     setRefreshingSection('customization');
     try {
       // Reload fresh data directly from MongoDB Atlas to discard unsaved edits and restore latest saved version
-      await loadAllData();
-      showToast('Form reset to latest saved version from database.');
+      await loadAllData(false, true);
+      if (onDataChanged) onDataChanged();
+      showToast('Restored latest saved version from MongoDB Atlas');
     } catch (err) {
-      showToast('Reset failed: ' + err.message, 'error');
+      showToast('Failed to reset: ' + err.message, 'error');
     } finally {
-      setTimeout(() => setRefreshingSection(null), 350);
+      setRefreshingSection(null);
     }
   };
 
