@@ -1573,17 +1573,17 @@ em.s {
 }
 
 .folders {
-  --tab-h: clamp(34px, 2.6vw, 42px);
-  --tab-peek: clamp(14px, 1.6vh, 20px);
-  --fr: clamp(16px, 2vw, 24px);
+  --tab-h: clamp(40px, 3.2vw, 48px);
+  --tab-peek: clamp(12px, 1.4vh, 18px);
+  --fr: clamp(18px, 2vw, 28px);
   --tr: 14px;
   display: grid;
-  gap: clamp(180px, 32vh, 320px);
+  gap: clamp(40px, 6vw, 80px);
 }
 
 .folder {
   position: sticky;
-  top: calc(clamp(4px, 0.6vh, 10px) + var(--i, 0) * var(--tab-peek));
+  top: calc(max(92px, (100svh - 480px) / 2) + var(--i, 0) * var(--tab-peek));
   z-index: calc(var(--i, 0) + 1);
   --plate: var(--c1);
   --on: var(--ink);
@@ -1669,11 +1669,11 @@ em.s {
   position: relative;
   overflow: visible;
   display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
-  gap: clamp(16px, 2.4vw, 36px);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(24px, 3.2vw, 56px);
   align-items: center;
-  min-height: auto;
-  padding: clamp(12px, 1.5vw, 20px) clamp(18px, 2.4vw, 32px);
+  min-height: clamp(380px, 48vh, 460px);
+  padding: clamp(24px, 3.2vw, 44px);
   border-radius: var(--fr);
   background: var(--plate);
   color: var(--on);
@@ -1696,9 +1696,9 @@ em.s {
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  gap: clamp(8px, 1.2vh, 14px);
+  gap: clamp(16px, 2.2vh, 26px);
   height: 100%;
-  min-height: auto;
+  min-height: 280px;
 }
 
 .folder__meta {
@@ -1713,21 +1713,21 @@ em.s {
 }
 
 .folder__h3 {
-  font-size: clamp(20px, 1.8vw, 28px);
-  line-height: 1.18;
+  font-size: clamp(24px, 2.2vw, 32px);
+  line-height: 1.16;
   letter-spacing: -.025em;
   font-weight: 700;
   color: var(--on);
 }
 
 .folder__lead {
-  font-size: clamp(13px, 1.05vw, 15px);
-  line-height: 1.48;
+  font-size: clamp(14px, 1.15vw, 16.5px);
+  line-height: 1.55;
   letter-spacing: -.01em;
   font-weight: 500;
   opacity: .92;
-  max-width: 34em;
-  margin-top: 6px;
+  max-width: 33em;
+  margin-top: 10px;
 }
 
 .folder__actions {
@@ -1736,7 +1736,7 @@ em.s {
   align-items: center;
   gap: 12px;
   margin-top: auto;
-  padding-top: 4px;
+  padding-top: 10px;
 }
 
 .folder__photo {
@@ -1744,9 +1744,9 @@ em.s {
   overflow: hidden;
   border-radius: calc(var(--fr) * .7);
   width: 100%;
-  aspect-ratio: 16/11;
-  min-height: 180px;
-  max-height: clamp(200px, 28vh, 280px);
+  aspect-ratio: 4/3;
+  min-height: 260px;
+  max-height: 380px;
   box-shadow: 0 16px 36px -12px rgba(0, 0, 0, .25);
 }
 
@@ -1849,13 +1849,13 @@ em.s {
 
 @media (max-width: 760px) {
   .folders {
-    --tab-h: clamp(26px, 3.8vh, 30px);
-    gap: clamp(48px, 8vh, 80px);
+    --tab-h: clamp(32px, 4.2vh, 38px);
+    gap: clamp(24px, 4vh, 40px);
   }
 
   .folder {
     position: sticky;
-    top: calc(clamp(8px, 1.2vh, 14px) + var(--i, 0) * var(--tab-peek, 18px));
+    top: calc(clamp(72px, 9vh, 84px) + var(--i, 0) * var(--tab-peek, 14px));
   }
 
   .folder__tab {
@@ -3752,7 +3752,7 @@ em.s {
 
   .folder {
     position: sticky !important;
-    top: calc(clamp(8px, 1.2vh, 14px) + var(--i, 0) * var(--tab-peek, 18px)) !important;
+    top: calc(clamp(72px, 9vh, 84px) + var(--i, 0) * var(--tab-peek, 14px)) !important;
   }
 
   .folder__tab {
