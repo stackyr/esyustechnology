@@ -331,7 +331,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen selection:bg-[var(--c1)] selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen selection:bg-[var(--c1)] selection:text-white relative">
       {/* Cinematic Minimal Loading Screen with Curtain Reveal Exit Transition */}
       {!isAdmin && (
         <LoadingScreen
@@ -349,12 +349,6 @@ export default function App() {
         />
       )}
 
-      {/* Main Website Wrapper with subtle slide-up entrance when loading completes */}
-      <div
-        className={`site-content-wrapper transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          !isAdmin && isLoading ? 'opacity-0 translate-y-6 pointer-events-none' : 'opacity-100 translate-y-0 pointer-events-auto'
-        }`}
-      >
         {/* SVG Sprite Definitions for Code Art & Symbols */}
       <SvgSprite />
       
@@ -497,8 +491,6 @@ export default function App() {
           setIsAdmin(true);
         }}
       />
-
-      </div>
 
       {/* Modals */}
       {selectedProduct && (

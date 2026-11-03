@@ -347,7 +347,7 @@ export function initHearthlyAnimations() {
 
     if (text) {
       [...text.children].forEach((el, i) => {
-        tl.fromTo(el, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, ease: 'power2.out' }, 0.25 + i * 0.06);
+        tl.fromTo(el, { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.22, ease: 'power2.out' }, 0.5 + i * 0.06);
       });
     }
 

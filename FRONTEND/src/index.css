@@ -167,9 +167,7 @@ textarea::-webkit-scrollbar-thumb:hover,
     text-wrap: balance;
   }
 
-  main > * {
-    overflow-x: clip;
-  }
+
 }
 
 
