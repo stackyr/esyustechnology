@@ -128,17 +128,23 @@ export function initHearthlyAnimations() {
   let lenis = null;
   let tickerCb = null;
   try {
+    const isTouchDevice = typeof window !== 'undefined' && (
+      'ontouchstart' in window ||
+      navigator.maxTouchPoints > 0 ||
+      navigator.msMaxTouchPoints > 0
+    );
+
     lenis = new Lenis({
-      duration: 1.15, // Responsive, buttery smooth duration
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential deceleration curve
+      duration: isTouchDevice ? 0.6 : 0.85, // Ultra-responsive, snappy buttery-smooth glide
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
-      wheelMultiplier: 1.1, // Responsive natural wheel response (no sluggish drag or getting stuck)
-      touchMultiplier: 1.8,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.0, // Natural 1:1 touch response without dragging or sticking
       infinite: false,
       autoResize: true,
-      syncTouch: false, // High refresh rate native touch momentum
+      syncTouch: false,
       allowNestedScroll: true,
       overscroll: true,
       prevent: (node) => {
@@ -153,7 +159,7 @@ export function initHearthlyAnimations() {
     lenis.on('scroll', ScrollTrigger.update);
     tickerCb = (time) => lenis.raf(time * 1000);
     gsap.ticker.add(tickerCb);
-    gsap.ticker.lagSmoothing(500, 33);
+    gsap.ticker.lagSmoothing(1000, 16);
     globalLenis = lenis;
     if (typeof window !== 'undefined') {
       window.__lenis = lenis;
@@ -298,10 +304,7 @@ export function initHearthlyAnimations() {
         scrub: 0.6,
         invalidateOnRefresh: true,
         onEnter: resumeVideo,
-        onEnterBack: resumeVideo,
-        onUpdate: (self) => {
-          if (self.isActive) resumeVideo();
-        }
+        onEnterBack: resumeVideo
       },
     });
 

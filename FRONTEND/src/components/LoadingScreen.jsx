@@ -15,41 +15,53 @@ export default function LoadingScreen({
   const [isExiting, setIsExiting] = useState(false);
   const [isMounted, setIsMounted] = useState(true);
 
-  // Progressive progress bar simulation matching real network lifecycle
+  // Smooth, guaranteed loading transition (Local & Vercel Production)
   useEffect(() => {
-    let timer;
-    if (isLoading || !isDatabaseConnected) {
-      if (loadingStage === 'connecting') {
-        setProgress((prev) => Math.max(prev, 40));
-      } else if (loadingStage === 'fetching') {
-        setProgress((prev) => Math.max(prev, 80));
-      } else {
-        setProgress((prev) => Math.min(prev + 5, 90));
-      }
-    } else {
-      // Data verified and loaded! Fast-forward to 100%
+    if (!isLoading) {
       setProgress(100);
 
-      // Brief moment to show 100%, then trigger smooth curtain slide exit
       const exitTimer = setTimeout(() => {
         setIsExiting(true);
 
-        // After curtain transition duration (750ms), unmount overlay completely
         const unmountTimer = setTimeout(() => {
           setIsMounted(false);
           if (onComplete) onComplete();
-          // Refresh ScrollTrigger now that page is visible
           if (typeof window !== 'undefined' && window.ScrollTrigger) {
             window.ScrollTrigger.refresh();
           }
-        }, 750);
+        }, 700);
 
         return () => clearTimeout(unmountTimer);
-      }, 350);
+      }, 300);
 
       return () => clearTimeout(exitTimer);
+    } else {
+      // Progressive progress simulation
+      const t1 = setTimeout(() => setProgress((p) => Math.max(p, 45)), 120);
+      const t2 = setTimeout(() => setProgress((p) => Math.max(p, 80)), 400);
+      const t3 = setTimeout(() => setProgress((p) => Math.max(p, 95)), 800);
+
+      // Fallback timer: ensures loading screen NEVER stays stuck on Vercel serverless cold-start
+      const safetyFallback = setTimeout(() => {
+        setProgress(100);
+        setIsExiting(true);
+        setTimeout(() => {
+          setIsMounted(false);
+          if (onComplete) onComplete();
+          if (typeof window !== 'undefined' && window.ScrollTrigger) {
+            window.ScrollTrigger.refresh();
+          }
+        }, 700);
+      }, 1800);
+
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+        clearTimeout(t3);
+        clearTimeout(safetyFallback);
+      };
     }
-  }, [isLoading, isDatabaseConnected, loadingStage, onComplete]);
+  }, [isLoading, onComplete]);
 
   // If already unmounted, do not render anything
   if (!isMounted) return null;

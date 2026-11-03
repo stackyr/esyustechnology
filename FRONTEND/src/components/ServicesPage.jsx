@@ -111,7 +111,7 @@ export default function ServicesPage({
   }, [currentServices, dataVersion]);
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] pt-24 pb-20">
+    <div className="min-h-screen bg-[var(--bg)] text-[var(--ink)] pt-28 sm:pt-36 pb-20">
       <div className="wrap">
         
         {/* Top Breadcrumb & Return to Landing Page */}
@@ -189,54 +189,70 @@ export default function ServicesPage({
               )}
             </div>
 
-            {/* Category Toggle Pills */}
-            <div className="toggle shrink-0 flex-wrap" role="group" aria-label="Filter services by category">
-              <button
-                type="button"
-                className="toggle__btn"
-                aria-pressed={categoryFilter === 'all'}
-                onClick={() => setCategoryFilter('all')}
-              >
-                All Services ({totalCount})
-              </button>
-              <button
-                type="button"
-                className="toggle__btn flex items-center gap-1.5"
-                aria-pressed={categoryFilter === 'desktop'}
-                onClick={() => setCategoryFilter('desktop')}
-              >
-                <Monitor className="w-3.5 h-3.5" />
-                <span>Desktop ({desktopCount})</span>
-              </button>
-              <button
-                type="button"
-                className="toggle__btn flex items-center gap-1.5"
-                aria-pressed={categoryFilter === 'web'}
-                onClick={() => setCategoryFilter('web')}
-              >
-                <Globe className="w-3.5 h-3.5" />
-                <span>Web ({webCount})</span>
-              </button>
-              <button
-                type="button"
-                className="toggle__btn flex items-center gap-1.5"
-                aria-pressed={categoryFilter === 'android'}
-                onClick={() => setCategoryFilter('android')}
-              >
-                <Smartphone className="w-3.5 h-3.5" />
-                <span>Android ({androidCount})</span>
-              </button>
-              <button
-                type="button"
-                className="toggle__btn flex items-center gap-1.5"
-                aria-pressed={categoryFilter === 'custom'}
-                onClick={() => setCategoryFilter('custom')}
-              >
-                <Cpu className="w-3.5 h-3.5" />
-                <span>Custom ({customCount})</span>
-              </button>
+            {/* Category Filter Pills (Responsive scroll on mobile, wrap on desktop) */}
+            <div className="w-full md:w-auto overflow-x-auto no-scrollbar py-1">
+              <div className="flex items-center gap-2 min-w-max md:flex-wrap md:min-w-0" role="group" aria-label="Filter services by category">
+                <button
+                  type="button"
+                  onClick={() => setCategoryFilter('all')}
+                  className={`px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                    categoryFilter === 'all'
+                      ? 'bg-[var(--ink)] text-[var(--bg)] shadow-xs font-bold'
+                      : 'bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] hover:border-[var(--ink)]/40 hover:bg-white'
+                  }`}
+                >
+                  All Services ({totalCount})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCategoryFilter('desktop')}
+                  className={`px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                    categoryFilter === 'desktop'
+                      ? 'bg-[var(--ink)] text-[var(--bg)] shadow-xs font-bold'
+                      : 'bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] hover:border-[var(--ink)]/40 hover:bg-white'
+                  }`}
+                >
+                  <Monitor className="w-3.5 h-3.5" />
+                  <span>Desktop ({desktopCount})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCategoryFilter('web')}
+                  className={`px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                    categoryFilter === 'web'
+                      ? 'bg-[var(--ink)] text-[var(--bg)] shadow-xs font-bold'
+                      : 'bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] hover:border-[var(--ink)]/40 hover:bg-white'
+                  }`}
+                >
+                  <Globe className="w-3.5 h-3.5" />
+                  <span>Web ({webCount})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCategoryFilter('android')}
+                  className={`px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                    categoryFilter === 'android'
+                      ? 'bg-[var(--ink)] text-[var(--bg)] shadow-xs font-bold'
+                      : 'bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] hover:border-[var(--ink)]/40 hover:bg-white'
+                  }`}
+                >
+                  <Smartphone className="w-3.5 h-3.5" />
+                  <span>Android ({androidCount})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCategoryFilter('custom')}
+                  className={`px-3.5 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                    categoryFilter === 'custom'
+                      ? 'bg-[var(--ink)] text-[var(--bg)] shadow-xs font-bold'
+                      : 'bg-[var(--bg)] text-[var(--ink)] border border-[var(--line)] hover:border-[var(--ink)]/40 hover:bg-white'
+                  }`}
+                >
+                  <Cpu className="w-3.5 h-3.5" />
+                  <span>Custom ({customCount})</span>
+                </button>
+              </div>
             </div>
-
           </div>
 
           {/* Results Counter & Capabilities Summary */}

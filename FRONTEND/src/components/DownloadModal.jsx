@@ -1,7 +1,7 @@
 import React from 'react';
 import { X, Clock, ShieldCheck, Mail, Download } from 'lucide-react';
 
-export default function DownloadModal({ product, onClose }) {
+export default function DownloadModal({ product, onClose, onEnquire }) {
   if (!product) return null;
 
   return (
@@ -119,14 +119,17 @@ export default function DownloadModal({ product, onClose }) {
             >
               Close
             </button>
-            <a
-              href="#contact"
-              onClick={onClose}
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                if (onEnquire) onEnquire(product.name);
+              }}
               className="px-4 py-2 text-xs font-bold text-white bg-[var(--ink)] hover:bg-[var(--ink)]/90 rounded-full shadow-sm hover:shadow-md transition-all inline-flex items-center gap-1.5 cursor-pointer"
             >
               <Mail className="w-3.5 h-3.5" />
               <span>Enquire for Enterprise Setup</span>
-            </a>
+            </button>
           </div>
         </div>
       </div>

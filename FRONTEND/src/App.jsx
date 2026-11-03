@@ -24,6 +24,7 @@ import ServiceModal from './components/ServiceModal';
 import DownloadModal from './components/DownloadModal';
 import LegalModal from './components/LegalModal';
 import LoadingScreen from './components/LoadingScreen';
+import InquiryModal from './components/InquiryModal';
 
 // Admin Panel & API Integration
 import AdminPanel from './admin/AdminPanel';
@@ -71,8 +72,9 @@ export default function App() {
   const [selectedService, setSelectedService] = useState(null);
   const [downloadingProduct, setDownloadingProduct] = useState(null);
   const [legalModalType, setLegalModalType] = useState(null); // 'privacy' | 'terms' | null
+  const [inquiryModalData, setInquiryModalData] = useState(null); // { subject, serviceName } | null
 
-  const isAnyModalOpen = Boolean(selectedProduct || selectedService || downloadingProduct || legalModalType);
+  const isAnyModalOpen = Boolean(selectedProduct || selectedService || downloadingProduct || legalModalType || inquiryModalData);
 
   // Lock background scroll and pause Lenis while modal is open so modal content scrolls natively and smoothly
   useEffect(() => {
@@ -267,7 +269,10 @@ export default function App() {
 
   const handleEnquireService = (serviceTitle) => {
     setContactSubject(`Enquiry: ${serviceTitle}`);
-    scrollToSection('contact');
+    setInquiryModalData({
+      subject: `Enquiry: ${serviceTitle}`,
+      serviceName: serviceTitle
+    });
   };
 
   const handleDownloadClick = (productToDownload = null) => {
@@ -520,6 +525,14 @@ export default function App() {
         <LegalModal
           type={legalModalType}
           onClose={() => setLegalModalType(null)}
+        />
+      )}
+
+      {inquiryModalData && (
+        <InquiryModal
+          initialSubject={inquiryModalData.subject}
+          serviceName={inquiryModalData.serviceName}
+          onClose={() => setInquiryModalData(null)}
         />
       )}
 

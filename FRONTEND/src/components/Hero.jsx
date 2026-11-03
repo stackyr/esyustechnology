@@ -7,76 +7,65 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
   const hero = landingPage?.hero || {};
   const videoRef = useRef(null);
 
-  // Robust, uninterrupted video playback controller
+  // Rock-solid, continuous video playback controller with concurrency guard
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    let playPromise = null;
+
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
+    video.loop = true;
 
-    const playVideo = () => {
-      if (video && video.paused) {
-        const p = video.play();
-        if (p && typeof p.catch === 'function') {
-          p.catch(() => {});
-        }
+    const safePlay = () => {
+      if (!video) return;
+      if (!video.paused) return;
+      if (playPromise) return; // Promise already in-flight, avoid AbortError
+
+      try {
+        playPromise = video.play()
+          .then(() => {
+            playPromise = null;
+          })
+          .catch(() => {
+            playPromise = null;
+          });
+      } catch (e) {
+        playPromise = null;
       }
     };
 
-    playVideo();
+    safePlay();
 
-    const handleEnded = () => {
-      video.currentTime = 0;
-      playVideo();
-    };
-
-    const handlePause = () => {
+    const handleVisibility = () => {
       if (document.visibilityState === 'visible') {
-        setTimeout(playVideo, 120);
+        safePlay();
       }
     };
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          playVideo();
-        }
-      });
-    }, { threshold: [0, 0.15, 0.5] });
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        safePlay();
+      }
+    }, { threshold: [0, 0.15] });
 
     observer.observe(video);
 
-    const handleUserGesture = () => {
-      playVideo();
-      window.removeEventListener('click', handleUserGesture);
-      window.removeEventListener('touchstart', handleUserGesture);
-      window.removeEventListener('scroll', handleUserGesture);
+    const onUserInteraction = () => {
+      safePlay();
     };
 
-    window.addEventListener('click', handleUserGesture, { passive: true });
-    window.addEventListener('touchstart', handleUserGesture, { passive: true });
-    window.addEventListener('scroll', handleUserGesture, { passive: true });
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        playVideo();
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    video.addEventListener('ended', handleEnded);
-    video.addEventListener('pause', handlePause);
+    window.addEventListener('click', onUserInteraction, { passive: true, once: true });
+    window.addEventListener('touchstart', onUserInteraction, { passive: true, once: true });
+    document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener('click', handleUserGesture);
-      window.removeEventListener('touchstart', handleUserGesture);
-      window.removeEventListener('scroll', handleUserGesture);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      video.removeEventListener('ended', handleEnded);
-      video.removeEventListener('pause', handlePause);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('click', onUserInteraction);
+      window.removeEventListener('touchstart', onUserInteraction);
     };
   }, [hero.videoUrl]);
 
@@ -308,15 +297,8 @@ export default function Hero({ onExploreServices, onViewApplications, onDownload
               loop
               playsInline
               preload="auto"
-              onEnded={(e) => {
-                e.target.currentTime = 0;
-                e.target.play().catch(() => {});
-              }}
-              onPause={(e) => {
-                if (document.visibilityState === 'visible') {
-                  e.target.play().catch(() => {});
-                }
-              }}
+              disablePictureInPicture
+              disableRemotePlayback
               className="full object-cover"
               style={{ filter: 'brightness(0.65)' }}
             />
