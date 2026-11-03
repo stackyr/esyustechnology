@@ -123,11 +123,19 @@ async function seedMongoDefaults() {
   try {
     const local = getDB();
 
-    // 1. Brand
-    const brandCount = await Brand.countDocuments();
-    if (brandCount === 0 && local.brand) {
+    // 1. Brand: Create if empty or sync if db.json is newer or fields differ
+    let brandDoc = await Brand.findOne();
+    if (!brandDoc && local.brand) {
       await Brand.create(local.brand);
       console.log('[MERN: MongoDB] Seeded initial Brand configuration.');
+    } else if (brandDoc && local.brand) {
+      const isNewer = local.brand.updatedAt && (!brandDoc.updatedAt || new Date(local.brand.updatedAt) > new Date(brandDoc.updatedAt));
+      const hasDiff = local.brand.founder !== brandDoc.founder || local.brand.coFounder !== brandDoc.coFounder;
+      if (isNewer || hasDiff) {
+        Object.assign(brandDoc, local.brand);
+        await brandDoc.save();
+        console.log(`[MERN: MongoDB] Synchronized Brand in MongoDB Atlas ( / ).`);
+      }
     }
 
     // 2. Services
@@ -158,11 +166,19 @@ async function seedMongoDefaults() {
       console.log(`[MERN: MongoDB] Seeded ${local.inquiries.length} initial inquiries.`);
     }
 
-    // 6. Landing Page Sections & Images
-    const landingCount = await LandingPage.countDocuments();
-    if (landingCount === 0 && local.landingPage) {
+    // 6. Landing Page: Create if empty or sync if db.json is newer or team differs
+    let landingDoc = await LandingPage.findOne();
+    if (!landingDoc && local.landingPage) {
       await LandingPage.create(local.landingPage);
-      console.log(`[MERN: MongoDB] Seeded initial Landing Page section copy and image URLs.`);
+      console.log('[MERN: MongoDB] Seeded initial Landing Page section copy and image URLs.');
+    } else if (landingDoc && local.landingPage) {
+      const isNewer = local.landingPage.updatedAt && (!landingDoc.updatedAt || new Date(local.landingPage.updatedAt) > new Date(landingDoc.updatedAt));
+      const hasTeamDiff = JSON.stringify(local.landingPage.team?.members?.map(m => m.name)) !== JSON.stringify(landingDoc.team?.members?.map(m => m.name));
+      if (isNewer || hasTeamDiff) {
+        Object.assign(landingDoc, local.landingPage);
+        await landingDoc.save();
+        console.log('[MERN: MongoDB] Synchronized Landing Page in MongoDB Atlas.');
+      }
     }
 
     // 7. Admin Credentials

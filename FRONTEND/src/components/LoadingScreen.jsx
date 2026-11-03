@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AlertCircle, RefreshCw, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Database, ShieldCheck, AlertCircle, RefreshCw, ArrowRight } from 'lucide-react';
 
 export default function LoadingScreen({
   isLoading,
@@ -12,33 +12,47 @@ export default function LoadingScreen({
   onOpenAdmin,
   onComplete
 }) {
+  const [progress, setProgress] = useState(18);
   const [isExiting, setIsExiting] = useState(false);
   const [isMounted, setIsMounted] = useState(true);
   const [isRetrying, setIsRetrying] = useState(false);
 
-  // Exit ONLY when data has been verified and fetched from MongoDB / API
-  // No arbitrary timeout to prevent exposing empty or broken content!
+  // Progressive progress bar simulation matching real network lifecycle
   useEffect(() => {
-    if (!isLoading && isDatabaseConnected) {
-      // Data verified and loaded — trigger smooth curtain slide exit
+    if (isLoading || !isDatabaseConnected) {
+      if (loadingStage === 'connecting') {
+        setProgress((prev) => Math.max(prev, 35));
+      } else if (loadingStage === 'fetching') {
+        setProgress((prev) => Math.max(prev, 75));
+      } else {
+        const interval = setInterval(() => {
+          setProgress((prev) => (prev < 88 ? prev + 2 : prev));
+        }, 120);
+        return () => clearInterval(interval);
+      }
+    } else {
+      // Data verified and loaded — smooth accelerate to 100%
+      setProgress(100);
+
+      // Brief moment so user perceives verified connection, then trigger curtain slide exit
       const exitTimer = setTimeout(() => {
         setIsExiting(true);
 
-        // After curtain transition completes (700ms), unmount overlay completely
+        // After curtain transition duration (750ms), unmount overlay completely
         const unmountTimer = setTimeout(() => {
           setIsMounted(false);
           if (onComplete) onComplete();
           if (typeof window !== 'undefined' && window.ScrollTrigger) {
             window.ScrollTrigger.refresh();
           }
-        }, 700);
+        }, 750);
 
         return () => clearTimeout(unmountTimer);
-      }, 250);
+      }, 350);
 
       return () => clearTimeout(exitTimer);
     }
-  }, [isLoading, isDatabaseConnected, onComplete]);
+  }, [isLoading, isDatabaseConnected, loadingStage, onComplete]);
 
   const handleRetryClick = async () => {
     if (isRetrying || !onRetry) return;
@@ -46,13 +60,20 @@ export default function LoadingScreen({
     try {
       await onRetry();
     } finally {
-      setTimeout(() => setIsRetrying(false), 800);
+      setTimeout(() => setIsRetrying(false), 900);
     }
   };
 
   if (!isMounted) return null;
 
   const isFailed = connectionError && !isDatabaseConnected;
+
+  const getDisplayStatus = () => {
+    if (isFailed) return 'Connection Offline';
+    if (progress >= 100) return 'Enterprise Engine Active • Ready';
+    if (loadingStage === 'fetching') return 'Synchronizing Services & Catalog...';
+    return loadingStatusText || 'Connecting to MongoDB Atlas...';
+  };
 
   return (
     <div
@@ -69,7 +90,7 @@ export default function LoadingScreen({
 
       {/* Top Shutter Panel */}
       <div
-        className={`fixed top-0 left-0 right-0 h-1/2 bg-[var(--bg)] border-b border-stone-300/30 will-change-transform transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${
+        className={`fixed top-0 left-0 right-0 h-1/2 bg-[var(--bg)] border-b border-stone-300/40 will-change-transform transition-transform duration-750 ease-[cubic-bezier(0.76,0,0.24,1)] ${
           isExiting ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
@@ -78,175 +99,135 @@ export default function LoadingScreen({
 
       {/* Bottom Shutter Panel */}
       <div
-        className={`fixed bottom-0 left-0 right-0 h-1/2 bg-[var(--bg)] border-t border-stone-300/30 will-change-transform transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] ${
+        className={`fixed bottom-0 left-0 right-0 h-1/2 bg-[var(--bg)] border-t border-stone-300/40 will-change-transform transition-transform duration-750 ease-[cubic-bezier(0.76,0,0.24,1)] ${
           isExiting ? 'translate-y-full' : 'translate-y-0'
         }`}
       >
         <div className="absolute inset-0 pointer-events-none opacity-20 mix-blend-overlay bg-[var(--grain)]" />
       </div>
 
-      {/* Center Stage: Unique Quantum Orbit Symbol or Protected Error View */}
+      {/* Center Hairline Accent Runner (fades gracefully when curtains split) */}
       <div
-        className={`fixed inset-0 z-[99999] flex flex-col items-center justify-center p-6 text-center transition-all duration-300 ease-out will-change-transform ${
-          isExiting ? 'opacity-0 -translate-y-3 pointer-events-none' : 'opacity-100 translate-y-0'
+        className={`fixed top-1/2 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[var(--c1)]/50 to-transparent z-[99998] transition-opacity duration-300 ease-out ${
+          isExiting ? 'opacity-0 scale-x-125' : 'opacity-100 scale-x-100'
+        }`}
+      />
+
+      {/* Center Stage: Minimal Animated Navbar Logo + Hairline Progress + Live Badges */}
+      <div
+        className={`fixed inset-0 z-[99999] flex flex-col items-center justify-center p-6 text-center transition-all duration-350 ease-out will-change-transform ${
+          isExiting
+            ? 'opacity-0 -translate-y-4 scale-95 pointer-events-none'
+            : 'opacity-100 translate-y-0 scale-100'
         }`}
       >
-        <div className="relative flex flex-col items-center max-w-sm w-full mx-auto">
-          {/* Brand Logo (Exact Navbar Logo) */}
-          <img
-            src="/logo-horizontal.png"
-            alt={brand?.name || 'Esyus Technology'}
-            className="h-10 sm:h-12 w-auto object-contain shrink-0 mb-7 drop-shadow-xs"
-          />
+        {/* Grain overlay */}
+        <div className="absolute inset-0 pointer-events-none opacity-15 mix-blend-overlay bg-[var(--grain)]" />
 
-          {!isFailed ? (
-            /* =========================================================================
-               UNIQUE ESYUS QUANTUM ORBIT CORE (Brand-aligned, no standard spinner!)
-               ========================================================================= */
-            <div className="flex flex-col items-center gap-6 animate-in fade-in duration-300">
-              {/* 3D Orbit & Core Sphere System */}
-              <div className="relative w-20 h-20 flex items-center justify-center">
-                {/* Outer Breathing Radial Glow */}
-                <div className="absolute inset-0 rounded-full bg-[var(--c1)] opacity-20 blur-xl animate-pulse" />
+        {!isFailed ? (
+          /* =========================================================================
+             PREMIUM MINIMAL LOADING STAGE (Clean, aesthetic, high-end)
+             ========================================================================= */
+          <div className="relative flex flex-col items-center space-y-6 max-w-sm w-full mx-auto animate-in fade-in duration-250">
+            {/* Animated Brand Logo Container (Exact Navbar Logo) */}
+            <div className="relative group flex items-center justify-center">
+              {/* Soft Ambient Glow */}
+              <div className="absolute -inset-8 bg-gradient-to-r from-[var(--c1)]/15 via-[var(--c3)]/20 to-[var(--c1)]/15 rounded-3xl blur-2xl pointer-events-none animate-pulse" />
 
-                {/* 3D Elliptical Orbit Track 1 */}
-                <div
-                  className="absolute inset-0 rounded-full border border-[var(--c1)]/35 pointer-events-none"
-                  style={{
-                    transform: 'rotateX(68deg) rotateY(-18deg) rotateZ(0deg)',
-                    animation: 'esyus-spin 3.2s linear infinite'
-                  }}
-                >
-                  {/* Orbiting Satellite Particle 1 */}
-                  <span
-                    className="absolute top-0 left-1/2 -ml-1 -mt-1 w-2 h-2 rounded-full bg-[var(--c1)] shadow-[0_0_8px_var(--c1)]"
-                  />
-                </div>
-
-                {/* 3D Elliptical Orbit Track 2 (Counter-Rotating) */}
-                <div
-                  className="absolute inset-1.5 rounded-full border border-stone-400/35 pointer-events-none"
-                  style={{
-                    transform: 'rotateX(68deg) rotateY(32deg) rotateZ(45deg)',
-                    animation: 'esyus-spin-reverse 4s linear infinite'
-                  }}
-                >
-                  {/* Orbiting Satellite Particle 2 */}
-                  <span
-                    className="absolute bottom-0 right-1/2 -mr-1 -mb-1 w-1.5 h-1.5 rounded-full bg-stone-700 shadow-[0_0_6px_rgba(0,0,0,0.3)]"
-                  />
-                </div>
-
-                {/* Central Radiant Terracotta Orb (Echoing Hero Orb Core) */}
-                <div
-                  className="w-8 h-8 rounded-full shadow-[0_4px_16px_rgba(232,105,60,0.4)] relative flex items-center justify-center"
-                  style={{
-                    background: 'radial-gradient(circle at 35% 32%, #ff956e 0%, #e8693c 55%, #ad3414 100%)'
-                  }}
-                >
-                  <div className="w-2 h-2 rounded-full bg-white/70 blur-[0.5px]" />
-                </div>
-              </div>
-
-              {/* Rhythmic 5-Bar Quantum Frequency Equalizer */}
-              <div className="flex items-center gap-1 h-3.5" aria-hidden="true">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <span
-                    key={i}
-                    className="w-1 bg-[var(--c1)]/80 rounded-full"
-                    style={{
-                      height: '100%',
-                      transformOrigin: 'bottom',
-                      animation: `esyus-equalizer 1.2s ease-in-out infinite alternate ${i * 0.18}s`
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Live Status Readout */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-center gap-1.5 text-xs font-mono font-semibold text-[var(--ink)] tracking-wider">
-                  <span>{loadingStatusText || 'Synchronizing with MongoDB Atlas'}</span>
-                  <span className="inline-flex gap-0.5 text-[var(--c1)]">
-                    <span className="animate-pulse">.</span>
-                    <span className="animate-pulse delay-150">.</span>
-                    <span className="animate-pulse delay-300">.</span>
-                  </span>
-                </div>
-                <p className="text-[11px] font-mono text-[var(--muted)]">
-                  Verifying live database records &amp; business engines
-                </p>
+              {/* Logo Card with Glossy Light Sheen */}
+              <div className="relative overflow-hidden px-6 py-3.5 rounded-2xl bg-white/75 backdrop-blur-md border border-stone-200/90 shadow-lg shadow-black/5">
+                <img
+                  src="/logo-horizontal.png"
+                  alt={brand?.name || 'Esyus Technology'}
+                  className="h-10 sm:h-12 w-auto object-contain shrink-0 relative z-10"
+                />
               </div>
             </div>
-          ) : (
-            /* =========================================================================
-               STRICT FAILURE GUARD: Website remains safely closed if records cannot load
-               ========================================================================= */
-            <div className="w-full bg-white rounded-2xl border border-red-200/90 p-5 sm:p-6 shadow-xl space-y-4 animate-in fade-in zoom-in-95 duration-200 text-left">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-red-50 border border-red-200 text-red-600 flex items-center justify-center shrink-0">
-                  <ShieldAlert className="w-5 h-5" />
-                </div>
-                <div>
-                  <h3 className="text-sm font-bold text-stone-900">Website Protected</h3>
-                  <p className="text-[11px] text-stone-500 font-mono">Unable to load database records</p>
+
+            {/* Hairline Progress Bar & Real Percentage */}
+            <div className="w-56 sm:w-64 space-y-2 pt-1">
+              <div className="h-[2.5px] w-full bg-stone-200/90 rounded-full overflow-hidden relative shadow-inner">
+                <div
+                  className="h-full bg-gradient-to-r from-[var(--c1)] via-[#ff8257] to-[var(--c1)] rounded-full transition-all duration-300 ease-out relative"
+                  style={{ width: `${progress}%` }}
+                >
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_8px_var(--c1)]" />
                 </div>
               </div>
 
-              <p className="text-xs text-stone-600 leading-relaxed">
-                The website cannot be opened because live data could not be retrieved from MongoDB Atlas cloud database. The loading curtain stays closed to prevent displaying missing or incomplete records.
+              <div className="flex items-center justify-between text-[11px] font-mono text-[var(--muted)] px-0.5">
+                <span className="truncate max-w-[200px] text-left">{getDisplayStatus()}</span>
+                <span className="font-bold text-[var(--ink)] tabular-nums ml-2">
+                  {Math.round(progress)}%
+                </span>
+              </div>
+            </div>
+
+            {/* Minimal Status Indicators */}
+            <div className="flex items-center justify-center gap-2.5 pt-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 border border-stone-200 text-[9.5px] font-mono text-stone-600 shadow-xs">
+                <Database className="w-3 h-3 text-[var(--c1)]" />
+                <span>MongoDB Atlas Cloud</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9.5px] font-mono text-emerald-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Live Sync Active</span>
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* =========================================================================
+             CONNECTION ERROR GATE: Website stays safely locked if data cannot load
+             ========================================================================= */
+          <div className="relative max-w-md w-full p-6 sm:p-8 rounded-3xl bg-white border border-red-200 shadow-2xl space-y-5 text-center pointer-events-auto animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-600 shadow-sm">
+              <AlertCircle className="w-6 h-6" />
+            </div>
+
+            <div className="space-y-1.5">
+              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-200 uppercase tracking-wider">
+                Database Connection Offline
+              </span>
+              <h2 className="text-lg sm:text-xl font-bold text-[var(--ink)]">
+                Unable to Load Website Records
+              </h2>
+              <p className="text-xs text-[var(--muted)] leading-relaxed">
+                The website requires an active cloud connection to MongoDB Atlas to stream live services and catalog. The curtain remains closed to protect data integrity.
               </p>
-
-              {connectionError && (
-                <div className="p-2.5 rounded-lg bg-stone-50 border border-stone-200/80 font-mono text-[10.5px] text-red-700 break-words leading-tight">
-                  {connectionError}
-                </div>
-              )}
-
-              <div className="flex flex-col sm:flex-row items-center gap-2 pt-1">
-                {onRetry && (
-                  <button
-                    type="button"
-                    onClick={handleRetryClick}
-                    disabled={isRetrying}
-                    className="w-full sm:flex-1 py-2.5 px-3.5 rounded-xl bg-[var(--c1)] hover:bg-[#d65a2f] text-white text-xs font-bold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                  >
-                    <RefreshCw className={`w-3.5 h-3.5 ${isRetrying ? 'animate-spin' : ''}`} />
-                    <span>{isRetrying ? 'Reconnecting...' : 'Retry Connection'}</span>
-                  </button>
-                )}
-
-                {onOpenAdmin && (
-                  <button
-                    type="button"
-                    onClick={onOpenAdmin}
-                    className="w-full sm:w-auto py-2.5 px-3.5 rounded-xl border border-stone-300 hover:bg-stone-50 text-xs font-semibold text-stone-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <span>Admin Panel</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
-                  </button>
-                )}
-              </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      {/* Orbit & Equalizer Keyframe Styles */}
-      <style>{`
-        @keyframes esyus-spin {
-          from { transform: rotateX(68deg) rotateY(-18deg) rotateZ(0deg); }
-          to { transform: rotateX(68deg) rotateY(-18deg) rotateZ(360deg); }
-        }
-        @keyframes esyus-spin-reverse {
-          from { transform: rotateX(68deg) rotateY(32deg) rotateZ(360deg); }
-          to { transform: rotateX(68deg) rotateY(32deg) rotateZ(0deg); }
-        }
-        @keyframes esyus-equalizer {
-          0% { transform: scaleY(0.25); opacity: 0.45; }
-          100% { transform: scaleY(1); opacity: 1; }
-        }
-      `}</style>
+            {connectionError && (
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-[11px] font-mono text-red-700 text-left overflow-x-auto leading-relaxed">
+                <code>{connectionError}</code>
+              </div>
+            )}
+
+            <div className="pt-2 flex flex-col sm:flex-row gap-2.5 justify-center">
+              {onRetry && (
+                <button
+                  type="button"
+                  onClick={handleRetryClick}
+                  disabled={isRetrying}
+                  className="px-6 py-2.5 rounded-xl bg-[var(--c1)] hover:bg-[#d64b22] text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isRetrying ? 'animate-spin' : ''}`} />
+                  <span>{isRetrying ? 'Reconnecting...' : 'Retry Connection Now'}</span>
+                </button>
+              )}
+              {onOpenAdmin && (
+                <button
+                  type="button"
+                  onClick={onOpenAdmin}
+                  className="px-4 py-2.5 rounded-xl border border-stone-300 hover:bg-stone-50 text-xs font-semibold text-stone-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  <span>Admin Panel</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

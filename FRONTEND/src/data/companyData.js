@@ -4,8 +4,8 @@ export const COMPANY_INFO = {
   domain: "esyustechnology.com",
   tagline: "Smart Software Solutions for Tomorrow's Businesses",
   slogan: "High-Performance Desktop, Web & Android Systems Built for Absolute Reliability",
-  founder: "Sayantan Ghosh",
-  coFounder: "Soham Dutta",
+  founder: "Milan Mandal",
+  coFounder: "Suman Raptan",
   establishmentDate: "01/01/2027",
   email: "contact@esyustechnology.com",
   supportEmail: "support@esyustechnology.com",
@@ -311,7 +311,7 @@ export const DEFAULT_WORKFLOW_STEPS = [
 
 export const TEAM_MEMBERS = [
   {
-    name: "Sayantan Ghosh",
+    name: "Milan Mandal",
     role: "Founder & Chief Executive Officer",
     category: "Executive Leadership",
     bio: "Visionary founder driving Esyus Technology. Passionate about creating software solutions that solve real-world operational challenges for Indian businesses with reliability and speed.",
@@ -321,7 +321,7 @@ export const TEAM_MEMBERS = [
     featured: true
   },
   {
-    name: "Soham Dutta",
+    name: "Suman Raptan",
     role: "Co-Founder & Chief Technology Officer",
     category: "Executive Leadership",
     bio: "Co-founder leading core technology and engineering standards. Specializes in low-latency offline systems, desktop application runtime, and database performance optimization.",
