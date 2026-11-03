@@ -168,12 +168,7 @@ async function seedMongoDefaults() {
       console.log(`[MERN: MongoDB] Seeded ${local.faqs.length} FAQs.`);
     }
 
-    // 5. Inquiries
-    const inqCount = await Inquiry.countDocuments();
-    if (inqCount === 0 && local.inquiries?.length) {
-      await Inquiry.insertMany(local.inquiries);
-      console.log(`[MERN: MongoDB] Seeded ${local.inquiries.length} initial inquiries.`);
-    }
+    // 5. Inquiries: Never auto-seed dummy inquiries into production leads database
 
     // 6. Landing Page: Create if empty or sync if db.json is newer or team differs
     let landingDoc = await LandingPage.findOne();
