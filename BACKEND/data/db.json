@@ -7,7 +7,7 @@
     "tagline": "Smart Software Solutions for Tomorrow's Businesses",
     "slogan": "High-Performance Desktop, Web & Android Systems Built for Absolute Reliability",
     "founder": "Milan Mandal",
-    "coFounder": "suman Raptan",
+    "coFounder": "suman Rapt",
     "establishmentDate": "01/01/2027",
     "email": "support@esyustechnology.com",
     "supportEmail": "support@esyustechnology.com",
@@ -36,7 +36,7 @@
       }
     ],
     "createdAt": "2026-11-02T07:50:45.568Z",
-    "updatedAt": "2026-11-03T05:20:54.761Z",
+    "updatedAt": "2026-11-03T05:44:24.274Z",
     "__v": 0,
     "footerAbout": "Esyus Technology builds robust, high-performance desktop suites, enterprise web platforms, and tailored Android applications designed to operate with absolute reliability and speed.",
     "navBadge": "Software",
@@ -189,7 +189,7 @@
       "footerCtaTitle": "Bring calm, offline precision to your billing counter."
     },
     "createdAt": "2026-11-02T07:51:01.116Z",
-    "updatedAt": "2026-11-03T05:20:59.712Z",
+    "updatedAt": "2026-11-03T06:07:28.165Z",
     "__v": 0,
     "team": {
       "headline": "The minds behind the software architecture",
@@ -202,7 +202,7 @@
           "bio": "Visionary founder driving Esyus Technology. Passionate about creating software solutions that solve real-world operational challenges for Indian businesses with reliability and speed."
         },
         {
-          "name": "Suman",
+          "name": "Suman Raptan",
           "role": "Co-Founder & Chief Technology Officer",
           "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
           "bio": "Co-founder leading core technology and engineering standards. Specializes in low-latency offline systems, desktop application runtime, and database performance optimization."
