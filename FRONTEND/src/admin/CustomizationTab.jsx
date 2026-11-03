@@ -44,6 +44,7 @@ export default function CustomizationTab({
   isRefreshing,
   isInitialLoading = false
 }) {
+  const isLoading = isInitialLoading || isRefreshing;
   const [activeSubTab, setActiveSubTab] = useState('brand');
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isLocalSaving, setIsLocalSaving] = useState(false);
@@ -121,69 +122,73 @@ export default function CustomizationTab({
   const [credsSuccess, setCredsSuccess] = useState('');
   const [credsError, setCredsError] = useState('');
 
-  // Synchronize ONLY ONCE on initial load or when explicit reset is called
+  // Synchronize on initial load, or when fresh data arrives via refresh if user has no unsaved edits
   useEffect(() => {
-    if (!brandInitializedRef.current && brand && typeof brand === 'object' && Object.keys(brand).length > 0) {
-      brandInitializedRef.current = true;
-      setBrandData({
-        name: brand.name || COMPANY_INFO.name,
-        shortName: brand.shortName || COMPANY_INFO.shortName,
-        domain: brand.domain || COMPANY_INFO.domain,
-        tagline: brand.tagline || COMPANY_INFO.tagline,
-        slogan: brand.slogan || COMPANY_INFO.slogan,
-        founder: brand.founder || COMPANY_INFO.founder,
-        coFounder: brand.coFounder || COMPANY_INFO.coFounder,
-        establishmentDate: brand.establishmentDate || COMPANY_INFO.establishmentDate,
-        email: brand.email || COMPANY_INFO.email,
-        supportEmail: brand.supportEmail || COMPANY_INFO.supportEmail,
-        phone: brand.phone || COMPANY_INFO.phone,
-        address: brand.address || COMPANY_INFO.address,
-        navBadge: brand.navBadge || COMPANY_INFO.navBadge || 'Software',
-        navSubtitle: brand.navSubtitle || COMPANY_INFO.navSubtitle || 'Enterprise Suite',
-        footerAbout: brand.footerAbout || COMPANY_INFO.footerAbout || '',
-        stats: Array.isArray(brand.stats) ? brand.stats : [...COMPANY_INFO.stats]
-      });
+    if (brand && typeof brand === 'object' && Object.keys(brand).length > 0) {
+      if (!brandInitializedRef.current || !isDirtyRef.current) {
+        brandInitializedRef.current = true;
+        setBrandData({
+          name: brand.name || COMPANY_INFO.name,
+          shortName: brand.shortName || COMPANY_INFO.shortName,
+          domain: brand.domain || COMPANY_INFO.domain,
+          tagline: brand.tagline || COMPANY_INFO.tagline,
+          slogan: brand.slogan || COMPANY_INFO.slogan,
+          founder: brand.founder || COMPANY_INFO.founder,
+          coFounder: brand.coFounder || COMPANY_INFO.coFounder,
+          establishmentDate: brand.establishmentDate || COMPANY_INFO.establishmentDate,
+          email: brand.email || COMPANY_INFO.email,
+          supportEmail: brand.supportEmail || COMPANY_INFO.supportEmail,
+          phone: brand.phone || COMPANY_INFO.phone,
+          address: brand.address || COMPANY_INFO.address,
+          navBadge: brand.navBadge || COMPANY_INFO.navBadge || 'Software',
+          navSubtitle: brand.navSubtitle || COMPANY_INFO.navSubtitle || 'Enterprise Suite',
+          footerAbout: brand.footerAbout || COMPANY_INFO.footerAbout || '',
+          stats: Array.isArray(brand.stats) ? brand.stats : [...COMPANY_INFO.stats]
+        });
+      }
     }
   }, [brand]);
 
   useEffect(() => {
-    if (!pageInitializedRef.current && landingPage && typeof landingPage === 'object' && Object.keys(landingPage).length > 0) {
-      pageInitializedRef.current = true;
-      setPageData({
-        hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage.hero || {}) },
-        about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage.about || {}) },
-        team: {
-          headline: landingPage.team?.headline || LANDING_PAGE_SECTIONS?.team?.headline || 'The minds behind the software architecture',
-          lead: landingPage.team?.lead || LANDING_PAGE_SECTIONS?.team?.lead || '',
-          members: Array.isArray(landingPage.team?.members) && landingPage.team.members.length > 0
-            ? landingPage.team.members
-            : (LANDING_PAGE_SECTIONS?.team?.members || TEAM_MEMBERS).map(m => ({
-                name: m.name,
-                role: m.role,
-                avatar: m.avatar,
-                bio: m.bio || ''
-              }))
-        },
-        servicesSection: { ...(LANDING_PAGE_SECTIONS?.servicesSection || {}), ...(landingPage.servicesSection || {}) },
-        productsSection: { ...(LANDING_PAGE_SECTIONS?.productsSection || {}), ...(landingPage.productsSection || {}) },
-        featuredProduct: {
-          ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}),
-          ...(landingPage.featuredProduct || {}),
-          steps: Array.isArray(landingPage.featuredProduct?.steps) && landingPage.featuredProduct.steps.length === 4
-            ? landingPage.featuredProduct.steps
-            : (LANDING_PAGE_SECTIONS?.featuredProduct?.steps || DEFAULT_WORKFLOW_STEPS).map(s => ({ ...s }))
-        },
-        whyChooseUs: {
-          headline: landingPage.whyChooseUs?.headline || LANDING_PAGE_SECTIONS?.whyChooseUs?.headline || '',
-          lead: landingPage.whyChooseUs?.lead || LANDING_PAGE_SECTIONS?.whyChooseUs?.lead || '',
-          pillarImages: Array.isArray(landingPage.whyChooseUs?.pillarImages) && landingPage.whyChooseUs.pillarImages.length === 5
-            ? landingPage.whyChooseUs.pillarImages
-            : [...(LANDING_PAGE_SECTIONS?.whyChooseUs?.pillarImages || [])]
-        },
-        reviewsSection: { ...(LANDING_PAGE_SECTIONS?.reviewsSection || {}), ...(landingPage.reviewsSection || {}) },
-        downloadSection: { ...(LANDING_PAGE_SECTIONS?.downloadSection || {}), ...(landingPage.downloadSection || {}) },
-        contact: { ...(LANDING_PAGE_SECTIONS?.contact || {}), ...(landingPage.contact || {}) }
-      });
+    if (landingPage && typeof landingPage === 'object' && Object.keys(landingPage).length > 0) {
+      if (!pageInitializedRef.current || !isDirtyRef.current) {
+        pageInitializedRef.current = true;
+        setPageData({
+          hero: { ...(LANDING_PAGE_SECTIONS?.hero || {}), ...(landingPage.hero || {}) },
+          about: { ...(LANDING_PAGE_SECTIONS?.about || {}), ...(landingPage.about || {}) },
+          team: {
+            headline: landingPage.team?.headline || LANDING_PAGE_SECTIONS?.team?.headline || 'The minds behind the software architecture',
+            lead: landingPage.team?.lead || LANDING_PAGE_SECTIONS?.team?.lead || '',
+            members: Array.isArray(landingPage.team?.members) && landingPage.team.members.length > 0
+              ? landingPage.team.members
+              : (LANDING_PAGE_SECTIONS?.team?.members || TEAM_MEMBERS).map(m => ({
+                  name: m.name,
+                  role: m.role,
+                  avatar: m.avatar,
+                  bio: m.bio || ''
+                }))
+          },
+          servicesSection: { ...(LANDING_PAGE_SECTIONS?.servicesSection || {}), ...(landingPage.servicesSection || {}) },
+          productsSection: { ...(LANDING_PAGE_SECTIONS?.productsSection || {}), ...(landingPage.productsSection || {}) },
+          featuredProduct: {
+            ...(LANDING_PAGE_SECTIONS?.featuredProduct || {}),
+            ...(landingPage.featuredProduct || {}),
+            steps: Array.isArray(landingPage.featuredProduct?.steps) && landingPage.featuredProduct.steps.length === 4
+              ? landingPage.featuredProduct.steps
+              : (LANDING_PAGE_SECTIONS?.featuredProduct?.steps || DEFAULT_WORKFLOW_STEPS).map(s => ({ ...s }))
+          },
+          whyChooseUs: {
+            headline: landingPage.whyChooseUs?.headline || LANDING_PAGE_SECTIONS?.whyChooseUs?.headline || '',
+            lead: landingPage.whyChooseUs?.lead || LANDING_PAGE_SECTIONS?.whyChooseUs?.lead || '',
+            pillarImages: Array.isArray(landingPage.whyChooseUs?.pillarImages) && landingPage.whyChooseUs.pillarImages.length === 5
+              ? landingPage.whyChooseUs.pillarImages
+              : [...(LANDING_PAGE_SECTIONS?.whyChooseUs?.pillarImages || [])]
+          },
+          reviewsSection: { ...(LANDING_PAGE_SECTIONS?.reviewsSection || {}), ...(landingPage.reviewsSection || {}) },
+          downloadSection: { ...(LANDING_PAGE_SECTIONS?.downloadSection || {}), ...(landingPage.downloadSection || {}) },
+          contact: { ...(LANDING_PAGE_SECTIONS?.contact || {}), ...(landingPage.contact || {}) }
+        });
+      }
     }
   }, [landingPage]);
 
@@ -522,8 +527,19 @@ export default function CustomizationTab({
         </div>
       </div>
 
-      {/* Subtabs Navigation Bar */}
-      <div className="p-2 rounded-2xl bg-white border border-[var(--line)] shadow-xs overflow-x-auto">
+      {/* Loading state during initial fetch or when clicking Refresh */}
+      {isLoading ? (
+        <div className="py-24 flex flex-col items-center justify-center gap-3.5 bg-white rounded-3xl border border-[var(--line)] shadow-xs my-4 animate-in fade-in duration-200">
+          <div className="w-9 h-9 rounded-full border-2 border-stone-300 border-t-[var(--c1)] animate-spin" />
+          <div className="text-center space-y-1">
+            <span className="text-sm font-bold text-[var(--ink)] block">Loading Website Customization...</span>
+            <span className="text-xs font-mono text-[var(--muted)] block">Fetching latest brand settings &amp; copy live from MongoDB Atlas</span>
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Subtabs Navigation Bar */}
+          <div className="p-2 rounded-2xl bg-white border border-[var(--line)] shadow-xs overflow-x-auto">
         <div className="flex items-center gap-1.5 min-w-max">
           {subTabs.map((tab) => {
             const isActive = activeSubTab === tab.id;
@@ -1934,6 +1950,24 @@ export default function CustomizationTab({
           </div>
         </div>
       </div>
+      </>
+    )}
+
+      {/* Updating / Saving Live Loading Modal Overlay */}
+      {(isSaving || isLocalSaving) && (
+        <div className="fixed inset-0 z-[9999] bg-stone-900/30 backdrop-blur-xs flex items-center justify-center p-4 select-none animate-in fade-in duration-150">
+          <div className="bg-white rounded-2xl p-6 sm:p-7 shadow-2xl border border-stone-200/90 flex flex-col items-center gap-3.5 max-w-sm w-full text-center">
+            <div className="w-10 h-10 rounded-full border-3 border-stone-200 border-t-[var(--c1)] animate-spin" />
+            <div className="space-y-1">
+              <h4 className="text-sm sm:text-base font-bold text-[var(--ink)]">Saving Customization Changes</h4>
+              <p className="text-xs text-[var(--muted)] font-mono">Writing updates to MongoDB Atlas &amp; broadcasting live...</p>
+            </div>
+            <div className="w-full bg-stone-100 rounded-full h-1.5 overflow-hidden mt-1">
+              <div className="h-full bg-[var(--c1)] rounded-full animate-pulse w-full" />
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

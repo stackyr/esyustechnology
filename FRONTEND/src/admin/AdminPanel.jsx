@@ -566,7 +566,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
                     onResetDefaults={handleResetDefaults}
                     isSaving={isSaving}
                     onRefresh={() => loadAllData()}
-                    isRefreshing={isRefreshing}
+                    isRefreshing={isRefreshing || refreshingSection === 'customization'}
                     isInitialLoading={isInitialLoading}
                   />
                 )}
