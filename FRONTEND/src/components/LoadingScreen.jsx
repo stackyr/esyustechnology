@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Database, ShieldCheck, AlertCircle, RefreshCw, ArrowRight } from 'lucide-react';
+import { Mail, RefreshCw, Clock } from 'lucide-react';
 
 export default function LoadingScreen({
   isLoading,
   isDatabaseConnected,
   connectionError,
   loadingStage = 'connecting',
-  loadingStatusText = 'Connecting to MongoDB Atlas Cloud Database...',
+  loadingStatusText = 'Loading experience...',
   brand,
   onRetry,
   onOpenAdmin,
   onComplete
 }) {
-  const [progress, setProgress] = useState(18);
+  const [progress, setProgress] = useState(20);
   const [isExiting, setIsExiting] = useState(false);
   const [isMounted, setIsMounted] = useState(true);
   const [isRetrying, setIsRetrying] = useState(false);
@@ -26,8 +26,8 @@ export default function LoadingScreen({
         setProgress((prev) => Math.max(prev, 75));
       } else {
         const interval = setInterval(() => {
-          setProgress((prev) => (prev < 88 ? prev + 2 : prev));
-        }, 120);
+          setProgress((prev) => (prev < 90 ? prev + 2 : prev));
+        }, 140);
         return () => clearInterval(interval);
       }
     } else {
@@ -68,11 +68,13 @@ export default function LoadingScreen({
 
   const isFailed = connectionError && !isDatabaseConnected;
 
+  const supportEmail = brand?.supportEmail || brand?.email || 'support@esyustechnology.com';
+
   const getDisplayStatus = () => {
-    if (isFailed) return 'Connection Offline';
-    if (progress >= 100) return 'Enterprise Engine Active • Ready';
-    if (loadingStage === 'fetching') return 'Synchronizing Services & Catalog...';
-    return loadingStatusText || 'Connecting to MongoDB Atlas...';
+    if (isFailed) return 'Temporarily unavailable';
+    if (progress >= 100) return 'Ready';
+    if (loadingStage === 'fetching') return 'Preparing business solutions...';
+    return loadingStatusText || 'Loading experience...';
   };
 
   return (
@@ -113,7 +115,7 @@ export default function LoadingScreen({
         }`}
       />
 
-      {/* Center Stage: Minimal Animated Navbar Logo + Hairline Progress + Live Badges */}
+      {/* Center Stage: Minimal Animated Navbar Logo + Hairline Progress */}
       <div
         className={`fixed inset-0 z-[99999] flex flex-col items-center justify-center p-6 text-center transition-all duration-350 ease-out will-change-transform ${
           isExiting
@@ -126,7 +128,7 @@ export default function LoadingScreen({
 
         {!isFailed ? (
           /* =========================================================================
-             PREMIUM MINIMAL LOADING STAGE (Clean, aesthetic, high-end)
+             PREMIUM MINIMAL LOADING STAGE (Clean, customer-facing, zero technical clutter)
              ========================================================================= */
           <div className="relative flex flex-col items-center space-y-6 max-w-sm w-full mx-auto animate-in fade-in duration-250">
             {/* Animated Brand Logo Container (Exact Navbar Logo) */}
@@ -162,68 +164,67 @@ export default function LoadingScreen({
                 </span>
               </div>
             </div>
-
-            {/* Minimal Status Indicators */}
-            <div className="flex items-center justify-center gap-2.5 pt-1">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/80 border border-stone-200 text-[9.5px] font-mono text-stone-600 shadow-xs">
-                <Database className="w-3 h-3 text-[var(--c1)]" />
-                <span>MongoDB Atlas Cloud</span>
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-[9.5px] font-mono text-emerald-800">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span>Live Sync Active</span>
-              </div>
-            </div>
           </div>
         ) : (
           /* =========================================================================
-             CONNECTION ERROR GATE: Website stays safely locked if data cannot load
+             CUSTOMER-FRIENDLY MAINTENANCE VIEW (Zero technical jargon or database terms)
              ========================================================================= */
-          <div className="relative max-w-md w-full p-6 sm:p-8 rounded-3xl bg-white border border-red-200 shadow-2xl space-y-5 text-center pointer-events-auto animate-in fade-in zoom-in-95 duration-200">
-            <div className="w-12 h-12 rounded-2xl bg-red-50 border border-red-200 flex items-center justify-center mx-auto text-red-600 shadow-sm">
-              <AlertCircle className="w-6 h-6" />
+          <div className="relative max-w-md w-full p-6 sm:p-8 rounded-3xl bg-white border border-stone-200 shadow-2xl space-y-5 text-center pointer-events-auto animate-in fade-in zoom-in-95 duration-200">
+            {/* Friendly Maintenance Clock Icon */}
+            <div className="w-12 h-12 rounded-2xl bg-stone-100 border border-stone-200 flex items-center justify-center mx-auto text-stone-700 shadow-xs">
+              <Clock className="w-6 h-6 text-[var(--c1)]" />
             </div>
 
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-200 uppercase tracking-wider">
-                Database Connection Offline
+            <div className="space-y-2">
+              <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 uppercase tracking-wider">
+                Temporary Notice
               </span>
               <h2 className="text-lg sm:text-xl font-bold text-[var(--ink)]">
-                Unable to Load Website Records
+                Website is Temporarily Down
               </h2>
-              <p className="text-xs text-[var(--muted)] leading-relaxed">
-                The website requires an active cloud connection to MongoDB Atlas to stream live services and catalog. The curtain remains closed to protect data integrity.
+              <p className="text-xs sm:text-sm text-[var(--muted)] leading-relaxed">
+                We are currently performing brief scheduled updates. Please check back in a few moments, or reach out to our team directly.
               </p>
             </div>
 
-            {connectionError && (
-              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-[11px] font-mono text-red-700 text-left overflow-x-auto leading-relaxed">
-                <code>{connectionError}</code>
+            {/* Direct Contact Admin / Support Details */}
+            <div className="p-3.5 rounded-xl bg-[var(--soft)] border border-[var(--line)] flex items-center justify-between gap-3 text-left">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-lg bg-white border border-stone-200 flex items-center justify-center shrink-0 text-[var(--c1)]">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div className="min-w-0">
+                  <span className="text-[10px] font-mono uppercase text-[var(--muted)] block">Contact Support Team</span>
+                  <a
+                    href={`mailto:${supportEmail}`}
+                    className="text-xs font-semibold text-[var(--ink)] hover:text-[var(--c1)] truncate block underline decoration-dotted"
+                  >
+                    {supportEmail}
+                  </a>
+                </div>
               </div>
-            )}
+            </div>
 
-            <div className="pt-2 flex flex-col sm:flex-row gap-2.5 justify-center">
+            {/* Action Buttons */}
+            <div className="pt-1 flex flex-col sm:flex-row gap-2.5 justify-center">
               {onRetry && (
                 <button
                   type="button"
                   onClick={handleRetryClick}
                   disabled={isRetrying}
-                  className="px-6 py-2.5 rounded-xl bg-[var(--c1)] hover:bg-[#d64b22] text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="px-5 py-2.5 rounded-xl bg-[var(--c1)] hover:bg-[#d64b22] text-white text-xs font-bold shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isRetrying ? 'animate-spin' : ''}`} />
-                  <span>{isRetrying ? 'Reconnecting...' : 'Retry Connection Now'}</span>
+                  <span>{isRetrying ? 'Connecting...' : 'Try Again'}</span>
                 </button>
               )}
-              {onOpenAdmin && (
-                <button
-                  type="button"
-                  onClick={onOpenAdmin}
-                  className="px-4 py-2.5 rounded-xl border border-stone-300 hover:bg-stone-50 text-xs font-semibold text-stone-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  <span>Admin Panel</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-stone-400" />
-                </button>
-              )}
+              <a
+                href={`mailto:${supportEmail}?subject=Website%20Inquiry%20-%20Temporary%20Downtime`}
+                className="px-4 py-2.5 rounded-xl border border-stone-300 hover:bg-stone-50 text-xs font-semibold text-stone-700 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Mail className="w-3.5 h-3.5 text-stone-500" />
+                <span>Email Support</span>
+              </a>
             </div>
           </div>
         )}

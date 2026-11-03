@@ -18,7 +18,7 @@ export function DataProvider({ children }) {
   const [isSocketConnected, setIsSocketConnected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingStage, setLoadingStage] = useState('connecting'); // 'connecting' | 'socket' | 'fetching' | 'ready' | 'error'
-  const [loadingStatusText, setLoadingStatusText] = useState('Connecting to MongoDB Atlas Cloud Database...');
+  const [loadingStatusText, setLoadingStatusText] = useState('Loading experience...');
   const [connectionError, setConnectionError] = useState(null);
   const [dataVersion, setDataVersion] = useState(0);
 
@@ -39,13 +39,13 @@ export function DataProvider({ children }) {
       setIsLoading(true);
       setConnectionError(null);
       setLoadingStage('connecting');
-      setLoadingStatusText('Connecting to MongoDB Atlas Cloud Database...');
+      setLoadingStatusText('Connecting to network...');
     }
 
     try {
       // 1. Health check verification
       setLoadingStage('fetching');
-      setLoadingStatusText('Synchronizing Services, Apps & Customizations from MongoDB...');
+      setLoadingStatusText('Loading business solutions...');
 
       const [brandRes, srvRes, prodRes, faqRes, landingRes, healthRes] = await Promise.allSettled([
         api.getBrand(),
@@ -96,7 +96,7 @@ export function DataProvider({ children }) {
         setIsDatabaseConnected(true);
         setConnectionError(null);
         setLoadingStage('ready');
-        setLoadingStatusText('All records live from MongoDB Atlas');
+        setLoadingStatusText('Ready');
         if (isInitial) {
           // Leave a brief 300ms moment so user perceives verified connection, then dismiss loading gate
           setTimeout(() => {
@@ -105,15 +105,15 @@ export function DataProvider({ children }) {
         }
         return true;
       } else {
-        throw new Error('Unable to verify live database response from MongoDB backend.');
+        throw new Error('Website is temporarily down. Please try again shortly.');
       }
     } catch (err) {
-      console.warn('[DataContext] Database sync error:', err.message);
+      console.warn('[DataContext] Service sync notice:', err.message);
       setIsDatabaseConnected(false);
-      setConnectionError(err.message || 'Unable to connect to MongoDB Atlas backend. Server unreachable or connection timed out.');
+      setConnectionError('Website is temporarily unavailable. Please try again shortly or contact our team.');
       setLoadingStage('error');
-      setLoadingStatusText('Connection failed. Website cannot be opened without database records.');
-      // Keep isLoading true so the loading screen stays closed and presents the error with Retry button
+      setLoadingStatusText('Website temporarily unavailable');
+      // Keep isLoading true so the loading screen stays closed and presents the user-friendly maintenance message
       return false;
     }
   }, [syncToMemory]);
