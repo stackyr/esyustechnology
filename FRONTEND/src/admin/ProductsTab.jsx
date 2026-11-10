@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { normalizeEmbedImageUrl, detectCloudProvider } from '../utils/imageUtils';
 import {
   Plus,
   Edit2,
@@ -110,8 +111,8 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
       })(),
       downloadUrl: form.downloadUrl.trim(),
       isComingSoon: Boolean(form.isComingSoon),
-      logo: form.logo.trim(),
-      image: form.image.trim(),
+      logo: normalizeEmbedImageUrl(form.logo.trim()),
+      image: normalizeEmbedImageUrl(form.image.trim()),
       tagline: form.tagline,
       description: form.description,
       badge: form.badge,
@@ -524,7 +525,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
                       type="text"
                       placeholder="/finance-flow-logo.png"
                       value={form.logo}
-                      onChange={(e) => setForm({ ...form, logo: e.target.value })}
+                      onChange={(e) => setForm({ ...form, logo: normalizeEmbedImageUrl(e.target.value) })}
                       className="w-full px-3 py-2 rounded-xl border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                     />
                     {form.logo && (
@@ -544,7 +545,7 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
                       type="text"
                       placeholder="/card-finance-flow.png"
                       value={form.image}
-                      onChange={(e) => setForm({ ...form, image: e.target.value })}
+                      onChange={(e) => setForm({ ...form, image: normalizeEmbedImageUrl(e.target.value) })}
                       className="w-full px-3 py-2 rounded-xl border border-[var(--line)] bg-white text-xs text-[var(--ink)] focus:outline-none focus:border-[var(--c1)]"
                     />
                     {form.image && (

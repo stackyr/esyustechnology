@@ -10,6 +10,7 @@ import FaqsTab from './FaqsTab';
 import AdminSecurityModal from './AdminSecurityModal';
 import api from '../utils/api';
 import liveSync from '../utils/liveSync';
+import { deepNormalizeImageUrls } from '../utils/imageUtils';
 
 class AdminErrorBoundary extends React.Component {
   constructor(props) {
@@ -315,7 +316,8 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleSaveBrand = async (brandData) => {
     setIsSaving(true);
     try {
-      const res = await api.updateBrand(brandData);
+      const cleanData = deepNormalizeImageUrls(brandData);
+      const res = await api.updateBrand(cleanData);
       if (res && res.data) {
         setBrand(res.data);
         liveSync.emitAdminChange('brand_updated', res.data);
@@ -334,7 +336,8 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
   const handleSaveLandingPage = async (pageData) => {
     setIsSaving(true);
     try {
-      const res = await api.updateLandingPage(pageData);
+      const cleanData = deepNormalizeImageUrls(pageData);
+      const res = await api.updateLandingPage(cleanData);
       if (res && res.data) {
         setLandingPage(res.data);
         liveSync.emitAdminChange('landing_page_updated', res.data);
@@ -485,7 +488,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     });
     setRefreshingSection('products');
     try {
-      await api.createProduct(productData);
+      await api.createProduct(deepNormalizeImageUrls(productData));
       const prodRes = await api.getProducts();
       if (prodRes && prodRes.data) {
         setProducts(prodRes.data);
@@ -518,7 +521,7 @@ export default function AdminPanel({ onBackToSite, onLogout, onDataChanged }) {
     });
     setRefreshingSection('products');
     try {
-      const res = await api.updateProduct(id, productData);
+      const res = await api.updateProduct(id, deepNormalizeImageUrls(productData));
       if (res && res.data) {
         setProducts((prev) => prev.map((p) => (p.id === id || p._id === id || String(p._id) === String(id) ? { ...p, ...res.data } : p)));
       }

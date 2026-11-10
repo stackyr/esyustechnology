@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useData } from '../context/DataContext';
 import { Clock, Download, Search, X, ExternalLink } from 'lucide-react';
+import { resolveProductDownload } from '../utils/productUtils';
 
 export default function DownloadSection({ onDownloadApp, onOpenDownloadsPage, dataVersion = 0 }) {
   const [filter, setFilter] = useState('all'); // 'all' | 'windows' | 'android'

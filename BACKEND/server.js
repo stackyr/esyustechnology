@@ -1,4 +1,5 @@
 import express from 'express';
+import { normalizeEmbedImageUrl, deepNormalizeImageUrls } from './utils/imageUtils.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import http from 'node:http';
@@ -479,7 +480,7 @@ app.get('/api/brand', async (req, res) => {
 
 app.put('/api/brand', requireAdminAuth, async (req, res) => {
   try {
-    const updated = await updateBrandData(req.body);
+    const updated = await updateBrandData(deepNormalizeImageUrls(req.body));
     broadcastLiveSync('brand_updated', updated);
     res.json({ success: true, message: 'Brand details updated successfully in MongoDB', data: updated });
   } catch (err) {
@@ -501,7 +502,7 @@ app.get('/api/landing-page', async (req, res) => {
 
 app.put('/api/landing-page', requireAdminAuth, async (req, res) => {
   try {
-    const updated = await updateLandingPageData(req.body);
+    const updated = await updateLandingPageData(deepNormalizeImageUrls(req.body));
     broadcastLiveSync('landing_page_updated', updated);
     res.json({ success: true, message: 'Landing page copy & image links updated successfully', data: updated });
   } catch (err) {
@@ -632,7 +633,7 @@ app.post('/api/services', requireAdminAuth, async (req, res) => {
       iconName: iconName || 'Globe',
       isComingSoon: Boolean(isComingSoon),
       actionUrl: (actionUrl || '').trim(),
-      image: (image || '').trim(),
+      image: normalizeEmbedImageUrl((image || '').trim()),
       features: Array.isArray(features) ? features : (typeof features === 'string' ? features.split('\n').filter(Boolean) : []),
       techStack: Array.isArray(techStack) ? techStack : (typeof techStack === 'string' ? techStack.split(',').map(s => s.trim()).filter(Boolean) : [])
     };
@@ -656,6 +657,8 @@ app.put('/api/services/:id', requireAdminAuth, async (req, res) => {
       techStack: Array.isArray(req.body.techStack) ? req.body.techStack : (typeof req.body.techStack === 'string' ? req.body.techStack.split(',').map(s => s.trim()).filter(Boolean) : req.body.techStack)
     };
     if (updates.isComingSoon === undefined) delete updates.isComingSoon;
+    if (updates.logo) updates.logo = normalizeEmbedImageUrl(updates.logo);
+    if (updates.image) updates.image = normalizeEmbedImageUrl(updates.image);
     const updated = await updateServiceData(id, updates);
     if (!updated) return res.status(404).json({ success: false, error: 'Service not found' });
     const allServices = await getServicesData();
@@ -725,8 +728,8 @@ app.post('/api/products', requireAdminAuth, async (req, res) => {
       isComingSoon: isComingSoon !== undefined ? Boolean(isComingSoon) : true,
       accentColor: accentColor || 'from-blue-600 to-indigo-700',
       badge: badge || 'Desktop App',
-      logo: (logo || '').trim(),
-      image: (image || '').trim()
+      logo: normalizeEmbedImageUrl((logo || '').trim()),
+      image: normalizeEmbedImageUrl((image || '').trim())
     };
 
     const saved = await createProductData(newProduct);
@@ -748,6 +751,8 @@ app.put('/api/products/:id', requireAdminAuth, async (req, res) => {
       isComingSoon: req.body.isComingSoon !== undefined ? Boolean(req.body.isComingSoon) : undefined
     };
     if (updates.isComingSoon === undefined) delete updates.isComingSoon;
+    if (updates.logo) updates.logo = normalizeEmbedImageUrl(updates.logo);
+    if (updates.image) updates.image = normalizeEmbedImageUrl(updates.image);
     if (updates.platform && updates.downloadFile) {
       const isAndroid = updates.platform.toLowerCase().includes('android');
       if (isAndroid && updates.downloadFile.toLowerCase().endsWith('.exe')) {

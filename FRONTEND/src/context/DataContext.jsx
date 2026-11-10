@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import api from '../utils/api';
 import liveSync from '../utils/liveSync';
 import { COMPANY_INFO, LANDING_PAGE_SECTIONS, SERVICES, PRODUCTS, FAQS, applyDynamicData } from '../data/companyData';
+import { deepNormalizeImageUrls } from '../utils/imageUtils';
 
 const DataContext = createContext(null);
 
@@ -24,7 +25,8 @@ export function DataProvider({ children }) {
 
   // Synchronize memory cache and trigger smooth ScrollTrigger refresh
   const syncToMemory = useCallback((freshData) => {
-    applyDynamicData(freshData);
+    const sanitized = deepNormalizeImageUrls(freshData);
+    applyDynamicData(sanitized);
     setDataVersion((v) => v + 1);
     setTimeout(() => {
       if (typeof window !== 'undefined' && window.ScrollTrigger) {
@@ -95,16 +97,16 @@ export function DataProvider({ children }) {
         setServices(freshServices);
       }
       if (Array.isArray(freshProducts) && freshProducts.length) {
-        setProducts(freshProducts);
+        setProducts(deepNormalizeImageUrls(freshProducts));
       }
       if (Array.isArray(freshFaqs) && freshFaqs.length) {
         setFaqs(freshFaqs);
       }
       if (freshBrand && typeof freshBrand === 'object') {
-        setBrand(freshBrand);
+        setBrand(deepNormalizeImageUrls(freshBrand));
       }
       if (freshLanding && typeof freshLanding === 'object') {
-        setLandingPage(freshLanding);
+        setLandingPage(deepNormalizeImageUrls(freshLanding));
       }
 
       if (loadedFromApi) {
@@ -172,19 +174,19 @@ export function DataProvider({ children }) {
         }
       } else if (event === 'products_updated') {
         if (Array.isArray(payload)) {
-          const fresh = [...payload];
+          const fresh = deepNormalizeImageUrls([...payload]);
           setProducts(fresh);
           syncToMemory({ products: fresh });
         }
       } else if (event === 'brand_updated') {
         if (payload && typeof payload === 'object') {
-          const fresh = { ...payload };
+          const fresh = deepNormalizeImageUrls({ ...payload });
           setBrand(fresh);
           syncToMemory({ brand: fresh });
         }
       } else if (event === 'landing_page_updated') {
         if (payload && typeof payload === 'object') {
-          const fresh = { ...payload };
+          const fresh = deepNormalizeImageUrls({ ...payload });
           setLandingPage(fresh);
           syncToMemory({ landingPage: fresh });
         }
@@ -197,10 +199,10 @@ export function DataProvider({ children }) {
       } else if (event === 'sync_all') {
         if (payload) {
           if (Array.isArray(payload.services)) setServices([...payload.services]);
-          if (Array.isArray(payload.products)) setProducts([...payload.products]);
+          if (Array.isArray(payload.products)) setProducts(deepNormalizeImageUrls([...payload.products]));
           if (Array.isArray(payload.faqs)) setFaqs([...payload.faqs]);
-          if (payload.brand) setBrand({ ...payload.brand });
-          if (payload.landingPage) setLandingPage({ ...payload.landingPage });
+          if (payload.brand) setBrand(deepNormalizeImageUrls({ ...payload.brand }));
+          if (payload.landingPage) setLandingPage(deepNormalizeImageUrls({ ...payload.landingPage }));
           syncToMemory(payload);
         }
       }

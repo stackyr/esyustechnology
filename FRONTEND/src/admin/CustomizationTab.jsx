@@ -32,6 +32,7 @@ import {
   TEAM_MEMBERS
 } from '../data/companyData';
 import api from '../utils/api';
+import { normalizeEmbedImageUrl, deepNormalizeImageUrls } from '../utils/imageUtils';
 
 export default function CustomizationTab({
   brand,
@@ -260,7 +261,11 @@ export default function CustomizationTab({
 
   // Brand updaters
   const handleBrandChange = (field, val) => {
-    setBrandData((prev) => ({ ...prev, [field]: val }));
+    let finalVal = val;
+    if (typeof val === 'string' && (field.toLowerCase().includes('logo') || field.toLowerCase().includes('image') || val.startsWith('http://') || val.startsWith('https://'))) {
+      finalVal = normalizeEmbedImageUrl(val);
+    }
+    setBrandData((prev) => ({ ...prev, [field]: finalVal }));
     setSaveSuccess(false);
   };
 
@@ -277,20 +282,35 @@ export default function CustomizationTab({
 
   // Landing page updaters
   const handlePageChange = (section, field, val) => {
+    let finalVal = val;
+    if (typeof val === 'string') {
+      const fieldLower = field.toLowerCase();
+      const isImg = fieldLower.includes('image') ||
+        fieldLower.includes('photo') ||
+        fieldLower.includes('logo') ||
+        fieldLower.includes('avatar') ||
+        fieldLower.includes('mockup') ||
+        fieldLower.includes('screenshot') ||
+        fieldLower.startsWith('collage');
+      if (isImg || val.startsWith('http://') || val.startsWith('https://')) {
+        finalVal = normalizeEmbedImageUrl(val);
+      }
+    }
     setPageData((prev) => ({
       ...prev,
       [section]: {
         ...prev[section],
-        [field]: val
+        [field]: finalVal
       }
     }));
     setSaveSuccess(false);
   };
 
   const handlePillarImageChange = (index, val) => {
+    const finalVal = normalizeEmbedImageUrl(val);
     setPageData((prev) => {
       const pillars = [...(prev.whyChooseUs?.pillarImages || [])];
-      pillars[index] = val;
+      pillars[index] = finalVal;
       return {
         ...prev,
         whyChooseUs: {
@@ -342,12 +362,15 @@ export default function CustomizationTab({
   };
 
   const handleTeamMemberChange = (index, field, val) => {
+    const finalVal = (field === 'avatar' || (typeof val === 'string' && (val.startsWith('http://') || val.startsWith('https://'))))
+      ? normalizeEmbedImageUrl(val)
+      : val;
     setPageData((prev) => {
       const members = Array.isArray(prev.team?.members) && prev.team.members.length > 0
         ? prev.team.members.map(m => ({ ...m }))
         : (LANDING_PAGE_SECTIONS?.team?.members || TEAM_MEMBERS).map(m => ({ name: m.name, role: m.role, avatar: m.avatar, bio: m.bio || '' }));
       if (members[index]) {
-        members[index] = { ...members[index], [field]: val };
+        members[index] = { ...members[index], [field]: finalVal };
       }
       return {
         ...prev,
@@ -426,8 +449,12 @@ export default function CustomizationTab({
     if (e) e.preventDefault();
     setIsLocalSaving(true);
     try {
-      if (onSaveBrand) await onSaveBrand(brandData);
-      if (onSaveLandingPage) await onSaveLandingPage(pageData);
+      const cleanBrand = deepNormalizeImageUrls(brandData);
+      const cleanLanding = deepNormalizeImageUrls(pageData);
+      if (onSaveBrand) await onSaveBrand(cleanBrand);
+      if (onSaveLandingPage) await onSaveLandingPage(cleanLanding);
+      setBrandData(cleanBrand);
+      setPageData(cleanLanding);
       isDirtyRef.current = false;
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 3000);
