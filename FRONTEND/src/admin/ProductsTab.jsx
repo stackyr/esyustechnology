@@ -102,7 +102,12 @@ export default function ProductsTab({ products = [], onAddProduct, onUpdateProdu
       platform: form.platform,
       version: form.version,
       size: form.size,
-      downloadFile: form.downloadFile,
+      downloadFile: (() => {
+        let f = (form.downloadFile || '').trim();
+        const isAndroid = (form.platform || '').toLowerCase().includes('android');
+        if (isAndroid && f.toLowerCase().endsWith('.exe')) f = f.replace(/\.exe$/i, '.apk');
+        return f;
+      })(),
       downloadUrl: form.downloadUrl.trim(),
       isComingSoon: Boolean(form.isComingSoon),
       logo: form.logo.trim(),

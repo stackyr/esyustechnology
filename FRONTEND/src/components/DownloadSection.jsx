@@ -193,7 +193,7 @@ export default function DownloadSection({ onDownloadApp, onOpenDownloadsPage, da
                 {/* Feature Bullet Points */}
                 <ul className="plan__list">
                   <li>
-                    <span><strong>Installer Package:</strong> {app.downloadFile}</span>
+                    <span><strong>{isAndroid ? 'Android Package:' : 'Installer Package:'}</strong> {resolveProductDownload(app).filename}</span>
                   </li>
                   <li>
                     <span><strong>Architecture:</strong> {isAndroid ? 'ARM64 / Universal APK' : 'x64 (Windows 10 & 11)'}</span>

@@ -1,8 +1,11 @@
 import React from 'react';
 import { X, CheckCircle2, Clock, Monitor, Smartphone, Cpu, Download } from 'lucide-react';
+import { resolveProductDownload } from '../utils/productUtils';
 
 export default function ProductModal({ product, onClose, _onDownload }) {
   if (!product) return null;
+
+  const { filename, typeLabel } = resolveProductDownload(product);
 
   const isAndroid = (product.platform || '').toLowerCase().includes('android');
 
@@ -142,13 +145,13 @@ export default function ProductModal({ product, onClose, _onDownload }) {
           {!product.isComingSoon && Boolean(product.downloadUrl) ? (
             <a
               href={product.downloadUrl}
-              download={product.downloadFile || true}
+              download={filename}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--c1)] hover:bg-[#d65a2f] text-white text-xs font-bold rounded-full shadow-md cursor-pointer transition-all active:scale-95"
             >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download ({product.downloadFile || product.size})</span>
+              <Download className="w-3.5 h-3.5 shrink-0" />
+              <span>Download {typeLabel} ({filename})</span>
             </a>
           ) : (
             <div

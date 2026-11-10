@@ -714,7 +714,13 @@ app.post('/api/products', requireAdminAuth, async (req, res) => {
       description: (description || '').trim(),
       highlights: Array.isArray(highlights) ? highlights : (typeof highlights === 'string' ? highlights.split('\n').filter(Boolean) : []),
       chips: Array.isArray(chips) ? chips : (typeof chips === 'string' ? chips.split(',').map(s => s.trim()).filter(Boolean) : []),
-      downloadFile: (downloadFile || `${name.replace(/\s+/g, '')}-Setup.exe`).trim(),
+      downloadFile: (() => {
+        const isAndroid = (platform || '').toLowerCase().includes('android');
+        let f = (downloadFile || '').trim();
+        if (isAndroid && f.toLowerCase().endsWith('.exe')) f = f.replace(/\.exe$/i, '.apk');
+        if (!f) f = isAndroid ? `${name.replace(/\s+/g, '')}.apk` : `${name.replace(/\s+/g, '')}-Setup.exe`;
+        return f;
+      })(),
       downloadUrl: (downloadUrl || '').trim(),
       isComingSoon: isComingSoon !== undefined ? Boolean(isComingSoon) : true,
       accentColor: accentColor || 'from-blue-600 to-indigo-700',
@@ -742,6 +748,12 @@ app.put('/api/products/:id', requireAdminAuth, async (req, res) => {
       isComingSoon: req.body.isComingSoon !== undefined ? Boolean(req.body.isComingSoon) : undefined
     };
     if (updates.isComingSoon === undefined) delete updates.isComingSoon;
+    if (updates.platform && updates.downloadFile) {
+      const isAndroid = updates.platform.toLowerCase().includes('android');
+      if (isAndroid && updates.downloadFile.toLowerCase().endsWith('.exe')) {
+        updates.downloadFile = updates.downloadFile.replace(/\.exe$/i, '.apk');
+      }
+    }
     const updated = await updateProductData(id, updates);
     if (!updated) return res.status(404).json({ success: false, error: 'Product not found' });
     const allProducts = await getProductsData();

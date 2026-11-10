@@ -1,8 +1,11 @@
 import React from 'react';
-import { X, Clock, ShieldCheck, Mail, Download } from 'lucide-react';
+import { X, Clock, ShieldCheck, Mail, Download, Smartphone, Monitor } from 'lucide-react';
+import { resolveProductDownload } from '../utils/productUtils';
 
 export default function DownloadModal({ product, onClose, onEnquire }) {
   if (!product) return null;
+
+  const { filename, isAndroid, isWindows, label, typeLabel } = resolveProductDownload(product);
 
   return (
     <div
@@ -64,11 +67,18 @@ export default function DownloadModal({ product, onClose, onEnquire }) {
           <div className="p-4 rounded-2xl bg-[var(--soft)] border border-[var(--line)] space-y-2 text-xs">
             <div className="flex items-center justify-between text-[var(--muted)]">
               <span>Platform Target:</span>
-              <span className="font-semibold text-[var(--ink)]">{product.platform}</span>
+              <span className="font-semibold text-[var(--ink)] flex items-center gap-1.5">
+                {isAndroid ? <Smartphone className="w-3.5 h-3.5 text-emerald-600 shrink-0" /> : <Monitor className="w-3.5 h-3.5 text-blue-600 shrink-0" />}
+                {product.platform}
+              </span>
             </div>
             <div className="flex items-center justify-between text-[var(--muted)]">
               <span>Package Size:</span>
               <span className="font-semibold text-[var(--ink)]">{product.size}</span>
+            </div>
+            <div className="flex items-center justify-between text-[var(--muted)]">
+              <span>Package File:</span>
+              <span className="font-mono text-xs font-bold text-[var(--ink)] truncate max-w-[200px]" title={filename}>{filename}</span>
             </div>
             <div className="flex items-center justify-between text-[var(--muted)]">
               <span>Status:</span>
@@ -86,22 +96,22 @@ export default function DownloadModal({ product, onClose, onEnquire }) {
               <>
                 <a
                   href={product.downloadUrl}
-                  download={product.downloadFile || true}
+                  download={filename}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full h-12 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 bg-[var(--c1)] hover:bg-[#d65a2f] text-white shadow-lg shadow-[var(--c1)]/30 cursor-pointer transition-all active:scale-95"
+                  className="w-full h-12 rounded-full font-bold text-xs flex items-center justify-center gap-2 bg-[var(--c1)] hover:bg-[#d65a2f] text-white shadow-lg shadow-[var(--c1)]/30 cursor-pointer transition-all active:scale-95"
                 >
-                  <Download className="w-4 h-4" />
-                  <span>Download Package ({product.downloadFile || product.size})</span>
+                  <Download className="w-4 h-4 shrink-0" />
+                  <span className="truncate">Download {typeLabel} ({filename})</span>
                 </a>
                 <div className="text-[11px] text-center font-mono text-[var(--muted)]">
-                  Verified SHA-256 installer • Offline database runtime
+                  {isAndroid ? 'Verified SHA-256 APK package • Offline database runtime' : 'Verified SHA-256 installer • Offline database runtime'}
                 </div>
               </>
             ) : (
               <>
-                <div className="w-full h-11 rounded-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 bg-[var(--soft)] border border-[var(--c1)]/30 text-[var(--c1)] shadow-xs select-none">
-                  <Clock className="w-4 h-4 text-[var(--c1)] animate-pulse" />
+                <div className="w-full h-11 rounded-full font-bold text-xs flex items-center justify-center gap-2 bg-[var(--soft)] border border-[var(--c1)]/30 text-[var(--c1)] shadow-xs select-none">
+                  <Clock className="w-4 h-4 text-[var(--c1)] animate-pulse shrink-0" />
                   <span>Official Download Coming Soon ({product.version || 'v1.0.0'})</span>
                 </div>
                 <div className="text-[11px] text-center font-mono text-[var(--muted)]">

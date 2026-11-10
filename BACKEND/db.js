@@ -244,7 +244,7 @@ const DEFAULT_DATA = {
       id: "finance-flow-lite",
       name: "Finance Flow Lite",
       category: "Lightweight Billing",
-      platform: "Windows & Android",
+      platform: "Android",
       version: "v1.2.1",
       size: "18.5 MB",
       isFeatured: false,
@@ -258,7 +258,7 @@ const DEFAULT_DATA = {
         "Zero installation overhead"
       ],
       chips: ["⚡ <100MB Memory", "📱 Android Tablet Ready", "🧾 Offline Quick Touch"],
-      downloadFile: "FinanceFlowLite-Setup.exe",
+      downloadFile: "FinanceFlowLite_v1.0.2.apk",
       downloadUrl: "",
       isComingSoon: true,
       accentColor: "from-teal-600 to-emerald-600",
