@@ -182,15 +182,15 @@ export default function Products({ onSelectProduct, onDownloadProduct, onViewAll
                     ))}
                   </div>
 
-                  {/* Interactive Action Buttons */}
-                  <div className="flex items-center gap-2.5 pt-1">
+                  {/* Interactive Action Buttons (Equal 50/50 Grid, No Overflow or Overlap) */}
+                  <div className="grid grid-cols-2 gap-2 sm:gap-2.5 pt-1 w-full items-center">
                     <button
                       type="button"
                       onClick={() => hasProduct && onSelectProduct(item.product)}
-                      className="spec-btn flex-1"
+                      className="spec-btn w-full min-w-0"
                     >
-                      <span>Specs & Features</span>
-                      <span className="spec-btn__arr" aria-hidden="true">→</span>
+                      <span className="truncate">Specs & Features</span>
+                      <span className="spec-btn__arr shrink-0" aria-hidden="true">→</span>
                     </button>
 
                     {item.product && !item.product.isComingSoon && Boolean(item.product.downloadUrl) ? (
@@ -200,19 +200,19 @@ export default function Products({ onSelectProduct, onDownloadProduct, onViewAll
                           if (onDownloadProduct) onDownloadProduct(item.product);
                           else if (onDownloadClick) onDownloadClick(item.product);
                         }}
-                        className="btn btn--cta flex-1 justify-center !py-2.5 text-xs cursor-pointer shadow-md"
+                        className="prod-dl-btn w-full min-w-0"
                         title={`Download ${item.name}`}
                       >
-                        <Download className="w-3.5 h-3.5 shrink-0 mr-1" />
-                        <span>Download {item.product.platform?.toLowerCase().includes('android') ? 'APK' : 'EXE'}</span>
+                        <Download className="w-3.5 h-3.5 shrink-0" />
+                        <span className="truncate">Download {item.product.platform?.toLowerCase().includes('android') ? 'APK' : 'EXE'}</span>
                       </button>
                     ) : (
                       <div
-                        className="coming-soon-btn flex-1 justify-center opacity-85 cursor-default select-none"
+                        className="coming-soon-btn w-full min-w-0"
                         title={`Official ${item.name} release in preparation`}
                       >
                         <Clock className="w-3.5 h-3.5 shrink-0" />
-                        <span>Coming Soon</span>
+                        <span className="truncate">Coming Soon</span>
                       </div>
                     )}
                   </div>
